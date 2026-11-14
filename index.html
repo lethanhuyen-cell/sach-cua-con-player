@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Truyện Kể Thiên Nhiên Ru Ngủ Cho Bé — 48kHz Mỹ Duyên</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0B132B">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.85; transform: scale(1); filter: drop-shadow(0 0 10px rgba(246, 189, 96, 0.3)); }
+      50% { opacity: 1; transform: scale(1.06); filter: drop-shadow(0 0 20px rgba(246, 189, 96, 0.6)); }
+    }
+    @keyframes waveBar {
+      0%, 100% { height: 4px; }
+      50% { height: 18px; }
+    }
+    .mascot-glow {
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+    .wave-bar {
+      animation: waveBar 1.2s ease-in-out infinite;
+    }
+    .wave-bar:nth-child(2) { animation-delay: 0.2s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.4s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.6s; }
+    .wave-bar:nth-child(5) { animation-delay: 0.8s; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-[#070B19] text-slate-100 min-h-screen flex flex-col font-sans pb-32">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-[#070B19]/80 backdrop-blur-xl border-b border-slate-800/80 px-4 py-3">
+    <div class="max-w-2xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-xl mascot-glow">
+          🐥
+        </div>
+        <div>
+          <h1 class="text-sm font-bold text-white tracking-tight flex items-center gap-1.5">
+            SÁCH CỦA CON
+            <span class="text-[10px] bg-amber-400/10 text-amber-300 border border-amber-400/30 px-1.5 py-0.2 rounded-md font-normal">48kHz</span>
+          </h1>
+          <p class="text-[11px] text-slate-400">Giọng đọc: Mỹ Duyên · Ru ngủ an lành</p>
+        </div>
+      </div>
+      <button onclick="openSearchModal()" class="w-9 h-9 rounded-full bg-slate-800/80 border border-slate-700/80 flex items-center justify-center text-sm text-slate-300 hover:text-white">
+        🔍
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero Night Banner -->
+  <section class="max-w-2xl mx-auto w-full px-4 pt-5 pb-2">
+    <div class="rounded-3xl bg-gradient-to-br from-[#121B35] to-[#0A1024] border border-amber-400/20 p-5 shadow-2xl relative overflow-hidden text-center">
+      <div class="absolute -top-10 -right-10 w-32 h-32 bg-amber-400/10 rounded-full blur-2xl"></div>
+      <span class="text-[11px] font-semibold text-amber-300 bg-amber-400/10 border border-amber-400/30 px-3 py-1 rounded-full uppercase tracking-wider">
+        🌙 365 KHÁM PHÁ THIÊN NHIÊN
+      </span>
+      <h2 class="text-lg font-bold text-white mt-3 mb-1" id="heroTitle">
+        Tập 00: Bí Mật Dưới Gốc Sồi Di Sản
+      </h2>
+      <p class="text-xs text-slate-300 leading-relaxed max-w-md mx-auto" id="heroSummary">
+        Cội nguồn tổ ấm Cây Sồi Di Sản tại Thung Lũng Rừng Phong, cơ duyên gặp gỡ chú đom đóm Đốm Đốm và định ước chiếc túi da 365 kỷ vật thiên nhiên.
+      </p>
+      <div class="mt-4 flex items-center justify-center gap-3">
+        <button onclick="playTrackById('00')" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold px-5 py-2 rounded-full text-xs shadow-lg shadow-amber-400/20 flex items-center gap-1.5 transition transform active:scale-95">
+          <span>▶</span> Nghe Ngay
+        </button>
+        <button onclick="openReadingModal('00')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium px-4 py-2 rounded-full text-xs border border-slate-700 flex items-center gap-1.5 transition">
+          <span>📖</span> Đọc Truyện
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Category Pills Filter -->
+  <section class="max-w-2xl mx-auto w-full px-4 py-3">
+    <div class="flex gap-2 overflow-x-auto no-scrollbar text-xs py-1" id="categoryChips">
+      <button onclick="filterCategory('all')" class="cat-pill active bg-amber-400 text-slate-950 px-3.5 py-1.5 rounded-full font-semibold whitespace-nowrap shadow-sm">
+        Tất cả (11)
+      </button>
+      <button onclick="filterCategory('Cội nguồn')" class="cat-pill bg-slate-800/80 text-slate-300 hover:text-white px-3.5 py-1.5 rounded-full font-medium whitespace-nowrap border border-slate-700">
+        Cội nguồn (1)
+      </button>
+      <button onclick="filterCategory('Thú kỳ diệu')" class="cat-pill bg-slate-800/80 text-slate-300 hover:text-white px-3.5 py-1.5 rounded-full font-medium whitespace-nowrap border border-slate-700">
+        Thú kỳ diệu (10)
+      </button>
+    </div>
+  </section>
+
+  <!-- Episode List -->
+  <main class="max-w-2xl mx-auto w-full px-4 space-y-3 flex-1" id="episodeList">
+    <!-- Episodes will be rendered here dynamically -->
+  </main>
+
+  <!-- Sticky Bottom Player -->
+  <div class="fixed bottom-0 left-0 right-0 z-50 bg-[#0A1024]/95 backdrop-blur-2xl border-t border-slate-800/80 px-4 pt-3 pb-5 shadow-2xl">
+    <div class="max-w-2xl mx-auto space-y-2">
+      <!-- Scrubber -->
+      <div class="w-full bg-slate-800/80 h-1.5 rounded-full cursor-pointer relative overflow-hidden" id="scrubber" onclick="seekAudio(event)">
+        <div class="bg-amber-400 h-full w-0 rounded-full" id="scrubberFill"></div>
+      </div>
+      
+      <!-- Player Info & Controls Row -->
+      <div class="flex items-center justify-between">
+        <!-- Track Info -->
+        <div class="flex items-center gap-3 overflow-hidden" onclick="openReadingModal(currentTrackId)">
+          <div class="w-10 h-10 rounded-2xl bg-amber-400/20 border border-amber-400/30 flex items-center justify-center text-xl shrink-0 cursor-pointer" id="playerIcon">
+            🐥
+          </div>
+          <div class="overflow-hidden cursor-pointer">
+            <h4 class="text-xs font-bold text-white truncate w-40 md:w-56" id="playerTitle">
+              Tập 00: Bí Mật Dưới Gốc Sồi Di Sản
+            </h4>
+            <div class="flex items-center gap-2 text-[10px] text-slate-400">
+              <span id="playerCurrentTime">00:00</span> / <span id="playerDuration">00:00</span>
+              <!-- Sound wave animation -->
+              <div class="flex items-end gap-0.5 h-3.5 ml-1" id="audioWave" style="display: none;">
+                <div class="w-0.5 bg-amber-400 rounded-full wave-bar"></div>
+                <div class="w-0.5 bg-amber-400 rounded-full wave-bar"></div>
+                <div class="w-0.5 bg-amber-400 rounded-full wave-bar"></div>
+                <div class="w-0.5 bg-amber-400 rounded-full wave-bar"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex items-center gap-3 shrink-0">
+          <button onclick="playPrev()" class="text-slate-400 hover:text-white text-base p-1">⏮</button>
+          <button onclick="togglePlay()" class="w-11 h-11 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold flex items-center justify-center text-lg shadow-lg shadow-amber-400/25 transition transform active:scale-90" id="playBtn">
+            ▶
+          </button>
+          <button onclick="playNext()" class="text-slate-400 hover:text-white text-base p-1">⏭</button>
+        </div>
+      </div>
+
+      <!-- Controls & Speed Row -->
+      <div class="flex items-center justify-between pt-1 text-[11px] text-slate-400 border-t border-slate-800/40">
+        <div class="flex items-center gap-1.5">
+          <span>Tốc độ:</span>
+          <button onclick="cycleSpeed()" id="speedBtn" class="px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-amber-300 font-semibold border border-slate-700">1.0x</button>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="flex items-center gap-1 text-slate-400">⏱️ Ngủ:</span>
+          <div class="flex gap-1" id="timerGroup">
+            <button onclick="setTimer(0)" class="timer-btn active px-1.5 py-0.5 rounded-md bg-amber-400/20 text-amber-300 border border-amber-400/40 font-semibold" data-min="0">Tắt</button>
+            <button onclick="setTimer(15)" class="timer-btn px-1.5 py-0.5 rounded-md bg-slate-800 text-slate-400 hover:text-slate-200" data-min="15">15p</button>
+            <button onclick="setTimer(30)" class="timer-btn px-1.5 py-0.5 rounded-md bg-slate-800 text-slate-400 hover:text-slate-200" data-min="30">30p</button>
+            <button onclick="setTimer(45)" class="timer-btn px-1.5 py-0.5 rounded-md bg-slate-800 text-slate-400 hover:text-slate-200" data-min="45">45p</button>
+            <button onclick="setTimer(60)" class="timer-btn px-1.5 py-0.5 rounded-md bg-slate-800 text-slate-400 hover:text-slate-200" data-min="60">60p</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reading Sheet Modal -->
+  <div id="readingModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex flex-col justify-end">
+    <div class="bg-[#0B132B] border-t border-slate-700/80 rounded-t-3xl max-w-2xl w-full mx-auto max-h-[88vh] flex flex-col shadow-2xl animate-slide-up">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between px-5 py-4 border-b border-slate-800">
+        <div class="flex items-center gap-2.5">
+          <span class="text-xl" id="modalIcon">🐥</span>
+          <div>
+            <h3 class="text-sm font-bold text-white truncate max-w-xs" id="modalTitle">Tập 00: Bí Mật Dưới Gốc Sồi</h3>
+            <p class="text-[11px] text-amber-300" id="modalMeta">Ru ngủ 48kHz · Giọng Mỹ Duyên</p>
+          </div>
+        </div>
+        <button onclick="closeReadingModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center font-bold text-sm">
+          ✕
+        </button>
+      </div>
+
+      <!-- Modal Content (The Story) -->
+      <div class="p-6 overflow-y-auto space-y-4 font-serif text-slate-200 text-sm leading-relaxed" id="modalContent">
+        <!-- Story paragraphs loaded here -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-slate-800 bg-[#070B19]/60 flex items-center justify-between">
+        <span class="text-xs text-slate-400" id="modalRelic">Kỷ vật: Chiếc túi da thuộc</span>
+        <button onclick="playTrackById(currentModalId); closeReadingModal();" class="bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-full text-xs flex items-center gap-1 shadow-md">
+          <span>▶</span> Nghe Tập Này
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Modal -->
+  <div id="searchModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex flex-col justify-start pt-16 px-4">
+    <div class="bg-[#0B132B] border border-slate-700/80 rounded-3xl max-w-lg w-full mx-auto p-4 shadow-2xl">
+      <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
+        <span class="text-base text-slate-400">🔍</span>
+        <input type="text" id="searchInput" placeholder="Tìm tập, con vật, cây cối, kỷ vật..." class="bg-transparent flex-1 text-sm text-white placeholder-slate-500 focus:outline-none" oninput="handleSearch(this.value)">
+        <button onclick="closeSearchModal()" class="w-7 h-7 rounded-full bg-slate-800 text-slate-400 hover:text-white text-xs font-bold">✕</button>
+      </div>
+      <div class="mt-3 max-h-80 overflow-y-auto space-y-2 no-scrollbar" id="searchResults">
+        <!-- Search results here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-[#16213E] border border-amber-400/40 text-amber-200 px-4 py-2 rounded-2xl shadow-2xl text-xs font-medium flex items-center gap-2 transition-all duration-300 opacity-0 pointer-events-none">
+    <span id="toastIcon">✨</span>
+    <span id="toastMsg">Thông báo</span>
+  </div>
+
+  <audio id="audioElement" preload="metadata"></audio>
+
+  <script>
+    let episodesData = [];
+    let currentTrackId = "00";
+    let currentModalId = "00";
+    let sleepTimerTimeout = null;
+
+    const audio = document.getElementById('audioElement');
+    const playBtn = document.getElementById('playBtn');
+    const scrubberFill = document.getElementById('scrubberFill');
+    const playerTitle = document.getElementById('playerTitle');
+    const playerIcon = document.getElementById('playerIcon');
+    const playerCurrentTime = document.getElementById('playerCurrentTime');
+    const playerDuration = document.getElementById('playerDuration');
+    const audioWave = document.getElementById('audioWave');
+
+    // Nạp dữ liệu
+    async function loadEpisodes() {
+      try {
+        const res = await fetch('data/episodes.json');
+        if (res.ok) {
+          episodesData = await res.json();
+          renderEpisodes(episodesData);
+          setHero(episodesData[0]);
+          loadTrack(episodesData[0].id, false);
+        }
+      } catch (err) {
+        console.log('Using local fallback data', err);
+      }
+    }
+
+    function setHero(ep) {
+      document.getElementById('heroTitle').textContent = ep.title;
+      document.getElementById('heroSummary').textContent = ep.summary;
+    }
+
+    function renderEpisodes(items) {
+      const list = document.getElementById('episodeList');
+      list.innerHTML = '';
+
+      items.forEach(ep => {
+        const card = document.createElement('div');
+        card.className = `p-4 rounded-2xl bg-[#0E172E] border border-slate-800/80 hover:border-amber-400/40 transition duration-200 flex flex-col gap-2.5 shadow-md ${ep.id === currentTrackId ? 'ring-1 ring-amber-400/50 bg-[#121D3A]' : ''}`;
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-slate-800 border border-slate-700/80 flex items-center justify-center text-xl shrink-0">
+                ${ep.icon}
+              </div>
+              <div>
+                <span class="text-[10px] font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full border border-amber-400/20">
+                  TẬP ${ep.id}
+                </span>
+                <h3 class="text-sm font-bold text-white mt-1 leading-snug">${ep.title}</h3>
+                <p class="text-xs text-slate-400 mt-1 line-clamp-2">${ep.summary}</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between pt-2 border-t border-slate-800/60 text-[11px] text-slate-400">
+            <span class="flex items-center gap-1 text-amber-300/80">👜 ${ep.relic.slice(0, 32)}...</span>
+            <div class="flex items-center gap-2">
+              <button onclick="openReadingModal('${ep.id}')" class="px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium">
+                📖 Đọc
+              </button>
+              <button onclick="playTrackById('${ep.id}')" class="px-3.5 py-1 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold shadow-sm">
+                ▶ Nghe
+              </button>
+            </div>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    function formatTime(sec) {
+      if (isNaN(sec)) return "00:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    function loadTrack(id, autoPlay = true) {
+      const ep = episodesData.find(e => e.id === id);
+      if (!ep) return;
+
+      currentTrackId = id;
+      playerTitle.textContent = ep.title;
+      playerIcon.textContent = ep.icon;
+
+      if (!ep.audio) {
+        showToast(`Tập ${ep.id}: Âm thanh đang render 48kHz! Mở bản thảo...`, "⏳");
+        openReadingModal(id);
+        renderEpisodes(episodesData);
+        return;
+      }
+
+      audio.src = ep.audio;
+      audio.playbackRate = currentSpeed;
+
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: ep.title,
+          artist: "Giọng đọc: Mỹ Duyên (48kHz)",
+          album: "Truyện Kể Thiên Nhiên Ru Ngủ Cho Bé"
+        });
+      }
+
+      renderEpisodes(episodesData);
+
+      if (autoPlay) {
+        audio.play().then(() => {
+          playBtn.textContent = '⏸';
+          audioWave.style.display = 'flex';
+        }).catch(e => {
+          console.log('Autoplay error', e);
+          playBtn.textContent = '▶';
+          audioWave.style.display = 'none';
+        });
+      }
+    }
+
+    function togglePlay() {
+      if (audio.paused) {
+        audio.play();
+        playBtn.textContent = '⏸';
+        audioWave.style.display = 'flex';
+      } else {
+        audio.pause();
+        playBtn.textContent = '▶';
+        audioWave.style.display = 'none';
+      }
+    }
+
+    function playTrackById(id) {
+      loadTrack(id, true);
+    }
+
+    function playNext() {
+      const idx = episodesData.findIndex(e => e.id === currentTrackId);
+      const nextIdx = (idx + 1) % episodesData.length;
+      loadTrack(episodesData[nextIdx].id, true);
+    }
+
+    function playPrev() {
+      const idx = episodesData.findIndex(e => e.id === currentTrackId);
+      const prevIdx = (idx - 1 + episodesData.length) % episodesData.length;
+      loadTrack(episodesData[prevIdx].id, true);
+    }
+
+    audio.ontimeupdate = () => {
+      if (audio.duration) {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        scrubberFill.style.width = percent + '%';
+        playerCurrentTime.textContent = formatTime(audio.currentTime);
+        playerDuration.textContent = formatTime(audio.duration);
+      }
+    };
+
+    audio.onended = () => {
+      playNext();
+    };
+
+    function seekAudio(e) {
+      const rect = document.getElementById('scrubber').getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const width = rect.width;
+      audio.currentTime = (clickX / width) * audio.duration;
+    }
+
+    function setTimer(mins) {
+      document.querySelectorAll('.timer-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-amber-400/20', 'text-amber-300', 'border', 'border-amber-400/40', 'font-semibold');
+        btn.classList.add('bg-slate-800', 'text-slate-400');
+        if (parseInt(btn.dataset.min) === mins) {
+          btn.classList.remove('bg-slate-800', 'text-slate-400');
+          btn.classList.add('active', 'bg-amber-400/20', 'text-amber-300', 'border', 'border-amber-400/40', 'font-semibold');
+        }
+      });
+
+      if (sleepTimerTimeout) clearTimeout(sleepTimerTimeout);
+      if (mins > 0) {
+        sleepTimerTimeout = setTimeout(() => {
+          audio.pause();
+          playBtn.textContent = '▶';
+          audioWave.style.display = 'none';
+          alert('🌙 Giờ hẹn ngủ đã đến. Chúc bé ngủ thật ngoan!');
+        }, mins * 60 * 1000);
+      }
+    }
+
+    // Modal Đọc Bản Thảo
+    function openReadingModal(id) {
+      const ep = episodesData.find(e => e.id === id);
+      if (!ep) return;
+      currentModalId = id;
+
+      document.getElementById('modalTitle').textContent = ep.title;
+      document.getElementById('modalIcon').textContent = ep.icon;
+      document.getElementById('modalRelic').textContent = `👜 ${ep.relic}`;
+
+      const modalContent = document.getElementById('modalContent');
+      modalContent.innerHTML = '';
+
+      // Tách các đoạn văn bản sạch
+      const paras = ep.content.split('\n\n');
+      paras.forEach(p => {
+        const pClean = p.trim();
+        if (!pClean || pClean.startsWith('#') || pClean === '---') return;
+        
+        if (pClean === '❦') {
+          const div = document.createElement('div');
+          div.className = 'text-center text-amber-400/80 my-3 text-base font-serif';
+          div.textContent = '❦';
+          modalContent.appendChild(div);
+        } else {
+          const pEl = document.createElement('p');
+          pEl.className = 'mb-2 leading-relaxed';
+          pEl.textContent = pClean;
+          modalContent.appendChild(pEl);
+        }
+      });
+
+      document.getElementById('readingModal').classList.remove('hidden');
+    }
+
+    function closeReadingModal() {
+      document.getElementById('readingModal').classList.add('hidden');
+    }
+
+    function filterCategory(cat) {
+      document.querySelectorAll('.cat-pill').forEach(b => {
+        b.classList.remove('active', 'bg-amber-400', 'text-slate-950', 'font-semibold');
+        b.classList.add('bg-slate-800/80', 'text-slate-300');
+      });
+      event.target.classList.remove('bg-slate-800/80', 'text-slate-300');
+      event.target.classList.add('active', 'bg-amber-400', 'text-slate-950', 'font-semibold');
+
+      if (cat === 'all') {
+        renderEpisodes(episodesData);
+      } else {
+        const filtered = episodesData.filter(e => e.category === cat);
+        renderEpisodes(filtered);
+      }
+    }
+
+    // Tốc độ phát
+    let currentSpeed = 1.0;
+    const speedList = [1.0, 0.9, 0.8, 1.1];
+    function cycleSpeed() {
+      const idx = speedList.indexOf(currentSpeed);
+      currentSpeed = speedList[(idx + 1) % speedList.length];
+      audio.playbackRate = currentSpeed;
+      document.getElementById('speedBtn').textContent = currentSpeed.toFixed(1) + 'x';
+      showToast(`Tốc độ đọc: ${currentSpeed.toFixed(1)}x`, '⚡');
+    }
+
+    // Modal Tìm kiếm
+    function openSearchModal() {
+      document.getElementById('searchModal').classList.remove('hidden');
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      input.focus();
+      handleSearch('');
+    }
+
+    function closeSearchModal() {
+      document.getElementById('searchModal').classList.add('hidden');
+    }
+
+    function handleSearch(q) {
+      const resContainer = document.getElementById('searchResults');
+      resContainer.innerHTML = '';
+      const query = q.trim().toLowerCase();
+      const filtered = episodesData.filter(ep => {
+        if (!query) return true;
+        return ep.title.toLowerCase().includes(query) ||
+               ep.summary.toLowerCase().includes(query) ||
+               ep.relic.toLowerCase().includes(query) ||
+               ep.category.toLowerCase().includes(query);
+      });
+
+      if (filtered.length === 0) {
+        resContainer.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">Không tìm thấy tập nào phù hợp.</p>';
+        return;
+      }
+
+      filtered.forEach(ep => {
+        const item = document.createElement('div');
+        item.className = 'p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between gap-2 hover:border-amber-400/40 cursor-pointer';
+        item.innerHTML = `
+          <div class="flex items-center gap-2 overflow-hidden" onclick="closeSearchModal(); openReadingModal('${ep.id}')">
+            <span class="text-lg">${ep.icon}</span>
+            <div class="truncate">
+              <p class="text-xs font-bold text-white truncate">${ep.title}</p>
+              <p class="text-[10px] text-slate-400 truncate">${ep.relic}</p>
+            </div>
+          </div>
+          <button onclick="closeSearchModal(); playTrackById('${ep.id}')" class="px-2.5 py-1 rounded-full bg-amber-400 text-slate-950 font-bold text-[11px] shrink-0">
+            ▶
+          </button>
+        `;
+        resContainer.appendChild(item);
+      });
+    }
+
+    // Toast Thông báo
+    function showToast(msg, icon = '✨') {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      document.getElementById('toastIcon').textContent = icon;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none');
+        toast.classList.remove('opacity-100');
+      }, 3000);
+    }
+
+    // Đăng ký Service Worker cho PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
+      });
+    }
+
+    loadEpisodes();
+  </script>
+</body>
+</html>
