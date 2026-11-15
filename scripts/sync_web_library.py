@@ -76,6 +76,27 @@ def extract_episode_data(ep_num, folder_name, category, icon):
     if not audio_female and audio_default:
         audio_female = audio_default
     
+    # Tự động quét tranh minh họa nếu có
+    illustrations = []
+    ep_img_dir = os.path.join(WEB_DIR, "public", "images", "episodes", ep_num)
+    if os.path.exists(ep_img_dir):
+        for img_file in sorted(os.listdir(ep_img_dir)):
+            if img_file.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
+                caption = "Minh họa tác phẩm phong cách tranh màu nước hoài niệm"
+                if "scene_1" in img_file:
+                    caption = "Thung Lũng Rừng Phong ngập tràn sắc vàng mật ong ấm áp của mùa thu."
+                elif "scene_2" in img_file:
+                    caption = "Bé Lim và mẹ Vacci dừng chân trò chuyện cùng Bác Chó Barley bên hàng rào gỗ."
+                elif "scene_3" in img_file:
+                    caption = "Chiếc mũi kỳ diệu của Bác Chó Barley bắt trọn từng làn hương thoang thoảng từ xa ba trăm mét."
+                elif "scene_4" in img_file:
+                    caption = "Lim cẩn thận cất mẩu gỗ thông vào chiếc túi da thuộc và chìm vào giấc ngủ an lành."
+
+                illustrations.append({
+                    "url": f"images/episodes/{ep_num}/{img_file}",
+                    "caption": caption
+                })
+
     word_count = len(content.split())
     
     return {
@@ -90,6 +111,7 @@ def extract_episode_data(ep_num, folder_name, category, icon):
         "audio": audio_female or audio_default,
         "audio_female": audio_female or audio_default,
         "audio_male": audio_male,
+        "illustrations": illustrations,
         "content": content
     }
 

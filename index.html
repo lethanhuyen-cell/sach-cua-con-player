@@ -784,6 +784,96 @@
       gap: 8px;
     }
 
+    /* Full-Bleed Illustration in Reader */
+    .reader-illustration {
+      margin: 32px -20px 24px -20px;
+      position: relative;
+    }
+
+    .illustration-frame {
+      width: 100%;
+      overflow: hidden;
+      border-top: 1px solid var(--gold-border);
+      border-bottom: 1px solid var(--gold-border);
+      background: #000000;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+    }
+
+    .illustration-img {
+      width: 100%;
+      height: auto;
+      max-height: 440px;
+      object-fit: cover;
+      display: block;
+      cursor: zoom-in;
+      transition: transform 0.3s ease;
+    }
+
+    .illustration-img:active {
+      transform: scale(0.99);
+    }
+
+    .illustration-caption {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--gold-primary);
+      text-align: center;
+      padding: 10px 20px 0;
+      font-style: italic;
+      line-height: 1.5;
+      letter-spacing: 0.1px;
+    }
+
+    /* Image Zoom Modal */
+    .zoom-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      cursor: pointer;
+    }
+
+    .zoom-modal.open {
+      display: flex;
+    }
+
+    .zoom-box {
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .zoom-img {
+      width: 100%;
+      max-height: 72vh;
+      object-fit: contain;
+      border-radius: 14px;
+      border: 1px solid var(--gold-border);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    }
+
+    .zoom-caption {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--gold-primary);
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    .zoom-tip {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
     /* Floating Mini Bar inside Reader */
     .reader-bottom-bar {
       position: absolute;
@@ -1024,6 +1114,17 @@
       <button class="btn-hero-play" style="padding: 6px 14px; font-size: 11px;" onclick="togglePlay()" id="readerMiniPlayBtn">
         ▶ Nghe truyện
       </button>
+    </div>
+  </div>
+
+  <!-- Image Zoom Modal -->
+  <div class="zoom-modal" id="zoomModal" onclick="closeImageZoom()">
+    <div class="zoom-box" onclick="event.stopPropagation()">
+      <div style="position:relative;">
+        <img id="zoomImage" src="" alt="Tranh minh họa" style="width:100%; height:auto; max-height:75vh; object-fit:contain; border-radius:14px; box-shadow:0 16px 48px rgba(0,0,0,0.9); border:1px solid var(--gold-border);" />
+        <button onclick="closeImageZoom()" style="position:absolute; top:-12px; right:-12px; width:36px; height:36px; border-radius:50%; background:var(--gold-primary); color:#070B19; border:none; font-weight:800; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,0.6);">✕</button>
+      </div>
+      <div id="zoomCaption" style="margin-top:14px; font-size:13px; color:var(--gold-primary); font-style:italic; line-height:1.6; padding:0 8px; text-align:center;"></div>
     </div>
   </div>
 
@@ -1341,16 +1442,34 @@
       const bodyEl = document.getElementById('readerBodyText');
       bodyEl.innerHTML = '';
 
+      let illustrationIndex = 0;
+      const illustrations = ep.illustrations || [];
+
       const paragraphs = ep.content.split('\n\n');
       paragraphs.forEach(p => {
         const clean = p.trim();
         if (!clean || clean.startsWith('#') || clean === '---') return;
 
         if (clean === '❦') {
-          const div = document.createElement('div');
-          div.className = 'reader-divider';
-          div.textContent = '❦';
-          bodyEl.appendChild(div);
+          if (illustrations.length > 0 && illustrationIndex < illustrations.length) {
+            const illus = illustrations[illustrationIndex];
+            const figure = document.createElement('div');
+            figure.className = 'reader-illustration';
+            const safeCaption = illus.caption.replace(/'/g, "\\'");
+            figure.innerHTML = `
+              <div class="illustration-frame" onclick="openImageZoom('${illus.url}', '${safeCaption}')">
+                <img src="${illus.url}" class="illustration-img" alt="${illus.caption}" loading="lazy" />
+              </div>
+              <div class="illustration-caption">❦ ${illus.caption}</div>
+            `;
+            bodyEl.appendChild(figure);
+            illustrationIndex++;
+          } else {
+            const div = document.createElement('div');
+            div.className = 'reader-divider';
+            div.textContent = '❦';
+            bodyEl.appendChild(div);
+          }
         } else {
           const pEl = document.createElement('p');
           pEl.textContent = clean;
@@ -1360,6 +1479,19 @@
 
       document.getElementById('readerModal').classList.add('open');
       document.body.style.overflow = 'hidden';
+    }
+
+    function openImageZoom(url, caption) {
+      const modal = document.getElementById('zoomModal');
+      const img = document.getElementById('zoomImage');
+      const cap = document.getElementById('zoomCaption');
+      img.src = url;
+      cap.textContent = caption.startsWith('❦') ? caption : '❦ ' + caption;
+      modal.classList.add('open');
+    }
+
+    function closeImageZoom() {
+      document.getElementById('zoomModal').classList.remove('open');
     }
 
     function closeReader() {
