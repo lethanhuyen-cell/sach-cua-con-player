@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Truyện Kể Thiên Nhiên Ru Ngủ Cho Bé — 48kHz Mỹ Duyên</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#070B19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <style>
+    :root {
+      --bg-deep: #070B19;
+      --bg-card: #0D162D;
+      --bg-card-active: #152244;
+      --bg-player: rgba(10, 16, 36, 0.94);
+      --gold-primary: #F6BD60;
+      --gold-hover: #F8CD82;
+      --gold-dim: rgba(246, 189, 96, 0.15);
+      --gold-border: rgba(246, 189, 96, 0.35);
+      --text-main: #F1F5F9;
+      --text-muted: #94A3B8;
+      --border-subtle: rgba(148, 163, 184, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-deep);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 120px;
+      overflow-x: hidden;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      width: 100%;
+      background: rgba(7, 11, 25, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mascot-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--gold-dim);
+      border: 1.5px solid var(--gold-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 0 15px rgba(246, 189, 96, 0.3);
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 12px rgba(246, 189, 96, 0.25); }
+      50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(246, 189, 96, 0.5); }
+    }
+
+    .brand-text h1 {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-48k {
+      font-size: 10px;
+      background: var(--gold-dim);
+      color: var(--gold-primary);
+      border: 1px solid var(--gold-border);
+      padding: 1px 6px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .brand-text p {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .btn-search {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* Hero Night Player */
+    .hero-card {
+      margin-top: 16px;
+      background: linear-gradient(145deg, #121D38, #0B132B);
+      border: 1px solid var(--gold-border);
+      border-radius: 24px;
+      padding: 20px 16px;
+      text-align: center;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(246, 189, 96, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--gold-primary);
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-border);
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-art-circle {
+      width: 88px;
+      height: 88px;
+      margin: 14px auto 10px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(246, 189, 96, 0.22), rgba(11, 19, 43, 0.8));
+      border: 2px solid var(--gold-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      box-shadow: 0 0 24px rgba(246, 189, 96, 0.35);
+      transition: transform 0.4s ease;
+    }
+
+    .hero-art-circle.playing {
+      animation: rotateArt 18s linear infinite;
+    }
+
+    @keyframes rotateArt {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .hero-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-top: 4px;
+      line-height: 1.35;
+    }
+
+    .hero-meta {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .btn-hero-play {
+      background: var(--gold-primary);
+      color: #070B19;
+      font-weight: 700;
+      font-size: 12.5px;
+      border: none;
+      padding: 9px 20px;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(246, 189, 96, 0.35);
+      transition: all 0.2s ease;
+    }
+
+    .btn-hero-play:active {
+      transform: scale(0.96);
+    }
+
+    .btn-hero-read {
+      background: rgba(30, 41, 59, 0.8);
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 12.5px;
+      border: 1px solid var(--border-subtle);
+      padding: 9px 18px;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    /* Voice Switcher Row */
+    .voice-switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(13, 22, 45, 0.85);
+      border: 1px solid var(--gold-border);
+      border-radius: 18px;
+      padding: 8px 12px;
+      margin-top: 14px;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .voice-switch-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold-primary);
+      white-space: nowrap;
+    }
+
+    .voice-pills {
+      display: flex;
+      gap: 6px;
+    }
+
+    .voice-pill {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 5px 11px;
+      border-radius: 14px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .voice-pill.active {
+      background: var(--gold-primary);
+      color: #070B19;
+      border-color: var(--gold-primary);
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(246, 189, 96, 0.35);
+    }
+
+    /* Category Filter Pills */
+    .category-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 14px 0 10px;
+      scrollbar-width: none;
+    }
+
+    .category-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-chip {
+      background: rgba(30, 41, 59, 0.6);
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .cat-chip.active {
+      background: var(--gold-primary);
+      color: #070B19;
+      border-color: var(--gold-primary);
+      box-shadow: 0 2px 8px rgba(246, 189, 96, 0.3);
+    }
+
+    /* Episode List Rows (Clean & Compact) */
+    .episode-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .ep-row {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .ep-row:active {
+      transform: scale(0.985);
+    }
+
+    .ep-row.active {
+      background: var(--bg-card-active);
+      border-color: var(--gold-border);
+      box-shadow: 0 0 12px rgba(246, 189, 96, 0.15);
+    }
+
+    .ep-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .ep-icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .ep-row.active .ep-icon-box {
+      background: var(--gold-dim);
+      border-color: var(--gold-border);
+    }
+
+    .ep-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .ep-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ep-id-tag {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--gold-primary);
+      background: var(--gold-dim);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    .ep-dur-tag {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .ep-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #FFFFFF;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    .ep-row.active .ep-title {
+      color: var(--gold-primary);
+    }
+
+    .ep-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-row-read {
+      background: rgba(30, 41, 59, 0.8);
+      color: #CBD5E1;
+      border: 1px solid var(--border-subtle);
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-row-play {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--gold-primary);
+      color: #070B19;
+      border: none;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(246, 189, 96, 0.3);
+    }
+
+    .ep-row.active .btn-row-play {
+      background: #FFFFFF;
+    }
+
+    /* Sticky Bottom Player (Refined & Non-Intrusive) */
+    .bottom-player {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      background: var(--bg-player);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-top: 1px solid var(--border-subtle);
+      padding: 8px 16px 14px;
+      display: flex;
+      justify-content: center;
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .player-inner {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    /* Scrubber */
+    .scrubber-container {
+      width: 100%;
+      height: 12px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .scrubber-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(148, 163, 184, 0.2);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .scrubber-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--gold-primary);
+      border-radius: 4px;
+      transition: width 0.1s linear;
+    }
+
+    /* Main Row */
+    .player-main-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .player-track-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+      cursor: pointer;
+    }
+
+    .player-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .player-texts {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .player-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #FFFFFF;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-time-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    /* Waveform visualizer */
+    .waveform-box {
+      display: none;
+      align-items: flex-end;
+      gap: 2px;
+      height: 10px;
+    }
+
+    .wave-bar {
+      width: 2px;
+      height: 4px;
+      background: var(--gold-primary);
+      border-radius: 2px;
+      animation: waveMove 1s ease-in-out infinite;
+    }
+
+    .wave-bar:nth-child(2) { animation-delay: 0.2s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes waveMove {
+      0%, 100% { height: 3px; }
+      50% { height: 10px; }
+    }
+
+    /* Player Controls */
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .btn-step {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .btn-play-main {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--gold-primary);
+      color: #070B19;
+      border: none;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(246, 189, 96, 0.4);
+    }
+
+    /* Sub Controls Row (Speed & Timer) */
+    .player-sub-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(148, 163, 184, 0.08);
+      padding-top: 5px;
+      font-size: 10.5px;
+      color: var(--text-muted);
+    }
+
+    .speed-pill {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid var(--border-subtle);
+      color: var(--gold-primary);
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .timer-wrap {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .timer-btn {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .timer-btn.active {
+      background: var(--gold-dim);
+      border-color: var(--gold-border);
+      color: var(--gold-primary);
+      font-weight: 700;
+    }
+
+    /* FULL-SCREEN BEDTIME READER (Optimized for Mobile) */
+    .reader-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: #080E21;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reader-modal.open {
+      transform: translateY(0);
+    }
+
+    .reader-header {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(8, 14, 33, 0.95);
+      border-bottom: 1px solid var(--border-subtle);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-reader-back {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .reader-title-box {
+      text-align: center;
+      max-width: 220px;
+    }
+
+    .reader-title-box h3 {
+      font-size: 12px;
+      font-weight: 700;
+      color: #FFFFFF;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .reader-font-controls {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-font {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .reader-scroll-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 20px 100px;
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .reader-body {
+      font-family: "Georgia", "Merriweather", "Charter", serif;
+      font-size: 17px;
+      line-height: 1.85;
+      color: #E2E8F0;
+    }
+
+    .reader-body p {
+      margin-bottom: 16px;
+      text-align: justify;
+    }
+
+    .reader-divider {
+      text-align: center;
+      color: var(--gold-primary);
+      font-size: 18px;
+      margin: 24px 0;
+      opacity: 0.8;
+    }
+
+    .reader-relic-card {
+      background: rgba(246, 189, 96, 0.08);
+      border: 1px dashed var(--gold-border);
+      border-radius: 16px;
+      padding: 12px 16px;
+      margin-bottom: 24px;
+      font-size: 12px;
+      color: var(--gold-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Full-Bleed Illustration in Reader */
+    .reader-illustration {
+      margin: 32px -20px 24px -20px;
+      position: relative;
+    }
+
+    .illustration-frame {
+      width: 100%;
+      overflow: hidden;
+      border-top: 1px solid var(--gold-border);
+      border-bottom: 1px solid var(--gold-border);
+      background: #000000;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+    }
+
+    .illustration-img {
+      width: 100%;
+      height: auto;
+      max-height: 440px;
+      object-fit: cover;
+      display: block;
+      cursor: zoom-in;
+      transition: transform 0.3s ease;
+    }
+
+    .illustration-img:active {
+      transform: scale(0.99);
+    }
+
+    .illustration-caption {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--gold-primary);
+      text-align: center;
+      padding: 10px 20px 0;
+      font-style: italic;
+      line-height: 1.5;
+      letter-spacing: 0.1px;
+    }
+
+    /* Image Zoom Modal */
+    .zoom-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      cursor: pointer;
+    }
+
+    .zoom-modal.open {
+      display: flex;
+    }
+
+    .zoom-box {
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .zoom-img {
+      width: 100%;
+      max-height: 72vh;
+      object-fit: contain;
+      border-radius: 14px;
+      border: 1px solid var(--gold-border);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    }
+
+    .zoom-caption {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--gold-primary);
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    .zoom-tip {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Floating Mini Bar inside Reader */
+    .reader-bottom-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 16, 36, 0.96);
+      border-top: 1px solid var(--border-subtle);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(16px);
+    }
+
+    /* Search Modal */
+    .search-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 60px 16px;
+    }
+
+    .search-modal.open {
+      display: flex;
+    }
+
+    .search-box {
+      background: #0D162D;
+      border: 1px solid var(--gold-border);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 440px;
+      padding: 14px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .search-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 10px;
+    }
+
+    .search-input-row input {
+      background: none;
+      border: none;
+      color: #FFFFFF;
+      font-size: 14px;
+      flex: 1;
+      outline: none;
+    }
+
+    .search-results {
+      margin-top: 10px;
+      max-height: 280px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    /* Toast */
+    .toast-msg {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-30px);
+      background: #1A2649;
+      border: 1px solid var(--gold-border);
+      color: var(--gold-primary);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 120;
+    }
+
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="top-bar">
+    <div class="brand-wrap">
+      <div class="mascot-avatar">🐥</div>
+      <div class="brand-text">
+        <h1>SÁCH CỦA CON <span class="badge-48k">48kHz</span></h1>
+        <p>Truyện thiên nhiên ru ngủ · Giọng Mỹ Duyên</p>
+      </div>
+    </div>
+    <button class="btn-search" onclick="openSearchModal()" title="Tìm kiếm">🔍</button>
+  </header>
+
+  <div class="app-container">
+
+    <!-- Hero Card (Featured Night Track) -->
+    <section class="hero-card">
+      <span class="hero-tag">🌙 ĐÊM NAY NGHE GÌ CHO BÉ</span>
+      <div class="hero-art-circle" id="heroArt">🐕</div>
+      <h2 class="hero-title" id="heroTitle">Tập 01: Bác Chó Barley Và Chiếc Mũi Thần Kỳ</h2>
+      <p class="hero-meta" id="heroMeta">Giọng đọc: Mỹ Duyên · Thời lượng: ~21 phút</p>
+      
+      <div class="hero-actions">
+        <button class="btn-hero-play" onclick="playHeroTrack()">
+          <span id="heroPlayIcon">▶</span> <span id="heroPlayText">Nghe Ngay</span>
+        </button>
+        <button class="btn-hero-read" onclick="openReaderForTrack(featuredTrackId)">
+          <span>📖</span> Đọc Truyện
+        </button>
+      </div>
+    </section>
+
+    <!-- Voice Switcher Bar -->
+    <div class="voice-switch-row">
+      <span class="voice-switch-label">🎙️ Giọng ru ngủ:</span>
+      <div class="voice-pills">
+        <button class="voice-pill active" id="btnVoiceFemale" onclick="switchVoice('female')">
+          🌸 Mỹ Duyên (Nữ)
+        </button>
+        <button class="voice-pill" id="btnVoiceMale" onclick="switchVoice('male')">
+          🌿 Thiền Tâm Đức (Nam)
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Filter Chips -->
+    <div class="category-scroll">
+      <button class="cat-chip active" onclick="filterCategory('all', this)">Tất cả (11)</button>
+      <button class="cat-chip" onclick="filterCategory('Cội nguồn', this)">Cội nguồn (1)</button>
+      <button class="cat-chip" onclick="filterCategory('Thú kỳ diệu', this)">Thú kỳ diệu (10)</button>
+    </div>
+
+    <!-- Episode List -->
+    <main class="episode-list" id="episodeContainer">
+      <!-- Generated Dynamically -->
+    </main>
+
+  </div>
+
+  <!-- Sticky Bottom Bedtime Player -->
+  <div class="bottom-player">
+    <div class="player-inner">
+      <!-- Scrubber -->
+      <div class="scrubber-container" id="scrubber" onclick="seekAudio(event)">
+        <div class="scrubber-track">
+          <div class="scrubber-fill" id="scrubberFill"></div>
+        </div>
+      </div>
+
+      <!-- Main Controls Row -->
+      <div class="player-main-row">
+        <div class="player-track-info" onclick="openReaderForTrack(currentTrackId)">
+          <div class="player-icon" id="playerIcon">🐕</div>
+          <div class="player-texts">
+            <div class="player-title" id="playerTitle">Tập 01: Bác Chó Barley</div>
+            <div class="player-time-row">
+              <span id="playerCurrentTime">00:00</span> / <span id="playerDuration">00:00</span>
+              <div class="waveform-box" id="waveformBox">
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="player-controls">
+          <button class="btn-step" onclick="playPrev()" title="Tập trước">⏮</button>
+          <button class="btn-play-main" onclick="togglePlay()" id="btnPlayMain">▶</button>
+          <button class="btn-step" onclick="playNext()" title="Tập sau">⏭</button>
+        </div>
+      </div>
+
+      <!-- Speed & Timer Row -->
+      <div class="player-sub-row">
+        <div>
+          <span>Tốc độ: </span>
+          <button class="speed-pill" onclick="cycleSpeed()" id="speedBtn">1.0x</button>
+        </div>
+
+        <div class="timer-wrap" id="timerGroup">
+          <span>⏱️ Ngủ: </span>
+          <button class="timer-btn active" onclick="setTimer(0, this)">Tắt</button>
+          <button class="timer-btn" onclick="setTimer(15, this)">15p</button>
+          <button class="timer-btn" onclick="setTimer(30, this)">30p</button>
+          <button class="timer-btn" onclick="setTimer(45, this)">45p</button>
+          <button class="timer-btn" onclick="setTimer(60, this)">60p</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULL-SCREEN BEDTIME READING SHEET -->
+  <div class="reader-modal" id="readerModal">
+    <div class="reader-header">
+      <button class="btn-reader-back" onclick="closeReader()">← Quay lại</button>
+      <div class="reader-title-box">
+        <h3 id="readerTitle">Bác Chó Barley Và Chiếc Mũi Thần Kỳ</h3>
+      </div>
+      <div class="reader-font-controls">
+        <button class="btn-font" onclick="changeFontSize(-1)">A-</button>
+        <button class="btn-font" onclick="changeFontSize(1)">A+</button>
+      </div>
+    </div>
+
+    <div class="reader-scroll-content">
+      <div class="reader-relic-card" id="readerRelicBox">
+        <span>👜</span> <span id="readerRelicText">Kỷ vật: Mẩu gỗ thông tuyết thơm dịu</span>
+      </div>
+      <div class="reader-body" id="readerBodyText">
+        <!-- Story text -->
+      </div>
+    </div>
+
+    <!-- Mini Bottom Bar inside Reader -->
+    <div class="reader-bottom-bar">
+      <div style="font-size: 11px; color: var(--gold-primary); font-weight: 600;" id="readerMiniInfo">
+        🎧 Đang phát giọng Mỹ Duyên 48kHz
+      </div>
+      <button class="btn-hero-play" style="padding: 6px 14px; font-size: 11px;" onclick="togglePlay()" id="readerMiniPlayBtn">
+        ▶ Nghe truyện
+      </button>
+    </div>
+  </div>
+
+  <!-- Image Zoom Modal -->
+  <div class="zoom-modal" id="zoomModal" onclick="closeImageZoom()">
+    <div class="zoom-box" onclick="event.stopPropagation()">
+      <div style="position:relative;">
+        <img id="zoomImage" src="" alt="Tranh minh họa" style="width:100%; height:auto; max-height:75vh; object-fit:contain; border-radius:14px; box-shadow:0 16px 48px rgba(0,0,0,0.9); border:1px solid var(--gold-border);" />
+        <button onclick="closeImageZoom()" style="position:absolute; top:-12px; right:-12px; width:36px; height:36px; border-radius:50%; background:var(--gold-primary); color:#070B19; border:none; font-weight:800; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,0.6);">✕</button>
+      </div>
+      <div id="zoomCaption" style="margin-top:14px; font-size:13px; color:var(--gold-primary); font-style:italic; line-height:1.6; padding:0 8px; text-align:center;"></div>
+    </div>
+  </div>
+
+  <!-- Search Modal -->
+  <div class="search-modal" id="searchModal" onclick="handleSearchModalClick(event)">
+    <div class="search-box">
+      <div class="search-input-row">
+        <span>🔍</span>
+        <input type="text" id="searchInput" placeholder="Tìm tên con vật, cây cối, kỷ vật..." oninput="handleSearch(this.value)">
+        <button onclick="closeSearchModal()" style="background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer;">✕</button>
+      </div>
+      <div class="search-results" id="searchResults">
+        <!-- Search items -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-msg" id="toast">
+    <span id="toastIcon">✨</span>
+    <span id="toastText">Thông báo</span>
+  </div>
+
+  <!-- Native Audio Element -->
+  <audio id="audioEl" preload="auto" playsinline webkit-playsinline></audio>
+
+  <script>
+    let episodes = [];
+    let currentTrackId = "01";
+    let featuredTrackId = "01";
+    let currentSpeed = 1.0;
+    let sleepTimeout = null;
+    let currentFontSize = 17;
+    let currentVoice = localStorage.getItem('scc_preferred_voice') || 'female';
+
+    function getVoiceName() {
+      return currentVoice === 'female' ? "Mỹ Duyên (Nữ Nam Bộ)" : "Thiền Tâm Đức (Nam Trầm Bắc)";
+    }
+
+    function initVoiceUI() {
+      const btnF = document.getElementById('btnVoiceFemale');
+      const btnM = document.getElementById('btnVoiceMale');
+      if (btnF && btnM) {
+        btnF.classList.toggle('active', currentVoice === 'female');
+        btnM.classList.toggle('active', currentVoice === 'male');
+      }
+    }
+
+    function switchVoice(v) {
+      currentVoice = v;
+      localStorage.setItem('scc_preferred_voice', v);
+      initVoiceUI();
+
+      const vName = getVoiceName();
+      showToast(`Đã chọn: ${vName}`, "🎙️");
+
+      const curEp = episodes.find(e => e.id === currentTrackId);
+      if (curEp) {
+        document.getElementById('heroMeta').textContent = `Giọng đọc: ${vName} · Thời lượng: ${curEp.duration}`;
+      }
+
+      selectTrack(currentTrackId, !audio.paused);
+    }
+
+    const audio = document.getElementById('audioEl');
+    const btnPlayMain = document.getElementById('btnPlayMain');
+    const heroPlayIcon = document.getElementById('heroPlayIcon');
+    const heroPlayText = document.getElementById('heroPlayText');
+    const heroArt = document.getElementById('heroArt');
+    const scrubberFill = document.getElementById('scrubberFill');
+    const playerTitle = document.getElementById('playerTitle');
+    const playerIcon = document.getElementById('playerIcon');
+    const playerCurrentTime = document.getElementById('playerCurrentTime');
+    const playerDuration = document.getElementById('playerDuration');
+    const waveformBox = document.getElementById('waveformBox');
+
+    // Nạp dữ liệu
+    async function initApp() {
+      try {
+        const res = await fetch('data/episodes.json?v=' + Date.now());
+        if (res.ok) {
+          episodes = await res.json();
+          renderEpisodes(episodes);
+
+          initVoiceUI();
+          // Mặc định chọn Tập 01 làm Featured Track vì đã có sẵn Audio 48kHz hoàn chỉnh
+          const defaultTrack = episodes.find(e => e.id === "01") || episodes[0];
+          setFeatured(defaultTrack);
+          selectTrack(defaultTrack.id, false);
+        }
+      } catch (err) {
+        console.error("Lỗi nạp episodes.json", err);
+      }
+    }
+
+    function setFeatured(ep) {
+      featuredTrackId = ep.id;
+      document.getElementById('heroTitle').textContent = ep.title;
+      document.getElementById('heroArt').textContent = ep.icon;
+      document.getElementById('heroMeta').textContent = `Giọng đọc: ${getVoiceName()} · Thời lượng: ${ep.duration}`;
+    }
+
+    function renderEpisodes(items) {
+      const container = document.getElementById('episodeContainer');
+      container.innerHTML = '';
+
+      items.forEach(ep => {
+        const hasAudio = !!(currentVoice === 'male' ? (ep.audio_male || ep.audio) : (ep.audio_female || ep.audio));
+        const row = document.createElement('div');
+        row.className = `ep-row ${ep.id === currentTrackId ? 'active' : ''}`;
+        row.onclick = () => selectTrack(ep.id, true);
+
+        row.innerHTML = `
+          <div class="ep-left">
+            <div class="ep-icon-box">${ep.icon}</div>
+            <div class="ep-info">
+              <div class="ep-badge-row">
+                <span class="ep-id-tag">TẬP ${ep.id}</span>
+                <span class="ep-dur-tag">${ep.duration}</span>
+                ${hasAudio ? '<span style="font-size:9px; color:#F6BD60;">★ 48kHz</span>' : '<span style="font-size:9px; color:#94A3B8;">(Sắp có)</span>'}
+              </div>
+              <div class="ep-title">${ep.title}</div>
+            </div>
+          </div>
+          <div class="ep-actions" onclick="event.stopPropagation()">
+            <button class="btn-row-read" onclick="openReaderForTrack('${ep.id}')">📖 Đọc</button>
+            <button class="btn-row-play" onclick="selectTrack('${ep.id}', true)">▶</button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function resolveAudioUrl(rawUrl) {
+      if (!rawUrl) return "";
+      // Đảm bảo đường dẫn chạy tốt trên cả GitHub Pages lẫn Vercel
+      if (rawUrl.startsWith("http")) return rawUrl;
+      return rawUrl;
+    }
+
+    function selectTrack(id, autoPlay = true) {
+      const ep = episodes.find(e => e.id === id);
+      if (!ep) return;
+
+      currentTrackId = id;
+      setFeatured(ep);
+      playerTitle.textContent = ep.title;
+      playerIcon.textContent = ep.icon;
+
+      let trackAudio = "";
+      if (currentVoice === 'male') {
+        trackAudio = ep.audio_male || "";
+        if (!trackAudio && (ep.audio_female || ep.audio)) {
+          trackAudio = ep.audio_female || ep.audio;
+          if (autoPlay) {
+            showToast(`Bản thu giọng Nam (Thiền Tâm Đức) đang phòng thu. Đang phát bản giọng Nữ (Mỹ Duyên)!`, "🌿");
+          }
+        }
+      } else {
+        trackAudio = ep.audio_female || ep.audio || "";
+      }
+
+      if (!trackAudio) {
+        showToast(`Tập ${ep.id}: Âm thanh đang hoàn tất phòng thu 48kHz. Mời đọc truyện!`, "⏳");
+        openReaderForTrack(id);
+        renderEpisodes(episodes);
+        return;
+      }
+
+      const finalUrl = resolveAudioUrl(trackAudio);
+      if (audio.src !== finalUrl && !audio.src.endsWith(finalUrl)) {
+        audio.src = finalUrl;
+        audio.load();
+      }
+      audio.playbackRate = currentSpeed;
+
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: ep.title,
+          artist: `Giọng đọc: ${getVoiceName()} (48kHz)`,
+          album: "Sách Của Con — Truyện Thiên Nhiên Ru Ngủ"
+        });
+      }
+
+      renderEpisodes(episodes);
+
+      if (autoPlay) {
+        audio.play().then(() => {
+          updatePlayUI(true);
+        }).catch(err => {
+          console.warn("Autoplay notice:", err);
+          updatePlayUI(false);
+        });
+      } else {
+        updatePlayUI(false);
+      }
+    }
+
+    function togglePlay() {
+      if (!audio.src) {
+        selectTrack(currentTrackId, true);
+        return;
+      }
+
+      if (audio.paused) {
+        audio.play().then(() => {
+          updatePlayUI(true);
+        }).catch(err => {
+          console.warn("Play error:", err);
+        });
+      } else {
+        audio.pause();
+        updatePlayUI(false);
+      }
+    }
+
+    function playHeroTrack() {
+      if (currentTrackId === featuredTrackId && !audio.paused) {
+        togglePlay();
+      } else {
+        selectTrack(featuredTrackId, true);
+      }
+    }
+
+    function updatePlayUI(isPlaying) {
+      btnPlayMain.textContent = isPlaying ? "⏸" : "▶";
+      heroPlayIcon.textContent = isPlaying ? "⏸" : "▶";
+      heroPlayText.textContent = isPlaying ? "Tạm Dừng" : "Nghe Ngay";
+      waveformBox.style.display = isPlaying ? "flex" : "none";
+      if (isPlaying) {
+        heroArt.classList.add("playing");
+      } else {
+        heroArt.classList.remove("playing");
+      }
+      document.getElementById('readerMiniPlayBtn').textContent = isPlaying ? "⏸ Tạm dừng" : "▶ Nghe truyện";
+    }
+
+    function playNext() {
+      const idx = episodes.findIndex(e => e.id === currentTrackId);
+      const nextIdx = (idx + 1) % episodes.length;
+      selectTrack(episodes[nextIdx].id, true);
+    }
+
+    function playPrev() {
+      const idx = episodes.findIndex(e => e.id === currentTrackId);
+      const prevIdx = (idx - 1 + episodes.length) % episodes.length;
+      selectTrack(episodes[prevIdx].id, true);
+    }
+
+    function formatTime(sec) {
+      if (isNaN(sec) || sec < 0) return "00:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    audio.ontimeupdate = () => {
+      if (audio.duration) {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        scrubberFill.style.width = percent + '%';
+        playerCurrentTime.textContent = formatTime(audio.currentTime);
+        playerDuration.textContent = formatTime(audio.duration);
+      }
+    };
+
+    audio.onended = () => {
+      playNext();
+    };
+
+    function seekAudio(e) {
+      const rect = document.getElementById('scrubber').getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const width = rect.width;
+      if (audio.duration) {
+        audio.currentTime = (clickX / width) * audio.duration;
+      }
+    }
+
+    // Tốc độ ru ngủ
+    const speeds = [1.0, 0.9, 0.8, 1.1];
+    function cycleSpeed() {
+      const idx = speeds.indexOf(currentSpeed);
+      currentSpeed = speeds[(idx + 1) % speeds.length];
+      audio.playbackRate = currentSpeed;
+      document.getElementById('speedBtn').textContent = currentSpeed.toFixed(1) + "x";
+      showToast(`Tốc độ ru ngủ: ${currentSpeed.toFixed(1)}x`, "⚡");
+    }
+
+    // Hẹn giờ ngủ
+    function setTimer(mins, btnEl) {
+      document.querySelectorAll('.timer-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+
+      if (sleepTimeout) clearTimeout(sleepTimeout);
+      if (mins > 0) {
+        sleepTimeout = setTimeout(() => {
+          audio.pause();
+          updatePlayUI(false);
+          showToast("🌙 Đã hết giờ hẹn ru ngủ. Chúc bé ngủ ngoan!", "😴");
+        }, mins * 60 * 1000);
+        showToast(`Đã hẹn giờ tắt nhạc sau ${mins} phút`, "⏱️");
+      } else {
+        showToast("Đã tắt hẹn giờ ngủ", "⏱️");
+      }
+    }
+
+    // Full-Screen Bedtime Reader
+    function openReaderForTrack(id) {
+      const ep = episodes.find(e => e.id === id);
+      if (!ep) return;
+
+      document.getElementById('readerTitle').textContent = ep.title;
+      document.getElementById('readerRelicText').textContent = `Kỷ vật: ${ep.relic}`;
+      
+      const bodyEl = document.getElementById('readerBodyText');
+      bodyEl.innerHTML = '';
+
+      let illustrationIndex = 0;
+      const illustrations = ep.illustrations || [];
+
+      const paragraphs = ep.content.split('\n\n');
+      paragraphs.forEach(p => {
+        const clean = p.trim();
+        if (!clean || clean.startsWith('#') || clean === '---') return;
+
+        if (clean === '❦') {
+          if (illustrations.length > 0 && illustrationIndex < illustrations.length) {
+            const illus = illustrations[illustrationIndex];
+            const figure = document.createElement('div');
+            figure.className = 'reader-illustration';
+            const safeCaption = illus.caption.replace(/'/g, "\\'");
+            figure.innerHTML = `
+              <div class="illustration-frame" onclick="openImageZoom('${illus.url}', '${safeCaption}')">
+                <img src="${illus.url}" class="illustration-img" alt="${illus.caption}" loading="lazy" />
+              </div>
+              <div class="illustration-caption">❦ ${illus.caption}</div>
+            `;
+            bodyEl.appendChild(figure);
+            illustrationIndex++;
+          } else {
+            const div = document.createElement('div');
+            div.className = 'reader-divider';
+            div.textContent = '❦';
+            bodyEl.appendChild(div);
+          }
+        } else {
+          const pEl = document.createElement('p');
+          pEl.textContent = clean;
+          bodyEl.appendChild(pEl);
+        }
+      });
+
+      document.getElementById('readerModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function openImageZoom(url, caption) {
+      const modal = document.getElementById('zoomModal');
+      const img = document.getElementById('zoomImage');
+      const cap = document.getElementById('zoomCaption');
+      img.src = url;
+      cap.textContent = caption.startsWith('❦') ? caption : '❦ ' + caption;
+      modal.classList.add('open');
+    }
+
+    function closeImageZoom() {
+      document.getElementById('zoomModal').classList.remove('open');
+    }
+
+    function closeReader() {
+      document.getElementById('readerModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function changeFontSize(delta) {
+      currentFontSize = Math.min(24, Math.max(14, currentFontSize + delta));
+      document.getElementById('readerBodyText').style.fontSize = currentFontSize + 'px';
+    }
+
+    // Search Modal
+    function openSearchModal() {
+      document.getElementById('searchModal').classList.add('open');
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      input.focus();
+      handleSearch('');
+    }
+
+    function closeSearchModal() {
+      document.getElementById('searchModal').classList.remove('open');
+    }
+
+    function handleSearchModalClick(e) {
+      if (e.target.id === 'searchModal') closeSearchModal();
+    }
+
+    function handleSearch(query) {
+      const resContainer = document.getElementById('searchResults');
+      resContainer.innerHTML = '';
+      const q = query.trim().toLowerCase();
+
+      const matched = episodes.filter(e => {
+        if (!q) return true;
+        return e.title.toLowerCase().includes(q) ||
+               e.relic.toLowerCase().includes(q) ||
+               e.category.toLowerCase().includes(q) ||
+               e.summary.toLowerCase().includes(q);
+      });
+
+      if (matched.length === 0) {
+        resContainer.innerHTML = '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:12px;">Không tìm thấy tập phù hợp.</div>';
+        return;
+      }
+
+      matched.forEach(ep => {
+        const item = document.createElement('div');
+        item.style.cssText = 'padding:8px 10px; background:rgba(30,41,59,0.7); border-radius:12px; display:flex; align-items:center; justify-content:space-between; cursor:pointer;';
+        item.innerHTML = `
+          <div style="display:flex; align-items:center; gap:8px; overflow:hidden;">
+            <span style="font-size:16px;">${ep.icon}</span>
+            <div style="overflow:hidden;">
+              <div style="font-size:12px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${ep.title}</div>
+              <div style="font-size:10px; color:var(--text-muted);">${ep.relic.slice(0,30)}...</div>
+            </div>
+          </div>
+          <button style="background:var(--gold-primary); color:#070B19; border:none; border-radius:50%; width:28px; height:28px; font-size:10px; font-weight:700; flex-shrink:0;">▶</button>
+        `;
+        item.onclick = () => {
+          closeSearchModal();
+          selectTrack(ep.id, true);
+        };
+        resContainer.appendChild(item);
+      });
+    }
+
+    // Category Filter
+    function filterCategory(cat, chipEl) {
+      document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+      chipEl.classList.add('active');
+
+      if (cat === 'all') {
+        renderEpisodes(episodes);
+      } else {
+        const filtered = episodes.filter(e => e.category === cat);
+        renderEpisodes(filtered);
+      }
+    }
+
+    // Toast Notification
+    function showToast(text, icon = '✨') {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastText').textContent = text;
+      document.getElementById('toastIcon').textContent = icon;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Đăng ký Service Worker cho PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration notice:', err));
+      });
+    }
+
+    initApp();
+  </script>
+</body>
+</html>

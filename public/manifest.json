@@ -1,0 +1,21 @@
+{
+  "name": "Truyện Kể Thiên Nhiên Ru Ngủ",
+  "short_name": "Sách Của Con",
+  "description": "365 Khám Phá Thiên Nhiên Kỳ Thú — Sách Nói & Truyện Đọc Ru Ngủ 48kHz",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#070B19",
+  "theme_color": "#0B132B",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
