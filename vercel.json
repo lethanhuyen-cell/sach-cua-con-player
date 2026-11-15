@@ -1,17 +1,12 @@
 {
-  "version": 2,
-  "cleanUrls": true,
-  "routes": [
+  "rewrites": [
     {
-      "src": "/audio/(.*)",
-      "dest": "/public/audio/$1",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      }
+      "source": "/",
+      "destination": "/index.html"
     },
     {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "source": "/audio/:path*",
+      "destination": "/public/audio/:path*"
     }
   ]
 }
