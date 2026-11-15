@@ -58,26 +58,24 @@ def extract_episode_data(ep_num, folder_name, category, icon):
     if len(summary) > 180:
         summary = summary[:180] + "..."
         
-    # Tìm file audio tương ứng trong HUB hoặc folder
-    audio_src = ""
-    # Tìm trong HUB_AUDIO_DIR
+    # Tìm file audio tương ứng cho cả 2 giọng (Mỹ Duyên & Thiền Tâm Đức)
+    audio_female = ""
+    audio_male = ""
+    audio_default = ""
+
     if os.path.exists(HUB_AUDIO_DIR):
-        # Ưu tiên file có chữ Tap chuẩn hóa
         for f in sorted(os.listdir(HUB_AUDIO_DIR)):
-            if f.startswith(f"{ep_num}_") and f.endswith(".mp3") and "Tap" in f:
-                audio_src = f"audio/{f}"
-                break
-        if not audio_src:
-            for f in sorted(os.listdir(HUB_AUDIO_DIR)):
-                if f.startswith(f"{ep_num}_") and f.endswith(".mp3"):
-                    audio_src = f"audio/{f}"
-                    break
-                
-    if not audio_src:
-        local_audio = os.path.join(folder_path, "04_Audio_Master_48kHz.mp3")
-        if os.path.exists(local_audio):
-            audio_src = f"audio/{ep_num}_{folder_name}_48kHz.mp3"
-            
+            if f.startswith(f"{ep_num}_") and f.endswith(".mp3"):
+                if "Thien_Tam_Duc" in f:
+                    audio_male = f"audio/{f}"
+                elif "My_Duyen" in f:
+                    audio_female = f"audio/{f}"
+                elif not audio_default:
+                    audio_default = f"audio/{f}"
+
+    if not audio_female and audio_default:
+        audio_female = audio_default
+    
     word_count = len(content.split())
     
     return {
@@ -89,7 +87,9 @@ def extract_episode_data(ep_num, folder_name, category, icon):
         "relic": relic,
         "words": word_count,
         "duration": f"~{round(word_count / 150)} phút",
-        "audio": audio_src,
+        "audio": audio_female or audio_default,
+        "audio_female": audio_female or audio_default,
+        "audio_male": audio_male,
         "content": content
     }
 
