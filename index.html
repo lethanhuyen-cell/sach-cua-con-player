@@ -1204,7 +1204,7 @@
     // Nạp dữ liệu
     async function initApp() {
       try {
-        const res = await fetch('data/episodes.json');
+        const res = await fetch('data/episodes.json?v=' + Date.now());
         if (res.ok) {
           episodes = await res.json();
           renderEpisodes(episodes);
