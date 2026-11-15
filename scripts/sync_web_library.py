@@ -39,12 +39,11 @@ def extract_episode_data(ep_num, folder_name, category, icon):
     with open(md_path, "r", encoding="utf-8") as f:
         content = f.read()
         
-    lines = content.strip().split("\n")
-    title_line = lines[0].replace("# ", "").strip()
-    
-    # Tách số tập và tên
-    # Ví dụ: TẬP 01: BÁC CHÓ BARLEY VÀ CHIẾC MŨI THẦN KỲ
-    title_clean = title_line
+    lines = [l.strip() for l in content.strip().split("\n") if l.strip()]
+    title_clean = lines[0].replace("# ", "").strip()
+    if len(lines) > 1 and lines[1].startswith("## "):
+        subtitle = lines[1].replace("## ", "").strip()
+        title_clean = f"{title_clean}: {subtitle}"
     
     # Trích xuất kỷ vật túi da
     relic = "Kỷ vật thiên nhiên"
