@@ -43,7 +43,8 @@ def extract_episode_data(ep_num, folder_name, category, icon):
     title_clean = lines[0].replace("# ", "").strip()
     if len(lines) > 1 and lines[1].startswith("## "):
         subtitle = lines[1].replace("## ", "").strip()
-        title_clean = f"{title_clean}: {subtitle}"
+        if ":" not in title_clean:
+            title_clean = f"{title_clean}: {subtitle}"
     
     # Trích xuất kỷ vật túi da
     relic = "Kỷ vật thiên nhiên"
