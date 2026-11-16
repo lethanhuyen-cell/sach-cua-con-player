@@ -69,11 +69,18 @@ def extract_episode_data(ep_num, folder_name, category, icon):
                     audio_male = f"audio/{f}"
                 elif "My_Duyen" in f:
                     audio_female = f"audio/{f}"
-                elif not audio_default:
-                    audio_default = f"audio/{f}"
+                else:
+                    # Các file gốc chưa gắn nhãn đều là giọng Nam (Thiền Tâm Đức)
+                    if not audio_male:
+                        audio_male = f"audio/{f}"
+                    if not audio_default:
+                        audio_default = f"audio/{f}"
 
-    if not audio_female and audio_default:
-        audio_female = audio_default
+    # Đặt file audio mặc định
+    if audio_female:
+        audio_default = audio_female
+    elif audio_male:
+        audio_default = audio_male
     
     # Tự động quét tranh minh họa nếu có
     illustrations = []
@@ -107,8 +114,8 @@ def extract_episode_data(ep_num, folder_name, category, icon):
         "relic": relic,
         "words": word_count,
         "duration": f"~{round(word_count / 150)} phút",
-        "audio": audio_female or audio_default,
-        "audio_female": audio_female or audio_default,
+        "audio": audio_female or audio_male or "",
+        "audio_female": audio_female,
         "audio_male": audio_male,
         "illustrations": illustrations,
         "content": content

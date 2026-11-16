@@ -990,9 +990,9 @@
     <!-- Hero Card (Featured Night Track) -->
     <section class="hero-card">
       <span class="hero-tag">🌙 ĐÊM NAY NGHE GÌ CHO BÉ</span>
-      <div class="hero-art-circle" id="heroArt">🐕</div>
-      <h2 class="hero-title" id="heroTitle">Tập 01: Bác Chó Barley Và Chiếc Mũi Thần Kỳ</h2>
-      <p class="hero-meta" id="heroMeta">Giọng đọc: Mỹ Duyên · Thời lượng: ~21 phút</p>
+      <div class="hero-art-circle" id="heroArt">🌳</div>
+      <h2 class="hero-title" id="heroTitle">CHƯƠNG MỞ ĐẦU: CHIẾC TÚI RỖNG VÀ LỜI HẸN 365 ĐÊM</h2>
+      <p class="hero-meta" id="heroMeta">Giọng đọc: Mỹ Duyên (Nữ Nam Bộ) · Thời lượng: ~32 phút</p>
       
       <div class="hero-actions">
         <button class="btn-hero-play" onclick="playHeroTrack()">
@@ -1153,8 +1153,8 @@
 
   <script>
     let episodes = [];
-    let currentTrackId = "01";
-    let featuredTrackId = "01";
+    let currentTrackId = "00";
+    let featuredTrackId = "00";
     let currentSpeed = 1.0;
     let sleepTimeout = null;
     let currentFontSize = 17;
@@ -1186,6 +1186,7 @@
         document.getElementById('heroMeta').textContent = `Giọng đọc: ${vName} · Thời lượng: ${curEp.duration}`;
       }
 
+      renderEpisodes(episodes);
       selectTrack(currentTrackId, !audio.paused);
     }
 
@@ -1210,8 +1211,8 @@
           renderEpisodes(episodes);
 
           initVoiceUI();
-          // Mặc định chọn Tập 01 làm Featured Track vì đã có sẵn Audio 48kHz hoàn chỉnh
-          const defaultTrack = episodes.find(e => e.id === "01") || episodes[0];
+          // Mặc định chọn Chương Mở Đầu (Tập 00) làm Featured Track vì có sẵn cả 2 giọng Mỹ Duyên (Nữ Nam Bộ) & Thiền Tâm Đức (Nam Trầm Bắc) 48kHz
+          const defaultTrack = episodes.find(e => e.id === "00") || episodes[0];
           setFeatured(defaultTrack);
           selectTrack(defaultTrack.id, false);
         }
@@ -1232,10 +1233,20 @@
       container.innerHTML = '';
 
       items.forEach(ep => {
-        const hasAudio = !!(currentVoice === 'male' ? (ep.audio_male || ep.audio) : (ep.audio_female || ep.audio));
+        const hasAudioThisVoice = !!(currentVoice === 'male' ? ep.audio_male : ep.audio_female);
+        const hasAnyAudio = !!(ep.audio_female || ep.audio_male);
         const row = document.createElement('div');
         row.className = `ep-row ${ep.id === currentTrackId ? 'active' : ''}`;
         row.onclick = () => selectTrack(ep.id, true);
+
+        let badgeAudio = '';
+        if (hasAudioThisVoice) {
+          badgeAudio = `<span style="font-size:9px; color:#F6BD60; font-weight:700;">★ 48kHz ${currentVoice === 'female' ? 'Mỹ Duyên' : 'Thiền Tâm Đức'}</span>`;
+        } else if (hasAnyAudio) {
+          badgeAudio = `<span style="font-size:9px; color:#38BDF8;">🎙️ ${currentVoice === 'female' ? '(Có giọng Nam)' : '(Có giọng Nữ)'}</span>`;
+        } else {
+          badgeAudio = '<span style="font-size:9px; color:#94A3B8;">(Sắp có)</span>';
+        }
 
         row.innerHTML = `
           <div class="ep-left">
@@ -1244,7 +1255,7 @@
               <div class="ep-badge-row">
                 <span class="ep-id-tag">TẬP ${ep.id}</span>
                 <span class="ep-dur-tag">${ep.duration}</span>
-                ${hasAudio ? '<span style="font-size:9px; color:#F6BD60;">★ 48kHz</span>' : '<span style="font-size:9px; color:#94A3B8;">(Sắp có)</span>'}
+                ${badgeAudio}
               </div>
               <div class="ep-title">${ep.title}</div>
             </div>
@@ -1277,14 +1288,20 @@
       let trackAudio = "";
       if (currentVoice === 'male') {
         trackAudio = ep.audio_male || "";
-        if (!trackAudio && (ep.audio_female || ep.audio)) {
-          trackAudio = ep.audio_female || ep.audio;
+        if (!trackAudio && ep.audio_female) {
+          trackAudio = ep.audio_female;
           if (autoPlay) {
-            showToast(`Bản thu giọng Nam (Thiền Tâm Đức) đang phòng thu. Đang phát bản giọng Nữ (Mỹ Duyên)!`, "🌿");
+            showToast(`Bản thu giọng Nam (Thiền Tâm Đức) đang hoàn thiện. Đang phát bản giọng Nữ (Mỹ Duyên)!`, "🌿");
           }
         }
       } else {
-        trackAudio = ep.audio_female || ep.audio || "";
+        trackAudio = ep.audio_female || "";
+        if (!trackAudio && ep.audio_male) {
+          trackAudio = ep.audio_male;
+          if (autoPlay) {
+            showToast(`Bản thu giọng Nữ (Mỹ Duyên) đang hoàn thiện. Đang phát tạm bản giọng Nam (Thiền Tâm Đức)!`, "🌿");
+          }
+        }
       }
 
       if (!trackAudio) {

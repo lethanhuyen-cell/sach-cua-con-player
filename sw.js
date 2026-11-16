@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sach-cua-con-v5';
+const CACHE_NAME = 'sach-cua-con-v6';
 
 // Chiến lược Network-First: Ưu tiên tải mới từ máy chủ, chỉ fallback cache khi offline
 self.addEventListener('install', (event) => {
