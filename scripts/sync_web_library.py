@@ -19,7 +19,7 @@ FOLDERS = [
     ("00", "Chuong_00_Khoi_Nguyen_Thung_Lung_Rung_Phong", "Cội nguồn", "🌳"),
     ("01", "Dem_001_Bac_Cho_Barley", "Thú kỳ diệu", "🐕"),
     ("02", "Dem_002_Co_Meo_Amber", "Thú kỳ diệu", "🐱"),
-    ("03", "Dem_003_Bac_Bo_Barnaby", "Thú kỳ diệu", "🐂"),
+    ("03", "Dem_003_Bac_Bo_Bruno", "Thú kỳ diệu", "🐂"),
     ("04", "Dem_004_Bac_Trau_Brook", "Thú kỳ diệu", "🐃"),
     ("05", "Dem_005_Anh_Ngua_Tawny", "Thú kỳ diệu", "🐎"),
     ("06", "Dem_006_Bac_De_Bramble", "Thú kỳ diệu", "🐐"),
@@ -40,11 +40,27 @@ def extract_episode_data(ep_num, folder_name, category, icon):
         content = f.read()
         
     lines = [l.strip() for l in content.strip().split("\n") if l.strip()]
-    title_clean = lines[0].replace("# ", "").strip()
-    if len(lines) > 1 and lines[1].startswith("## "):
-        subtitle = lines[1].replace("## ", "").strip()
-        if ":" not in title_clean:
-            title_clean = f"{title_clean}: {subtitle}"
+    
+    # Chuẩn hóa trích xuất Tiêu đề tập truyện
+    title_clean = ""
+    if ep_num == "00":
+        title_clean = "CHƯƠNG MỞ ĐẦU: CHIẾC TÚI RỖNG VÀ LỜI HẸN 365 ĐÊM"
+    else:
+        # Tìm dòng có tên tập chính
+        sub_headers = [l for l in lines if l.startswith("# ") and "LIM VÀ MẸ VACCI" not in l.upper()]
+        tap_headers = [l for l in lines if re.search(r'tập\s+\d+', l, re.IGNORECASE) or re.search(r'chuyến khám phá', l, re.IGNORECASE)]
+        
+        main_name = ""
+        if sub_headers:
+            main_name = sub_headers[0].replace("# ", "").strip()
+        elif len(lines) > 2 and lines[2].startswith("# "):
+            main_name = lines[2].replace("# ", "").strip()
+        else:
+            main_name = lines[0].replace("# ", "").strip()
+            
+        title_clean = f"TẬP {ep_num}: {main_name}"
+        if ":" in main_name and ("TẬP" in main_name.upper() or "CHUYẾN" in main_name.upper()):
+            title_clean = main_name
     
     # Trích xuất kỷ vật túi da
     relic = "Kỷ vật thiên nhiên"
