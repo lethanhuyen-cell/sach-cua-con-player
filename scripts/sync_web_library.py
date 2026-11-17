@@ -46,20 +46,26 @@ def extract_episode_data(ep_num, folder_name, category, icon):
     if ep_num == "00":
         title_clean = "CHƯƠNG MỞ ĐẦU: CHIẾC TÚI RỖNG VÀ LỜI HẸN 365 ĐÊM"
     else:
-        # Tìm dòng có tên tập chính
-        sub_headers = [l for l in lines if l.startswith("# ") and "LIM VÀ MẸ VACCI" not in l.upper()]
-        tap_headers = [l for l in lines if re.search(r'tập\s+\d+', l, re.IGNORECASE) or re.search(r'chuyến khám phá', l, re.IGNORECASE)]
-        
-        main_name = ""
-        if sub_headers:
-            main_name = sub_headers[0].replace("# ", "").strip()
-        elif len(lines) > 2 and lines[2].startswith("# "):
-            main_name = lines[2].replace("# ", "").strip()
+        # Tìm dòng tên tập chính
+        candidate_lines = []
+        for l in lines[:10]:
+            clean_l = l.replace("#", "").strip()
+            if not clean_l:
+                continue
+            if "LIM VÀ MẸ VACCI" in clean_l.upper():
+                continue
+            if re.match(r'^(tập\s+\d+|chuyến khám phá[^:]*):?$', clean_l, re.IGNORECASE):
+                continue
+            if any(k in clean_l.upper() for k in ["BÁC", "CÔ", "CHÚ", "ANH", "BẠN", "VÀ"]):
+                candidate_lines.append(clean_l)
+                
+        if candidate_lines:
+            main_name = candidate_lines[0]
         else:
-            main_name = lines[0].replace("# ", "").strip()
+            main_name = lines[0].replace("#", "").strip()
             
         title_clean = f"TẬP {ep_num}: {main_name}"
-        if ":" in main_name and ("TẬP" in main_name.upper() or "CHUYẾN" in main_name.upper()):
+        if main_name.upper().startswith(f"TẬP {ep_num}:"):
             title_clean = main_name
     
     # Trích xuất kỷ vật túi da
