@@ -2,25 +2,49 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Truyện Kể Thiên Nhiên Ru Ngủ Cho Bé — 48kHz Mỹ Duyên</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>Sách Của Con — Tủ Sách Thiên Nhiên Ru Ngủ 48kHz</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#070B19">
+  <meta name="theme-color" content="#0E1714">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Google Fonts: Playfair Display, Lora (chuẩn dấu văn học tiếng Việt), Be Vietnam Pro -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg-deep: #070B19;
-      --bg-card: #0D162D;
-      --bg-card-active: #152244;
-      --bg-player: rgba(10, 16, 36, 0.94);
-      --gold-primary: #F6BD60;
-      --gold-hover: #F8CD82;
-      --gold-dim: rgba(246, 189, 96, 0.15);
-      --gold-border: rgba(246, 189, 96, 0.35);
-      --text-main: #F1F5F9;
-      --text-muted: #94A3B8;
-      --border-subtle: rgba(148, 163, 184, 0.12);
+      /* Warm Woodland Night — Đêm Rừng Phong Ấm Áp (Zero Blue Glare) */
+      --bg-canvas: #0E1714;
+      --bg-canvas-deep: #09100E;
+      --bg-surface: #16231E;
+      --bg-surface-alt: #1D1A15;
+      --bg-surface-hover: #1D2E27;
+      --bg-surface-active: #21332B;
+      --bg-glass: rgba(14, 23, 20, 0.88);
+      --bg-player: rgba(13, 21, 18, 0.94);
+
+      --honey-gold: #EAB354;
+      --honey-gold-bright: #F4C471;
+      --honey-gold-dim: rgba(234, 179, 84, 0.14);
+      --brass-border: rgba(234, 179, 84, 0.26);
+      --brass-border-strong: rgba(234, 179, 84, 0.55);
+      --subtle-border: rgba(159, 176, 166, 0.15);
+
+      --spiced-bark: #C87D55;
+      --text-ivory: #F6F1E7;
+      --text-sage: #9FB0A6;
+      --text-thicket: #6E8076;
+      --ink-dark: #1B140A;
+
+      --font-display: "Playfair Display", "Lora", Georgia, serif;
+      --font-serif: "Lora", Georgia, "Charter", serif;
+      --font-sans: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+      --shadow-lantern: 0 16px 44px -8px rgba(234, 179, 84, 0.09), 0 8px 24px rgba(0, 0, 0, 0.48);
+      --shadow-card: 0 10px 28px rgba(0, 0, 0, 0.38);
     }
 
     * {
@@ -30,458 +54,1043 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-canvas);
+    }
+
     body {
-      background-color: var(--bg-deep);
-      color: var(--text-main);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-canvas);
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(234, 179, 84, 0.08), transparent 70%),
+        radial-gradient(circle at 85% 20%, rgba(200, 125, 85, 0.05), transparent 45%);
+      color: var(--text-ivory);
+      font-family: var(--font-sans);
+      line-height: 1.45;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-bottom: 120px;
+      padding-bottom: calc(138px + env(safe-area-inset-bottom, 0px));
       overflow-x: hidden;
+      transition: filter 0.5s ease;
     }
 
-    .app-container {
-      width: 100%;
-      max-width: 480px;
-      padding: 0 16px;
-      display: flex;
-      flex-direction: column;
+    /* Chế độ Đèn Đom Đóm (Dịu sáng phòng ngủ 21:00) */
+    body.firefly-dim {
+      filter: brightness(0.72) sepia(0.12);
     }
 
-    /* Top Navigation */
+    button {
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    svg {
+      display: block;
+      flex-shrink: 0;
+    }
+
+    /* ==================== TOP STUDIO BAR ==================== */
     .top-bar {
       position: sticky;
       top: 0;
-      z-index: 40;
+      z-index: 45;
       width: 100%;
-      background: rgba(7, 11, 25, 0.88);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: 12px 16px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px) saturate(135%);
+      -webkit-backdrop-filter: blur(20px) saturate(135%);
+      border-bottom: 1px solid var(--subtle-border);
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    .top-bar-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 12px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 16px;
     }
 
     .brand-wrap {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      min-width: 0;
     }
 
-    .mascot-avatar {
-      width: 40px;
-      height: 40px;
+    .brand-medallion {
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
-      background: var(--gold-dim);
-      border: 1.5px solid var(--gold-border);
+      background: radial-gradient(circle at 35% 30%, #273B32, #111C18);
+      border: 1.5px solid var(--brass-border-strong);
+      box-shadow: 0 0 18px rgba(234, 179, 84, 0.22), inset 0 0 8px rgba(234, 179, 84, 0.15);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      box-shadow: 0 0 15px rgba(246, 189, 96, 0.3);
-      animation: pulseGlow 4s ease-in-out infinite;
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 12px rgba(246, 189, 96, 0.25); }
-      50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(246, 189, 96, 0.5); }
+      flex-shrink: 0;
+      position: relative;
     }
 
     .brand-text h1 {
-      font-size: 14px;
+      font-family: var(--font-display);
+      font-size: 17px;
       font-weight: 700;
-      letter-spacing: -0.3px;
-      color: #FFFFFF;
+      letter-spacing: 0.3px;
+      color: var(--text-ivory);
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
-    .badge-48k {
-      font-size: 10px;
-      background: var(--gold-dim);
-      color: var(--gold-primary);
-      border: 1px solid var(--gold-border);
-      padding: 1px 6px;
-      border-radius: 6px;
+    .badge-master {
+      font-family: var(--font-sans);
+      font-size: 9.5px;
       font-weight: 600;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--honey-gold);
+      background: var(--honey-gold-dim);
+      border: 1px solid var(--brass-border);
+      padding: 2px 7px;
+      border-radius: 999px;
     }
 
     .brand-text p {
-      font-size: 11px;
-      color: var(--text-muted);
+      font-size: 11.5px;
+      color: var(--text-sage);
       margin-top: 1px;
     }
 
-    .btn-search {
-      width: 36px;
-      height: 36px;
+    /* Desktop Inline Search & Voice in Header */
+    .header-center-search {
+      display: none;
+      flex: 1;
+      max-width: 340px;
+    }
+
+    .search-pill-trigger {
+      width: 100%;
+      height: 40px;
+      background: rgba(22, 35, 30, 0.85);
+      border: 1px solid var(--subtle-border);
+      border-radius: 999px;
+      padding: 0 14px;
+      color: var(--text-sage);
+      font-size: 12.5px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      transition: all 0.2s ease;
+    }
+
+    .search-pill-trigger:hover {
+      border-color: var(--brass-border);
+      color: var(--text-ivory);
+    }
+
+    .header-right-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .desktop-voice-Cluster {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: rgba(22, 35, 30, 0.9);
+      border: 1px solid var(--brass-border);
+      padding: 4px 6px 4px 12px;
+      border-radius: 999px;
+    }
+
+    .btn-icon-circle {
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
-      background: rgba(30, 41, 59, 0.7);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-muted);
+      background: var(--bg-surface);
+      border: 1px solid var(--brass-border);
+      color: var(--honey-gold);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
-      cursor: pointer;
+      transition: all 0.2s ease;
     }
 
-    /* Hero Night Player */
-    .hero-card {
-      margin-top: 16px;
-      background: linear-gradient(145deg, #121D38, #0B132B);
-      border: 1px solid var(--gold-border);
-      border-radius: 24px;
-      padding: 20px 16px;
-      text-align: center;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    .btn-icon-circle:hover {
+      background: var(--bg-surface-hover);
+      border-color: var(--brass-border-strong);
+    }
+
+    /* ==================== MAIN CONTAINER ==================== */
+    .app-shell {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 18px 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* ==================== HERO SMART RESUME SHOWCASE ==================== */
+    .hero-showcase {
       position: relative;
+      background: linear-gradient(145deg, #182721 0%, #121D18 58%, #191612 100%);
+      border: 1px solid var(--brass-border);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: var(--shadow-lantern);
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
-    .hero-card::before {
+    /* Đốm sáng đom đóm dịu góc thẻ */
+    .hero-showcase::before {
       content: "";
       position: absolute;
-      top: -30px;
-      right: -30px;
-      width: 120px;
-      height: 120px;
-      background: radial-gradient(circle, rgba(246, 189, 96, 0.15) 0%, transparent 70%);
+      top: -50px;
+      right: -40px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(234, 179, 84, 0.14) 0%, transparent 70%);
       pointer-events: none;
     }
 
-    .hero-tag {
-      display: inline-block;
-      font-size: 10.5px;
-      font-weight: 700;
-      color: var(--gold-primary);
-      background: var(--gold-dim);
-      border: 1px solid var(--gold-border);
-      padding: 3px 10px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+    .hero-showcase::after {
+      content: "";
+      position: absolute;
+      bottom: -60px;
+      left: 15%;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(200, 125, 85, 0.09) 0%, transparent 70%);
+      pointer-events: none;
     }
 
-    .hero-art-circle {
-      width: 88px;
-      height: 88px;
-      margin: 14px auto 10px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(246, 189, 96, 0.22), rgba(11, 19, 43, 0.8));
-      border: 2px solid var(--gold-border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 40px;
-      box-shadow: 0 0 24px rgba(246, 189, 96, 0.35);
-      transition: transform 0.4s ease;
-    }
-
-    .hero-art-circle.playing {
-      animation: rotateArt 18s linear infinite;
-    }
-
-    @keyframes rotateArt {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .hero-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #FFFFFF;
-      margin-top: 4px;
-      line-height: 1.35;
-    }
-
-    .hero-meta {
-      font-size: 11.5px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .btn-hero-play {
-      background: var(--gold-primary);
-      color: #070B19;
-      font-weight: 700;
-      font-size: 12.5px;
-      border: none;
-      padding: 9px 20px;
-      border-radius: 24px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      box-shadow: 0 4px 16px rgba(246, 189, 96, 0.35);
-      transition: all 0.2s ease;
-    }
-
-    .btn-hero-play:active {
-      transform: scale(0.96);
-    }
-
-    .btn-hero-read {
-      background: rgba(30, 41, 59, 0.8);
-      color: var(--text-main);
-      font-weight: 600;
-      font-size: 12.5px;
-      border: 1px solid var(--border-subtle);
-      padding: 9px 18px;
-      border-radius: 24px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-    }
-
-    /* Voice Switcher Row */
-    .voice-switch-row {
+    .hero-top-meta {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(13, 22, 45, 0.85);
-      border: 1px solid var(--gold-border);
-      border-radius: 18px;
-      padding: 8px 12px;
-      margin-top: 14px;
       gap: 8px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
     }
 
-    .voice-switch-label {
-      font-size: 11px;
+    .hero-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--honey-gold-dim);
+      border: 1px solid var(--brass-border);
+      color: var(--honey-gold);
+      font-size: 10.5px;
       font-weight: 700;
-      color: var(--gold-primary);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--honey-gold);
+      box-shadow: 0 0 8px var(--honey-gold);
+      animation: fireflyPulse 2.8s ease-in-out infinite;
+    }
+
+    @keyframes fireflyPulse {
+      0%, 100% { opacity: 0.45; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .hero-night-hint {
+      font-size: 11.5px;
+      color: var(--text-sage);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .hero-main-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-mobile-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .hero-cover-frame {
+      width: 108px;
+      height: 136px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--brass-border-strong);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+      flex-shrink: 0;
+      position: relative;
+      background: #13201B;
+      cursor: pointer;
+    }
+
+    .hero-cover-frame img,
+    .hero-cover-frame svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-content-col {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.32;
+      color: var(--text-ivory);
+    }
+
+    .hero-excerpt {
+      display: none;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: #D7DFD9;
+    }
+
+    .hero-submeta {
+      font-size: 12px;
+      color: var(--text-sage);
+      line-height: 1.4;
+    }
+
+    .hero-relic-box {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: rgba(14, 23, 20, 0.55);
+      border: 1px solid rgba(234, 179, 84, 0.2);
+      border-radius: 14px;
+      padding: 9px 13px;
+      margin-top: 2px;
+    }
+
+    .hero-relic-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-sage);
+      font-weight: 600;
+    }
+
+    .hero-relic-val {
+      font-size: 13px;
+      color: var(--honey-gold);
+      font-weight: 500;
+    }
+
+    /* Thanh tiến độ nghe dở trong Hero */
+    .hero-progress-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .hero-progress-bar {
+      width: 100%;
+      height: 5px;
+      background: rgba(159, 176, 166, 0.16);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .hero-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--spiced-bark), var(--honey-gold));
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .hero-progress-times {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-sage);
+    }
+
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 2px;
+    }
+
+    .btn-primary-gold {
+      flex: 1;
+      min-height: 46px;
+      background: linear-gradient(180deg, var(--honey-gold-bright), var(--honey-gold));
+      color: var(--ink-dark);
+      border: none;
+      border-radius: 999px;
+      padding: 10px 20px;
+      font-size: 13.5px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(234, 179, 84, 0.28);
+      transition: transform 0.18s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-primary-gold:hover {
+      box-shadow: 0 8px 26px rgba(234, 179, 84, 0.4);
+    }
+
+    .btn-primary-gold:active {
+      transform: scale(0.97);
+    }
+
+    .btn-secondary-wood {
+      min-height: 46px;
+      background: rgba(22, 35, 30, 0.85);
+      color: var(--text-ivory);
+      border: 1px solid var(--brass-border);
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 13.5px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary-wood:hover {
+      background: var(--bg-surface-hover);
+      border-color: var(--brass-border-strong);
+    }
+
+    /* ==================== PROMINENT VOICE SWITCHER BAR ==================== */
+    .voice-switcher-bar {
+      background: var(--bg-surface);
+      border: 1px solid var(--brass-border);
+      border-radius: 20px;
+      padding: 9px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .voice-bar-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-sage);
       white-space: nowrap;
     }
 
-    .voice-pills {
+    .voice-pills-group {
       display: flex;
+      align-items: center;
       gap: 6px;
+      flex-wrap: nowrap;
     }
 
-    .voice-pill {
-      background: rgba(30, 41, 59, 0.7);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-muted);
-      padding: 5px 11px;
-      border-radius: 14px;
+    .voice-pill-btn {
+      min-height: 36px;
+      padding: 6px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--subtle-border);
+      background: rgba(14, 23, 20, 0.65);
+      color: var(--text-sage);
+      font-size: 11.5px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .voice-pill-btn:hover {
+      color: var(--text-ivory);
+      border-color: var(--brass-border);
+    }
+
+    .voice-pill-btn.active {
+      background: var(--honey-gold);
+      color: var(--ink-dark);
+      border-color: var(--honey-gold);
+      font-weight: 700;
+      box-shadow: 0 3px 12px rgba(234, 179, 84, 0.3);
+    }
+
+    /* ==================== LIBRARY TOOLBAR & FILTERS ==================== */
+    .library-toolbar {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 2px;
+    }
+
+    .library-heading-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-ivory);
+    }
+
+    .count-pill {
+      font-family: var(--font-sans);
       font-size: 11px;
       font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      white-space: nowrap;
+      color: var(--text-sage);
+      background: var(--bg-surface);
+      border: 1px solid var(--subtle-border);
+      padding: 2px 9px;
+      border-radius: 999px;
     }
 
-    .voice-pill.active {
-      background: var(--gold-primary);
-      color: #070B19;
-      border-color: var(--gold-primary);
-      font-weight: 700;
-      box-shadow: 0 2px 8px rgba(246, 189, 96, 0.35);
-    }
-
-    /* Category Filter Pills */
-    .category-scroll {
+    .filter-and-view-row {
       display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .category-chips {
+      display: flex;
+      align-items: center;
       gap: 8px;
       overflow-x: auto;
-      padding: 14px 0 10px;
       scrollbar-width: none;
+      padding: 2px 0;
+      flex: 1;
     }
 
-    .category-scroll::-webkit-scrollbar {
+    .category-chips::-webkit-scrollbar {
       display: none;
     }
 
     .cat-chip {
-      background: rgba(30, 41, 59, 0.6);
-      color: var(--text-muted);
-      border: 1px solid var(--border-subtle);
+      min-height: 36px;
       padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 11.5px;
+      border-radius: 999px;
+      background: var(--bg-surface);
+      border: 1px solid var(--subtle-border);
+      color: var(--text-sage);
+      font-size: 12px;
       font-weight: 600;
       white-space: nowrap;
-      cursor: pointer;
       transition: all 0.2s ease;
+    }
+
+    .cat-chip:hover {
+      border-color: var(--brass-border);
+      color: var(--text-ivory);
     }
 
     .cat-chip.active {
-      background: var(--gold-primary);
-      color: #070B19;
-      border-color: var(--gold-primary);
-      box-shadow: 0 2px 8px rgba(246, 189, 96, 0.3);
+      background: var(--honey-gold-dim);
+      border-color: var(--honey-gold);
+      color: var(--honey-gold);
+      font-weight: 700;
     }
 
-    /* Episode List Rows (Clean & Compact) */
-    .episode-list {
+    .view-toggle-box {
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg-surface);
+      border: 1px solid var(--subtle-border);
+      border-radius: 12px;
+      padding: 3px;
+      flex-shrink: 0;
+    }
+
+    .view-btn {
+      min-width: 34px;
+      height: 32px;
+      padding: 0 9px;
+      border: none;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--text-sage);
+      font-size: 11.5px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+    }
+
+    .view-btn span.view-label {
+      display: none;
+    }
+
+    .view-btn.active {
+      background: var(--honey-gold);
+      color: var(--ink-dark);
+    }
+
+    /* ==================== HEIRLOOM BOOKSHELF GRID ==================== */
+    .bookshelf-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .book-card {
+      position: relative;
+      background: linear-gradient(180deg, #172520 0%, #121D19 100%);
+      border: 1px solid rgba(234, 179, 84, 0.18);
+      border-radius: 18px;
+      padding: 10px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 4px;
+      gap: 10px;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease;
+      cursor: pointer;
+      overflow: hidden;
     }
 
-    .ep-row {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 10px 12px;
+    /* Gáy sách vải khâu cổ điển bên cạnh trái */
+    .book-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 14px;
+      bottom: 14px;
+      width: 3px;
+      border-radius: 0 3px 3px 0;
+      background: var(--spiced-bark);
+      opacity: 0.7;
+    }
+
+    .book-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--brass-border-strong);
+      box-shadow: var(--shadow-lantern);
+    }
+
+    .book-card.active {
+      background: linear-gradient(180deg, #1E3029 0%, #16241F 100%);
+      border-color: var(--honey-gold);
+      box-shadow: 0 0 0 1px rgba(234, 179, 84, 0.25), var(--shadow-lantern);
+    }
+
+    .book-card.active::before {
+      background: var(--honey-gold);
+      opacity: 1;
+    }
+
+    /* Khung bìa sách tỷ lệ 3:4 */
+    .book-cover-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #101A16;
+      border: 1px solid rgba(234, 179, 84, 0.24);
+      box-shadow: inset 6px 0 12px rgba(0, 0, 0, 0.45);
+    }
+
+    /* Nếp gấp gáy sách thật */
+    .book-cover-wrap::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 9px;
+      width: 2px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(0,0,0,0.45), rgba(255,255,255,0.08));
+      pointer-events: none;
+    }
+
+    .book-cover-img,
+    .book-cover-svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .book-card:hover .book-cover-img,
+    .book-card:hover .book-cover-svg {
+      transform: scale(1.03);
+    }
+
+    .cover-top-badges {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      right: 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      gap: 4px;
+      z-index: 2;
+      pointer-events: none;
     }
 
-    .ep-row:active {
-      transform: scale(0.985);
-    }
-
-    .ep-row.active {
-      background: var(--bg-card-active);
-      border-color: var(--gold-border);
-      box-shadow: 0 0 12px rgba(246, 189, 96, 0.15);
-    }
-
-    .ep-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-      flex: 1;
-    }
-
-    .ep-icon-box {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: rgba(30, 41, 59, 0.7);
-      border: 1px solid var(--border-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-
-    .ep-row.active .ep-icon-box {
-      background: var(--gold-dim);
-      border-color: var(--gold-border);
-    }
-
-    .ep-info {
-      min-width: 0;
-      flex: 1;
-    }
-
-    .ep-badge-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .ep-id-tag {
-      font-size: 10px;
+    .cover-pill-playing {
+      background: var(--honey-gold);
+      color: var(--ink-dark);
+      font-size: 9.5px;
       font-weight: 700;
-      color: var(--gold-primary);
-      background: var(--gold-dim);
-      padding: 1px 5px;
-      border-radius: 4px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.45);
     }
 
-    .ep-dur-tag {
-      font-size: 10px;
-      color: var(--text-muted);
-    }
-
-    .ep-title {
-      font-size: 12.5px;
+    .cover-pill-ep {
+      background: rgba(14, 23, 20, 0.82);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(234, 179, 84, 0.3);
+      color: var(--text-ivory);
+      font-size: 9.5px;
       font-weight: 600;
-      color: #FFFFFF;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    .cover-pill-dur {
+      margin-left: auto;
+      background: rgba(14, 23, 20, 0.82);
+      backdrop-filter: blur(6px);
+      color: #E2ECE6;
+      font-size: 9.5px;
+      font-weight: 600;
+      padding: 3px 7px;
+      border-radius: 999px;
+    }
+
+    .cover-relic-ribbon {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      z-index: 2;
+      background: rgba(14, 21, 18, 0.86);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(234, 179, 84, 0.3);
+      border-radius: 9px;
+      padding: 5px 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--honey-gold);
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    .cover-relic-ribbon span {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    /* Thân thông tin dưới bìa sách */
+    .book-body {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+      padding: 0 2px;
+    }
+
+    .book-eyebrow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--honey-gold);
+    }
+
+    .book-voice-hint {
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: 0;
+      color: var(--text-sage);
+      font-size: 10px;
+    }
+
+    .book-title {
+      font-family: var(--font-display);
+      font-size: 14.5px;
+      font-weight: 600;
+      line-height: 1.36;
+      color: var(--text-ivory);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 39px;
+    }
+
+    .book-card.active .book-title {
+      color: var(--honey-gold-bright);
+    }
+
+    .book-mini-progress {
+      width: 100%;
+      height: 3px;
+      background: rgba(159, 176, 166, 0.14);
+      border-radius: 99px;
+      overflow: hidden;
       margin-top: 2px;
     }
 
-    .ep-row.active .ep-title {
-      color: var(--gold-primary);
+    .book-mini-progress-fill {
+      height: 100%;
+      background: var(--honey-gold);
+      border-radius: 99px;
     }
 
-    .ep-actions {
+    .book-actions {
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 6px;
+    }
+
+    .btn-card-read {
+      flex: 1;
+      min-height: 36px;
+      background: rgba(25, 39, 33, 0.9);
+      border: 1px solid var(--subtle-border);
+      border-radius: 999px;
+      color: var(--text-ivory);
+      font-size: 11.5px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-card-read:hover {
+      border-color: var(--brass-border-strong);
+      background: var(--bg-surface-hover);
+    }
+
+    .btn-card-play {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: var(--honey-gold);
+      color: var(--ink-dark);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 10px rgba(234, 179, 84, 0.28);
+      transition: transform 0.18s ease, background 0.2s ease;
       flex-shrink: 0;
     }
 
-    .btn-row-read {
-      background: rgba(30, 41, 59, 0.8);
-      color: #CBD5E1;
-      border: 1px solid var(--border-subtle);
-      font-size: 11px;
-      padding: 6px 10px;
-      border-radius: 14px;
-      font-weight: 600;
-      cursor: pointer;
+    .btn-card-play:hover {
+      background: var(--honey-gold-bright);
+      transform: scale(1.05);
     }
 
-    .btn-row-play {
-      width: 32px;
-      height: 32px;
+    /* ==================== COMPACT LIST VIEW MODE ==================== */
+    .bookshelf-grid.list-mode {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .bookshelf-grid.list-mode .book-card {
+      flex-direction: row;
+      align-items: center;
+      padding: 10px 14px;
+      gap: 14px;
+    }
+
+    .bookshelf-grid.list-mode .book-cover-wrap {
+      width: 66px;
+      height: 86px;
+      aspect-ratio: auto;
+      flex-shrink: 0;
+    }
+
+    .bookshelf-grid.list-mode .cover-top-badges,
+    .bookshelf-grid.list-mode .cover-relic-ribbon {
+      display: none;
+    }
+
+    .bookshelf-grid.list-mode .book-body {
+      min-width: 0;
+      padding: 0;
+    }
+
+    .bookshelf-grid.list-mode .book-title {
+      min-height: 0;
+      -webkit-line-clamp: 1;
+      font-size: 15px;
+    }
+
+    .bookshelf-grid.list-mode .book-actions {
+      margin-top: 0;
+      padding-top: 0;
+      flex-shrink: 0;
+    }
+
+    .bookshelf-grid.list-mode .btn-card-read {
+      padding: 0 14px;
+      flex: initial;
+    }
+
+    .list-relic-sub {
+      display: none;
+      font-size: 11.5px;
+      color: var(--text-sage);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bookshelf-grid.list-mode .list-relic-sub {
+      display: block;
+    }
+
+    /* ==================== WOODLAND WHISPER QUOTE ==================== */
+    .woodland-whisper {
+      margin-top: 6px;
+      background: linear-gradient(135deg, rgba(22, 35, 30, 0.78), rgba(29, 26, 21, 0.78));
+      border: 1px solid var(--subtle-border);
+      border-radius: 20px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .whisper-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .whisper-moon {
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      background: var(--gold-primary);
-      color: #070B19;
-      border: none;
-      font-size: 11px;
-      font-weight: 700;
+      background: var(--honey-gold-dim);
+      border: 1px solid var(--brass-border);
+      color: var(--honey-gold);
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(246, 189, 96, 0.3);
+      flex-shrink: 0;
     }
 
-    .ep-row.active .btn-row-play {
-      background: #FFFFFF;
+    .whisper-quote {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-ivory);
     }
 
-    /* Sticky Bottom Player (Refined & Non-Intrusive) */
+    .whisper-sub {
+      font-size: 11px;
+      color: var(--text-sage);
+      margin-top: 3px;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-firefly-toggle {
+      min-height: 38px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: rgba(14, 23, 20, 0.8);
+      border: 1px solid var(--brass-border);
+      color: var(--honey-gold);
+      font-size: 11.5px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-firefly-toggle.active {
+      background: var(--honey-gold);
+      color: var(--ink-dark);
+    }
+
+    /* ==================== STICKY BEDTIME PLAYER DOCK ==================== */
     .bottom-player {
       position: fixed;
-      bottom: 0;
       left: 0;
       right: 0;
-      z-index: 50;
+      bottom: 0;
+      z-index: 55;
       background: var(--bg-player);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-top: 1px solid var(--border-subtle);
-      padding: 8px 16px 14px;
-      display: flex;
-      justify-content: center;
-      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(24px) saturate(140%);
+      -webkit-backdrop-filter: blur(24px) saturate(140%);
+      border-top: 1px solid var(--brass-border);
+      padding: 6px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+      box-shadow: 0 -10px 36px rgba(0, 0, 0, 0.55);
     }
 
     .player-inner {
-      width: 100%;
-      max-width: 480px;
+      max-width: 1240px;
+      margin: 0 auto;
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -490,58 +1099,73 @@
     /* Scrubber */
     .scrubber-container {
       width: 100%;
-      height: 12px;
+      height: 14px;
       display: flex;
       align-items: center;
       cursor: pointer;
-      position: relative;
     }
 
     .scrubber-track {
       width: 100%;
       height: 4px;
-      background: rgba(148, 163, 184, 0.2);
-      border-radius: 4px;
-      overflow: hidden;
+      background: rgba(159, 176, 166, 0.2);
+      border-radius: 999px;
       position: relative;
     }
 
     .scrubber-fill {
       height: 100%;
       width: 0%;
-      background: var(--gold-primary);
-      border-radius: 4px;
-      transition: width 0.1s linear;
+      background: linear-gradient(90deg, var(--spiced-bark), var(--honey-gold));
+      border-radius: 999px;
+      position: relative;
+      transition: width 0.12s linear;
     }
 
-    /* Main Row */
+    .scrubber-fill::after {
+      content: "";
+      position: absolute;
+      right: -5px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--honey-gold-bright);
+      box-shadow: 0 0 8px rgba(234, 179, 84, 0.7);
+    }
+
     .player-main-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
     }
 
     .player-track-info {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       min-width: 0;
       flex: 1;
       cursor: pointer;
     }
 
-    .player-icon {
-      width: 34px;
-      height: 34px;
+    .player-thumb {
+      width: 40px;
+      height: 40px;
       border-radius: 10px;
-      background: var(--gold-dim);
-      border: 1px solid var(--gold-border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
+      overflow: hidden;
+      border: 1px solid var(--brass-border);
+      background: var(--bg-surface);
       flex-shrink: 0;
+    }
+
+    .player-thumb img,
+    .player-thumb svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .player-texts {
@@ -550,9 +1174,10 @@
     }
 
     .player-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: #FFFFFF;
+      font-family: var(--font-display);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-ivory);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -561,494 +1186,950 @@
     .player-time-row {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 10px;
-      color: var(--text-muted);
+      gap: 7px;
+      font-size: 11px;
+      color: var(--text-sage);
       margin-top: 1px;
     }
 
-    /* Waveform visualizer */
     .waveform-box {
       display: none;
       align-items: flex-end;
       gap: 2px;
-      height: 10px;
+      height: 11px;
     }
 
     .wave-bar {
-      width: 2px;
+      width: 2.5px;
       height: 4px;
-      background: var(--gold-primary);
+      background: var(--honey-gold);
       border-radius: 2px;
-      animation: waveMove 1s ease-in-out infinite;
+      animation: waveMove 1.1s ease-in-out infinite;
     }
 
-    .wave-bar:nth-child(2) { animation-delay: 0.2s; }
-    .wave-bar:nth-child(3) { animation-delay: 0.4s; }
+    .wave-bar:nth-child(2) { animation-delay: 0.22s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.44s; }
 
     @keyframes waveMove {
       0%, 100% { height: 3px; }
-      50% { height: 10px; }
+      50% { height: 11px; }
     }
 
-    /* Player Controls */
     .player-controls {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       flex-shrink: 0;
     }
 
     .btn-step {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 14px;
-      cursor: pointer;
-      padding: 4px;
-    }
-
-    .btn-play-main {
       width: 38px;
       height: 38px;
       border-radius: 50%;
-      background: var(--gold-primary);
-      color: #070B19;
+      background: transparent;
       border: none;
-      font-size: 14px;
-      font-weight: 700;
-      display: flex;
+      color: var(--text-ivory);
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 10px rgba(246, 189, 96, 0.4);
+      opacity: 0.85;
+      transition: opacity 0.2s ease, background 0.2s ease;
     }
 
-    /* Sub Controls Row (Speed & Timer) */
+    .btn-step:hover {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .btn-play-main {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--honey-gold);
+      color: var(--ink-dark);
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(234, 179, 84, 0.36);
+      transition: transform 0.18s ease;
+    }
+
+    .btn-play-main:active {
+      transform: scale(0.94);
+    }
+
     .player-sub-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-top: 1px solid rgba(148, 163, 184, 0.08);
+      gap: 8px;
+      border-top: 1px solid rgba(159, 176, 166, 0.09);
       padding-top: 5px;
-      font-size: 10.5px;
-      color: var(--text-muted);
+      font-size: 11px;
+      color: var(--text-sage);
+    }
+
+    .sub-left-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .speed-pill {
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid var(--border-subtle);
-      color: var(--gold-primary);
-      padding: 2px 8px;
-      border-radius: 8px;
+      background: var(--bg-surface);
+      border: 1px solid var(--brass-border);
+      color: var(--honey-gold);
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-size: 11px;
       font-weight: 700;
-      cursor: pointer;
     }
 
     .timer-wrap {
       display: flex;
       align-items: center;
       gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .timer-wrap::-webkit-scrollbar {
+      display: none;
     }
 
     .timer-btn {
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-muted);
-      padding: 2px 6px;
-      border-radius: 6px;
-      font-size: 10px;
-      cursor: pointer;
+      background: var(--bg-surface);
+      border: 1px solid var(--subtle-border);
+      color: var(--text-sage);
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 600;
+      transition: all 0.18s ease;
     }
 
     .timer-btn.active {
-      background: var(--gold-dim);
-      border-color: var(--gold-border);
-      color: var(--gold-primary);
+      background: var(--honey-gold);
+      border-color: var(--honey-gold);
+      color: var(--ink-dark);
       font-weight: 700;
     }
 
-    /* FULL-SCREEN BEDTIME READER (Optimized for Mobile) */
+    /* ==================== STORYBOOK READER MODAL (ĐÊM ẤM / GIẤY KEM) ==================== */
     .reader-modal {
+      --reader-bg: #FAF4E6;
+      --reader-header-bg: rgba(250, 244, 230, 0.94);
+      --reader-surface: #F2E8D4;
+      --reader-ink: #2B231C;
+      --reader-muted: #6E5D4F;
+      --reader-accent: #9E6B20;
+      --reader-dropcap: #2D4739;
+      --reader-border: rgba(184, 131, 46, 0.32);
+
       position: fixed;
       inset: 0;
       z-index: 100;
-      background: #080E21;
+      background: var(--reader-bg);
+      color: var(--reader-ink);
       display: flex;
       flex-direction: column;
       transform: translateY(100%);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .reader-modal.theme-night {
+      --reader-bg: #0E1714;
+      --reader-header-bg: rgba(14, 23, 20, 0.94);
+      --reader-surface: #16231E;
+      --reader-ink: #EDE6D8;
+      --reader-muted: #9FB0A6;
+      --reader-accent: #EAB354;
+      --reader-dropcap: #EAB354;
+      --reader-border: rgba(234, 179, 84, 0.3);
     }
 
     .reader-modal.open {
       transform: translateY(0);
     }
 
+    .reader-progress-line {
+      width: 100%;
+      height: 3px;
+      background: rgba(150, 130, 100, 0.15);
+      flex-shrink: 0;
+    }
+
+    .reader-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--reader-accent);
+      transition: width 0.1s linear;
+    }
+
     .reader-header {
-      padding: 12px 16px;
+      padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 10px;
+      background: var(--reader-header-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--reader-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(8, 14, 33, 0.95);
-      border-bottom: 1px solid var(--border-subtle);
-      backdrop-filter: blur(10px);
+      gap: 8px;
     }
 
     .btn-reader-back {
-      background: rgba(30, 41, 59, 0.8);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-main);
-      padding: 6px 12px;
-      border-radius: 16px;
+      min-height: 36px;
+      padding: 6px 13px;
+      border-radius: 999px;
+      background: var(--reader-surface);
+      border: 1px solid var(--reader-border);
+      color: var(--reader-ink);
       font-size: 12px;
       font-weight: 600;
-      cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
     }
 
-    .reader-title-box {
-      text-align: center;
-      max-width: 220px;
+    /* Capsule chuyển đổi Đêm Ấm | Giấy Kem */
+    .reader-theme-capsule {
+      display: inline-flex;
+      align-items: center;
+      background: var(--reader-surface);
+      border: 1px solid var(--reader-border);
+      border-radius: 999px;
+      padding: 3px;
     }
 
-    .reader-title-box h3 {
-      font-size: 12px;
+    .theme-opt-btn {
+      min-height: 30px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--reader-muted);
+      font-size: 11.5px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .theme-opt-btn.active {
+      background: var(--reader-bg);
+      border-color: var(--reader-border);
+      color: var(--reader-ink);
       font-weight: 700;
-      color: #FFFFFF;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     }
 
     .reader-font-controls {
       display: flex;
+      align-items: center;
       gap: 6px;
     }
 
     .btn-font {
-      width: 28px;
-      height: 28px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
-      background: rgba(30, 41, 59, 0.8);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-main);
-      font-size: 11px;
+      background: var(--reader-surface);
+      border: 1px solid var(--reader-border);
+      color: var(--reader-ink);
+      font-size: 12px;
       font-weight: 700;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
     }
 
     .reader-scroll-content {
       flex: 1;
       overflow-y: auto;
-      padding: 24px 20px 100px;
-      max-width: 680px;
+      padding: 32px 22px 130px;
+      max-width: 720px;
       margin: 0 auto;
       width: 100%;
     }
 
+    .reader-chapter-head {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .reader-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--reader-dropcap);
+      margin-bottom: 8px;
+    }
+
+    .reader-main-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.32;
+      color: var(--reader-ink);
+    }
+
+    .reader-ornament-rule {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 16px auto 0;
+      max-width: 200px;
+      color: var(--reader-accent);
+      font-size: 16px;
+    }
+
+    .reader-ornament-rule::before,
+    .reader-ornament-rule::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--reader-border);
+    }
+
+    .reader-relic-card {
+      background: var(--reader-surface);
+      border: 1px dashed var(--reader-border);
+      border-radius: 16px;
+      padding: 13px 16px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--reader-ink);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .reader-relic-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(184, 131, 46, 0.12);
+      color: var(--reader-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
     .reader-body {
-      font-family: "Georgia", "Merriweather", "Charter", serif;
-      font-size: 17px;
-      line-height: 1.85;
-      color: #E2E8F0;
+      font-family: var(--font-serif);
+      font-size: 18px;
+      line-height: 1.92;
+      color: var(--reader-ink);
     }
 
     .reader-body p {
-      margin-bottom: 16px;
-      text-align: justify;
+      margin-bottom: 18px;
+    }
+
+    /* Chữ cái đầu chương thả lớn nghệ thuật (Drop Cap) */
+    .reader-body p.drop-cap-para::first-letter {
+      float: left;
+      font-family: var(--font-display);
+      font-size: 3.35em;
+      line-height: 0.84;
+      font-weight: 700;
+      padding-right: 12px;
+      padding-top: 4px;
+      color: var(--reader-dropcap);
+    }
+
+    /* Câu thoại đồng thoại thanh thoát */
+    .reader-body p.dialogue-para {
+      padding-left: 14px;
+      border-left: 2px solid var(--reader-border);
     }
 
     .reader-divider {
       text-align: center;
-      color: var(--gold-primary);
-      font-size: 18px;
-      margin: 24px 0;
-      opacity: 0.8;
+      color: var(--reader-accent);
+      font-size: 19px;
+      margin: 26px 0;
+      opacity: 0.85;
     }
 
-    .reader-relic-card {
-      background: rgba(246, 189, 96, 0.08);
-      border: 1px dashed var(--gold-border);
-      border-radius: 16px;
-      padding: 12px 16px;
-      margin-bottom: 24px;
-      font-size: 12px;
-      color: var(--gold-primary);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* Full-Bleed Illustration in Reader */
+    /* Khung tranh minh họa màu nước trong trang đọc */
     .reader-illustration {
-      margin: 32px -20px 24px -20px;
-      position: relative;
+      margin: 30px 0;
     }
 
     .illustration-frame {
       width: 100%;
+      border-radius: 16px;
       overflow: hidden;
-      border-top: 1px solid var(--gold-border);
-      border-bottom: 1px solid var(--gold-border);
-      background: #000000;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+      border: 1.5px solid var(--reader-border);
+      background: var(--reader-surface);
+      padding: 6px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+      cursor: zoom-in;
     }
 
     .illustration-img {
       width: 100%;
       height: auto;
-      max-height: 440px;
+      max-height: 480px;
       object-fit: cover;
+      border-radius: 11px;
       display: block;
-      cursor: zoom-in;
-      transition: transform 0.3s ease;
-    }
-
-    .illustration-img:active {
-      transform: scale(0.99);
     }
 
     .illustration-caption {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 11.5px;
-      font-weight: 500;
-      color: var(--gold-primary);
-      text-align: center;
-      padding: 10px 20px 0;
+      font-family: var(--font-serif);
       font-style: italic;
-      line-height: 1.5;
-      letter-spacing: 0.1px;
+      font-size: 13px;
+      color: var(--reader-muted);
+      text-align: center;
+      padding: 10px 14px 0;
+      line-height: 1.55;
     }
 
-    /* Image Zoom Modal */
+    .reader-next-card {
+      margin-top: 36px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: var(--reader-surface);
+      border: 1px solid var(--reader-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .reader-next-card:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Thanh Mini Player nổi đáy trang đọc */
+    .reader-bottom-bar {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+      max-width: 680px;
+      margin: 0 auto;
+      background: #15231E;
+      border: 1px solid var(--brass-border-strong);
+      border-radius: 999px;
+      padding: 8px 10px 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.42);
+    }
+
+    .reader-mini-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .reader-mini-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-ivory);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .reader-mini-sub {
+      font-size: 10.5px;
+      color: var(--text-sage);
+    }
+
+    .btn-reader-play {
+      min-height: 36px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: none;
+      background: var(--honey-gold);
+      color: var(--ink-dark);
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    /* ==================== SEARCH & ZOOM MODALS ==================== */
+    .search-modal,
     .zoom-modal {
       position: fixed;
       inset: 0;
-      z-index: 150;
-      background: rgba(0, 0, 0, 0.95);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      z-index: 130;
+      background: rgba(7, 12, 10, 0.86);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       display: none;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      padding: 20px;
-      cursor: pointer;
+      padding: 68px 16px 24px;
     }
 
+    .zoom-modal {
+      z-index: 150;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .search-modal.open,
     .zoom-modal.open {
       display: flex;
     }
 
-    .zoom-box {
-      max-width: 480px;
-      width: 100%;
-      text-align: center;
-    }
-
-    .zoom-img {
-      width: 100%;
-      max-height: 72vh;
-      object-fit: contain;
-      border-radius: 14px;
-      border: 1px solid var(--gold-border);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-    }
-
-    .zoom-caption {
-      margin-top: 12px;
-      font-size: 13px;
-      color: var(--gold-primary);
-      font-style: italic;
-      line-height: 1.4;
-    }
-
-    .zoom-tip {
-      display: inline-block;
-      margin-top: 10px;
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    /* Floating Mini Bar inside Reader */
-    .reader-bottom-bar {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(10, 16, 36, 0.96);
-      border-top: 1px solid var(--border-subtle);
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      backdrop-filter: blur(16px);
-    }
-
-    /* Search Modal */
-    .search-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 90;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(12px);
-      display: none;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 60px 16px;
-    }
-
-    .search-modal.open {
-      display: flex;
-    }
-
     .search-box {
-      background: #0D162D;
-      border: 1px solid var(--gold-border);
-      border-radius: 20px;
       width: 100%;
-      max-width: 440px;
-      padding: 14px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      max-width: 520px;
+      background: #14211C;
+      border: 1px solid var(--brass-border-strong);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: var(--shadow-lantern);
     }
 
     .search-input-row {
       display: flex;
       align-items: center;
-      gap: 8px;
-      border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 10px;
+      gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--subtle-border);
+      color: var(--honey-gold);
     }
 
     .search-input-row input {
+      flex: 1;
       background: none;
       border: none;
-      color: #FFFFFF;
-      font-size: 14px;
-      flex: 1;
       outline: none;
+      color: var(--text-ivory);
+      font-family: var(--font-sans);
+      font-size: 14.5px;
+    }
+
+    .search-input-row input::placeholder {
+      color: var(--text-thicket);
     }
 
     .search-results {
-      margin-top: 10px;
-      max-height: 280px;
+      margin-top: 12px;
+      max-height: 340px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
 
-    /* Toast */
-    .toast-msg {
-      position: fixed;
-      top: 18px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-30px);
-      background: #1A2649;
-      border: 1px solid var(--gold-border);
-      color: var(--gold-primary);
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 11.5px;
-      font-weight: 600;
+    .search-item {
+      padding: 10px 12px;
+      background: rgba(25, 39, 33, 0.75);
+      border: 1px solid var(--subtle-border);
+      border-radius: 14px;
       display: flex;
       align-items: center;
-      gap: 6px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+    }
+
+    .search-item:hover {
+      border-color: var(--brass-border-strong);
+    }
+
+    /* Toast Notification */
+    .toast-msg {
+      position: fixed;
+      top: calc(18px + env(safe-area-inset-top, 0px));
+      left: 50%;
+      transform: translateX(-50%) translateY(-24px);
+      background: #1B2B24;
+      border: 1px solid var(--brass-border-strong);
+      color: var(--honey-gold-bright);
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
       opacity: 0;
       pointer-events: none;
-      transition: all 0.3s ease;
-      z-index: 120;
+      transition: all 0.28s ease;
+      z-index: 160;
+      max-width: 92vw;
     }
 
     .toast-msg.show {
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
+
+    /* ==================== TABLET & DESKTOP RESPONSIVE ==================== */
+    @media (min-width: 768px) {
+      .app-shell {
+        padding: 26px 28px 36px;
+        gap: 24px;
+      }
+
+      .header-center-search {
+        display: block;
+      }
+
+      .hero-showcase {
+        padding: 26px 28px;
+        border-radius: 28px;
+      }
+
+      .hero-main-grid {
+        flex-direction: row;
+        align-items: center;
+        gap: 28px;
+      }
+
+      .hero-mobile-row {
+        display: contents;
+      }
+
+      .hero-cover-frame {
+        width: 240px;
+        height: 260px;
+        border-radius: 20px;
+      }
+
+      .hero-title {
+        font-size: 26px;
+      }
+
+      .hero-excerpt {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .hero-relic-box {
+        display: flex;
+      }
+
+      .hero-cta-row {
+        justify-content: flex-start;
+      }
+
+      .btn-primary-gold {
+        flex: initial;
+        padding: 11px 28px;
+      }
+
+      .bookshelf-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .book-card {
+        padding: 13px;
+        border-radius: 20px;
+      }
+
+      .book-title {
+        font-size: 16px;
+        min-height: 44px;
+      }
+
+      .view-btn span.view-label {
+        display: inline;
+      }
+
+      .reader-main-title {
+        font-size: 32px;
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .desktop-voice-Cluster {
+        display: inline-flex;
+      }
+
+      .mobile-voice-section {
+        display: none;
+      }
+
+      .hero-showcase {
+        padding: 32px 36px;
+      }
+
+      .hero-cover-frame {
+        width: 320px;
+        height: 300px;
+      }
+
+      .hero-title {
+        font-size: 31px;
+      }
+
+      .bookshelf-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 22px;
+      }
+
+      .bookshelf-grid.list-mode {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      /* Floating Studio Dock trên màn hình rộng */
+      .bottom-player {
+        left: 50%;
+        right: auto;
+        bottom: 16px;
+        transform: translateX(-50%);
+        width: calc(100% - 56px);
+        max-width: 1224px;
+        border: 1px solid var(--brass-border-strong);
+        border-radius: 24px;
+        padding: 8px 24px 10px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Top Navigation -->
+  <!-- ==================== TOP BAR ==================== -->
   <header class="top-bar">
-    <div class="brand-wrap">
-      <div class="mascot-avatar">🐥</div>
-      <div class="brand-text">
-        <h1>SÁCH CỦA CON <span class="badge-48k">48kHz</span></h1>
-        <p>Truyện thiên nhiên ru ngủ · Giọng Mỹ Duyên</p>
+    <div class="top-bar-inner">
+      <div class="brand-wrap">
+        <div class="brand-medallion" aria-hidden="true">
+          <!-- Huy hiệu chú chim sẻ non Bé Lim đội mũ beret len xanh -->
+          <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+            <circle cx="18" cy="18" r="16" stroke="#EAB354" stroke-opacity="0.35" stroke-dasharray="2 2"/>
+            <path d="M11 23C11 17.5 14.8 14 19.5 14C23.5 14 26.5 16.8 26.5 20.5C26.5 24.5 23 27 17.5 27C13.5 27 11 25.3 11 23Z" fill="#F2D184"/>
+            <path d="M12.5 14.5C13.5 11.2 17.8 9.8 22 11.2C23.6 11.8 24.4 13 23.8 14.1C20.5 13.3 15.8 13.7 12.5 14.5Z" fill="#4A789C" stroke="#EAB354" stroke-width="0.8"/>
+            <circle cx="22.2" cy="18.2" r="1.4" fill="#1B140A"/>
+            <path d="M26.2 18.8L29.2 19.8L26.2 21Z" fill="#D98245"/>
+            <path d="M14 21.5C15.8 20.5 18.5 21 20 22.8" stroke="#8C6239" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>SÁCH CỦA CON <span class="badge-master">48kHz Master</span></h1>
+          <p>Tủ sách thiên nhiên ru ngủ · 365 Đêm</p>
+        </div>
+      </div>
+
+      <!-- Ô tìm kiếm nhanh trên Tablet / Desktop -->
+      <div class="header-center-search">
+        <button class="search-pill-trigger" onclick="openSearchModal()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="7"/><path d="M20 20L16.5 16.5" stroke-linecap="round"/>
+          </svg>
+          <span>Tìm tên bạn nhỏ muôn loài, kỷ vật...</span>
+        </button>
+      </div>
+
+      <div class="header-right-actions">
+        <!-- Cụm chọn 2 giọng đọc ngay trên Header cho màn hình lớn -->
+        <div class="desktop-voice-Cluster" aria-label="Chọn giọng đọc ru ngủ">
+          <span class="voice-bar-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EAB354" stroke-width="2">
+              <path d="M12 3v18M8 8v8M16 7v10M4 11v2M20 11v2" stroke-linecap="round"/>
+            </svg>
+            Giọng ru ngủ:
+          </span>
+          <div class="voice-pills-group">
+            <button class="voice-pill-btn voice-btn-female active" onclick="switchVoice('female')">Mỹ Duyên (Nữ)</button>
+            <button class="voice-pill-btn voice-btn-male" onclick="switchVoice('male')">Thiền Tâm Đức (Nam)</button>
+          </div>
+        </div>
+
+        <button class="btn-icon-circle" onclick="openSearchModal()" title="Tìm kiếm tập truyện" aria-label="Tìm kiếm">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="7"/><path d="M20 20L16.5 16.5" stroke-linecap="round"/>
+          </svg>
+        </button>
       </div>
     </div>
-    <button class="btn-search" onclick="openSearchModal()" title="Tìm kiếm">🔍</button>
   </header>
 
-  <div class="app-container">
+  <!-- ==================== MAIN SHELL ==================== -->
+  <div class="app-shell">
 
-    <!-- Hero Card (Featured Night Track) -->
-    <section class="hero-card">
-      <span class="hero-tag">🌙 ĐÊM NAY NGHE GÌ CHO BÉ</span>
-      <div class="hero-art-circle" id="heroArt">🌳</div>
-      <h2 class="hero-title" id="heroTitle">CHƯƠNG MỞ ĐẦU: CHIẾC TÚI RỖNG VÀ LỜI HẸN 365 ĐÊM</h2>
-      <p class="hero-meta" id="heroMeta">Giọng đọc: Mỹ Duyên (Nữ Nam Bộ) · Thời lượng: ~32 phút</p>
-      
-      <div class="hero-actions">
-        <button class="btn-hero-play" onclick="playHeroTrack()">
-          <span id="heroPlayIcon">▶</span> <span id="heroPlayText">Nghe Ngay</span>
-        </button>
-        <button class="btn-hero-read" onclick="openReaderForTrack(featuredTrackId)">
-          <span>📖</span> Đọc Truyện
-        </button>
+    <!-- 1. HERO SHOWCASE: ĐÊM NAY NGHE TIẾP -->
+    <section class="hero-showcase" aria-label="Tiêu điểm đêm nay">
+      <div class="hero-top-meta">
+        <span class="hero-status-pill">
+          <span class="pulse-dot"></span>
+          <span id="heroBadgeText">ĐÊM NAY NGHE GÌ CHO BÉ</span>
+        </span>
+        <span class="hero-night-hint">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#EAB354" stroke-width="1.8">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>
+          </svg>
+          <span id="heroNightSub">Thung Lũng Rừng Phong</span>
+        </span>
+      </div>
+
+      <div class="hero-main-grid">
+        <div class="hero-mobile-row">
+          <div class="hero-cover-frame" id="heroCoverBox" onclick="openReaderForTrack(featuredTrackId)">
+            <!-- Bìa sách hoặc tranh màu nước render động -->
+          </div>
+
+          <div class="hero-content-col">
+            <h2 class="hero-title" id="heroTitle">Tập 00: Bí Mật Dưới Gốc Sồi Di Sản</h2>
+            <p class="hero-excerpt" id="heroExcerpt"></p>
+            <p class="hero-submeta" id="heroMeta">Giọng đọc: Mỹ Duyên (Nữ Nam Bộ) · Thời lượng: ~32 phút</p>
+
+            <div class="hero-relic-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EAB354" stroke-width="1.8">
+                <path d="M6 8h12a2 2 0 0 1 2 2v8a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-8a2 2 0 0 1 2-2Z"/>
+                <path d="M9 8V6a3 3 0 0 1 6 0v2M4 12h16M12 11v3" stroke-linecap="round"/>
+              </svg>
+              <div>
+                <div class="hero-relic-label">Kỷ vật túi da của Lim</div>
+                <div class="hero-relic-val" id="heroRelicText">Chiếc túi da mở đầu & cuốn sổ hành trình</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px; flex:1; justify-content:center;">
+          <!-- Tiến độ nghe dở thông minh -->
+          <div class="hero-progress-wrap" id="heroResumeProgressWrap" style="display:none;">
+            <div class="hero-progress-bar">
+              <div class="hero-progress-fill" id="heroResumeFill"></div>
+            </div>
+            <div class="hero-progress-times">
+              <span id="heroResumeLeft">Đang dừng ở 00:00</span>
+              <span id="heroResumeRight">Còn lại 16 phút</span>
+            </div>
+          </div>
+
+          <div class="hero-cta-row">
+            <button class="btn-primary-gold" onclick="playHeroTrack()">
+              <span id="heroPlayIconWrap" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7-12-7z"/></svg>
+              </span>
+              <span id="heroPlayText">Nghe Ngay</span>
+            </button>
+            <button class="btn-secondary-wood" onclick="openReaderForTrack(featuredTrackId)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EAB354" stroke-width="1.9">
+                <path d="M2 5.5A2.5 2.5 0 0 1 4.5 3H11v17H4.5A2.5 2.5 0 0 0 2 22.5v-17ZM22 5.5A2.5 2.5 0 0 0 19.5 3H13v17h6.5a2.5 2.5 0 0 1 2.5 2.5v-17Z" stroke-linejoin="round"/>
+              </svg>
+              <span>Đọc Truyện</span>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Voice Switcher Bar -->
-    <div class="voice-switch-row">
-      <span class="voice-switch-label">🎙️ Giọng ru ngủ:</span>
-      <div class="voice-pills">
-        <button class="voice-pill active" id="btnVoiceFemale" onclick="switchVoice('female')">
-          🌸 Mỹ Duyên (Nữ)
-        </button>
-        <button class="voice-pill" id="btnVoiceMale" onclick="switchVoice('male')">
-          🌿 Thiền Tâm Đức (Nam)
-        </button>
+    <!-- 2. VOICE SWITCHER BAR (Nổi bật ngay đầu trang Mobile & Tablet) -->
+    <section class="voice-switcher-bar mobile-voice-section" aria-label="Chọn giọng kể ru ngủ">
+      <span class="voice-bar-label">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#EAB354" stroke-width="2">
+          <path d="M12 3v18M8 8v8M16 7v10M4 11v2M20 11v2" stroke-linecap="round"/>
+        </svg>
+        Giọng ru ngủ:
+      </span>
+      <div class="voice-pills-group">
+        <button class="voice-pill-btn voice-btn-female active" onclick="switchVoice('female')">Mỹ Duyên (Nữ)</button>
+        <button class="voice-pill-btn voice-btn-male" onclick="switchVoice('male')">Thiền Tâm Đức (Nam)</button>
       </div>
-    </div>
+    </section>
 
-    <!-- Category Filter Chips -->
-    <div class="category-scroll">
-      <button class="cat-chip active" onclick="filterCategory('all', this)">Tất cả (11)</button>
-      <button class="cat-chip" onclick="filterCategory('Cội nguồn', this)">Cội nguồn (1)</button>
-      <button class="cat-chip" onclick="filterCategory('Thú kỳ diệu', this)">Thú kỳ diệu (10)</button>
-    </div>
+    <!-- 3. LIBRARY TOOLBAR: FILTER CHIPS & VIEW SWITCHER -->
+    <section class="library-toolbar">
+      <div class="library-heading-row">
+        <h2 class="section-heading">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EAB354" stroke-width="1.8">
+            <path d="M12 3C7.5 3 4 6.5 4 11c0 4 2.8 7.2 6.8 7.9L12 21l1.2-2.1C17.2 18.2 20 15 20 11c0-4.5-3.5-8-8-8Z"/>
+            <path d="M12 8v8M9 11l3-3 3 3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Kệ Sách Trong Thung Lũng</span>
+          <span class="count-pill" id="totalEpCount">11 Tập</span>
+        </h2>
 
-    <!-- Episode List -->
-    <main class="episode-list" id="episodeContainer">
-      <!-- Generated Dynamically -->
+        <div class="view-toggle-box" role="group" aria-label="Chế độ hiển thị kệ sách">
+          <button class="view-btn active" id="btnViewGrid" onclick="setLibraryView('grid')" title="Xem dạng Kệ Bìa Sách">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/>
+              <rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>
+            </svg>
+            <span class="view-label">Kệ Bìa Sách</span>
+          </button>
+          <button class="view-btn" id="btnViewList" onclick="setLibraryView('list')" title="Xem dạng Danh Sách Gọn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke-linecap="round"/>
+            </svg>
+            <span class="view-label">Danh Sách</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-and-view-row">
+        <div class="category-chips" id="categoryChipsContainer">
+          <!-- Render động theo danh mục thực tế -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. KỆ BÌA SÁCH ĐỒNG THOẠI -->
+    <main class="bookshelf-grid" id="episodeContainer">
+      <!-- Các tập sách được khởi tạo tự động -->
     </main>
+
+    <!-- 5. LỜI THÌ THẦM RỪNG GIÀ & NÚT ĐÈN ĐOM ĐÓM -->
+    <aside class="woodland-whisper">
+      <div class="whisper-left">
+        <div class="whisper-moon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="whisper-quote">“Mỗi mẩu vỏ cây, từng giọt sương đêm đều mang theo nhịp thở êm đềm của rừng già...”</p>
+          <p class="whisper-sub">Thung Lũng Rừng Phong · Không gian thính giác thuần khiết không màn hình xanh</p>
+        </div>
+      </div>
+      <button class="btn-firefly-toggle" id="btnFireflyDim" onclick="toggleFireflyDim()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2" stroke-linecap="round"/>
+        </svg>
+        <span id="fireflyBtnLabel">Đèn Đom Đóm (Dịu sáng)</span>
+      </button>
+    </aside>
 
   </div>
 
-  <!-- Sticky Bottom Bedtime Player -->
-  <div class="bottom-player">
+  <!-- ==================== STICKY BEDTIME PLAYER ==================== -->
+  <div class="bottom-player" role="region" aria-label="Trình phát truyện ru ngủ">
     <div class="player-inner">
-      <!-- Scrubber -->
       <div class="scrubber-container" id="scrubber" onclick="seekAudio(event)">
         <div class="scrubber-track">
           <div class="scrubber-fill" id="scrubberFill"></div>
         </div>
       </div>
 
-      <!-- Main Controls Row -->
       <div class="player-main-row">
         <div class="player-track-info" onclick="openReaderForTrack(currentTrackId)">
-          <div class="player-icon" id="playerIcon">🐕</div>
+          <div class="player-thumb" id="playerThumb"></div>
           <div class="player-texts">
-            <div class="player-title" id="playerTitle">Tập 01: Bác Chó Barley</div>
+            <div class="player-title" id="playerTitle">Tập 00: Bí Mật Dưới Gốc Sồi Di Sản</div>
             <div class="player-time-row">
               <span id="playerCurrentTime">00:00</span> / <span id="playerDuration">00:00</span>
+              <span>·</span>
+              <span id="playerVoiceShort">Mỹ Duyên</span>
               <div class="waveform-box" id="waveformBox">
                 <div class="wave-bar"></div>
                 <div class="wave-bar"></div>
@@ -1059,21 +2140,26 @@
         </div>
 
         <div class="player-controls">
-          <button class="btn-step" onclick="playPrev()" title="Tập trước">⏮</button>
-          <button class="btn-play-main" onclick="togglePlay()" id="btnPlayMain">▶</button>
-          <button class="btn-step" onclick="playNext()" title="Tập sau">⏭</button>
+          <button class="btn-step" onclick="playPrev()" title="Tập trước" aria-label="Tập trước">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg>
+          </button>
+          <button class="btn-play-main" onclick="togglePlay()" id="btnPlayMain" aria-label="Phát hoặc tạm dừng">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7-11-7z"/></svg>
+          </button>
+          <button class="btn-step" onclick="playNext()" title="Tập tiếp theo" aria-label="Tập tiếp theo">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+          </button>
         </div>
       </div>
 
-      <!-- Speed & Timer Row -->
       <div class="player-sub-row">
-        <div>
-          <span>Tốc độ: </span>
+        <div class="sub-left-group">
+          <span>Tốc độ:</span>
           <button class="speed-pill" onclick="cycleSpeed()" id="speedBtn">1.0x</button>
         </div>
 
         <div class="timer-wrap" id="timerGroup">
-          <span>⏱️ Ngủ: </span>
+          <span id="sleepTimerLabel">Hẹn tắt:</span>
           <button class="timer-btn active" onclick="setTimer(0, this)">Tắt</button>
           <button class="timer-btn" onclick="setTimer(15, this)">15p</button>
           <button class="timer-btn" onclick="setTimer(30, this)">30p</button>
@@ -1084,259 +2170,705 @@
     </div>
   </div>
 
-  <!-- FULL-SCREEN BEDTIME READING SHEET -->
-  <div class="reader-modal" id="readerModal">
+  <!-- ==================== FULL-SCREEN STORYBOOK READER ==================== -->
+  <div class="reader-modal" id="readerModal" aria-hidden="true">
+    <div class="reader-progress-line">
+      <div class="reader-progress-fill" id="readerProgressFill"></div>
+    </div>
+
     <div class="reader-header">
-      <button class="btn-reader-back" onclick="closeReader()">← Quay lại</button>
-      <div class="reader-title-box">
-        <h3 id="readerTitle">Bác Chó Barley Và Chiếc Mũi Thần Kỳ</h3>
+      <button class="btn-reader-back" onclick="closeReader()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Kệ sách</span>
+      </button>
+
+      <div class="reader-theme-capsule" role="group" aria-label="Chọn màu nền trang sách">
+        <button class="theme-opt-btn" id="btnThemeNight" onclick="setReaderTheme('night')">Đêm Ấm</button>
+        <button class="theme-opt-btn active" id="btnThemeParchment" onclick="setReaderTheme('parchment')">Giấy Kem</button>
       </div>
+
       <div class="reader-font-controls">
-        <button class="btn-font" onclick="changeFontSize(-1)">A-</button>
-        <button class="btn-font" onclick="changeFontSize(1)">A+</button>
+        <button class="btn-font" onclick="changeFontSize(-1)" title="Thu nhỏ chữ">A-</button>
+        <button class="btn-font" onclick="changeFontSize(1)" title="Phóng to chữ">A+</button>
       </div>
     </div>
 
-    <div class="reader-scroll-content">
+    <div class="reader-scroll-content" id="readerScrollArea">
+      <div class="reader-chapter-head">
+        <div class="reader-eyebrow" id="readerEyebrow">TẬP 01 · THUNG LŨNG RỪNG PHONG</div>
+        <h2 class="reader-main-title" id="readerTitle">Bác Chó Barley Và Con Đường Vô Hình</h2>
+        <div class="reader-ornament-rule">❦</div>
+      </div>
+
       <div class="reader-relic-card" id="readerRelicBox">
-        <span>👜</span> <span id="readerRelicText">Kỷ vật: Mẩu gỗ thông tuyết thơm dịu</span>
+        <div class="reader-relic-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M6 8h12a2 2 0 0 1 2 2v8a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-8a2 2 0 0 1 2-2Z"/>
+            <path d="M9 8V6a3 3 0 0 1 6 0v2M4 12h16M12 11v3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <strong style="font-weight:600;">Kỷ vật cất vào túi da:</strong>
+          <span id="readerRelicText" style="font-style:italic;">Mẩu gỗ thông thơm của bác Barley</span>
+        </div>
       </div>
-      <div class="reader-body" id="readerBodyText">
-        <!-- Story text -->
-      </div>
+
+      <article class="reader-body" id="readerBodyText"></article>
+
+      <div id="readerNextContainer"></div>
     </div>
 
-    <!-- Mini Bottom Bar inside Reader -->
+    <!-- Thanh Mini Player nổi bên trong trang đọc -->
     <div class="reader-bottom-bar">
-      <div style="font-size: 11px; color: var(--gold-primary); font-weight: 600;" id="readerMiniInfo">
-        🎧 Đang phát giọng Mỹ Duyên 48kHz
+      <div class="reader-mini-left">
+        <div class="waveform-box" id="readerWaveBox" style="display:flex;">
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+        </div>
+        <div style="min-width:0;">
+          <div class="reader-mini-title" id="readerMiniInfo">Giọng Mỹ Duyên · 48kHz Master</div>
+          <div class="reader-mini-sub" id="readerMiniTime">Sẵn sàng phát ru ngủ</div>
+        </div>
       </div>
-      <button class="btn-hero-play" style="padding: 6px 14px; font-size: 11px;" onclick="togglePlay()" id="readerMiniPlayBtn">
+      <button class="btn-reader-play" onclick="playFromReader()" id="readerMiniPlayBtn">
         ▶ Nghe truyện
       </button>
     </div>
   </div>
 
-  <!-- Image Zoom Modal -->
+  <!-- ==================== IMAGE ZOOM MODAL ==================== -->
   <div class="zoom-modal" id="zoomModal" onclick="closeImageZoom()">
-    <div class="zoom-box" onclick="event.stopPropagation()">
+    <div style="max-width:560px; width:100%; text-align:center;" onclick="event.stopPropagation()">
       <div style="position:relative;">
-        <img id="zoomImage" src="" alt="Tranh minh họa" style="width:100%; height:auto; max-height:75vh; object-fit:contain; border-radius:14px; box-shadow:0 16px 48px rgba(0,0,0,0.9); border:1px solid var(--gold-border);" />
-        <button onclick="closeImageZoom()" style="position:absolute; top:-12px; right:-12px; width:36px; height:36px; border-radius:50%; background:var(--gold-primary); color:#070B19; border:none; font-weight:800; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,0.6);">✕</button>
+        <img id="zoomImage" src="" alt="Tranh minh họa" style="width:100%; height:auto; max-height:76vh; object-fit:contain; border-radius:16px; box-shadow:0 20px 56px rgba(0,0,0,0.9); border:1.5px solid var(--brass-border-strong);" />
+        <button onclick="closeImageZoom()" aria-label="Đóng tranh" style="position:absolute; top:-12px; right:-12px; width:38px; height:38px; border-radius:50%; background:var(--honey-gold); color:var(--ink-dark); border:none; font-weight:800; font-size:16px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(0,0,0,0.6);">✕</button>
       </div>
-      <div id="zoomCaption" style="margin-top:14px; font-size:13px; color:var(--gold-primary); font-style:italic; line-height:1.6; padding:0 8px; text-align:center;"></div>
+      <div id="zoomCaption" style="margin-top:14px; font-family:var(--font-serif); font-size:14px; color:var(--honey-gold-bright); font-style:italic; line-height:1.6; padding:0 12px;"></div>
     </div>
   </div>
 
-  <!-- Search Modal -->
+  <!-- ==================== SEARCH MODAL ==================== -->
   <div class="search-modal" id="searchModal" onclick="handleSearchModalClick(event)">
     <div class="search-box">
       <div class="search-input-row">
-        <span>🔍</span>
-        <input type="text" id="searchInput" placeholder="Tìm tên con vật, cây cối, kỷ vật..." oninput="handleSearch(this.value)">
-        <button onclick="closeSearchModal()" style="background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer;">✕</button>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/><path d="M20 20L16.5 16.5" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Tìm tên bạn nhỏ muôn loài, cây cối, kỷ vật..." oninput="handleSearch(this.value)">
+        <button onclick="closeSearchModal()" style="background:none; border:none; color:var(--text-sage); font-size:18px; padding:4px;">✕</button>
       </div>
-      <div class="search-results" id="searchResults">
-        <!-- Search items -->
-      </div>
+      <div class="search-results" id="searchResults"></div>
     </div>
   </div>
 
-  <!-- Toast -->
+  <!-- ==================== TOAST ==================== -->
   <div class="toast-msg" id="toast">
-    <span id="toastIcon">✨</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 3l2.2 6.8H21l-5.5 4 2.1 6.7L12 16.5 6.4 20.5l2.1-6.7L3 9.8h6.8L12 3z" stroke-linejoin="round"/>
+    </svg>
     <span id="toastText">Thông báo</span>
   </div>
 
   <!-- Native Audio Element -->
-  <audio id="audioEl" preload="auto" playsinline webkit-playsinline></audio>
+  <audio id="audioEl" preload="metadata" playsinline webkit-playsinline></audio>
 
   <script>
+    /* ==================== STATE & STORAGE KEYS ==================== */
+    const STORAGE_VOICE = 'scc_preferred_voice';
+    const STORAGE_RESUME = 'scc_resume_v2';
+    const STORAGE_PROGRESS_MAP = 'scc_ep_progress_v2';
+    const STORAGE_VIEW_MODE = 'scc_library_view';
+    const STORAGE_READER_THEME = 'scc_reader_theme';
+    const STORAGE_FONT_SIZE = 'scc_reader_fontsize';
+
     let episodes = [];
-    let currentTrackId = "00";
-    let featuredTrackId = "00";
+    let activeCategory = 'all';
+    let currentTrackId = '00';
+    let featuredTrackId = '00';
+    let readerTrackId = '00';
     let currentSpeed = 1.0;
     let sleepTimeout = null;
-    let currentFontSize = 17;
-    let currentVoice = localStorage.getItem('scc_preferred_voice') || 'female';
+    let fadeInterval = null;
+    let lastSaveStamp = 0;
 
-    function getVoiceName() {
-      return currentVoice === 'female' ? "Mỹ Duyên (Nữ Nam Bộ)" : "Thiền Tâm Đức (Nam Trầm Bắc)";
-    }
-
-    function initVoiceUI() {
-      const btnF = document.getElementById('btnVoiceFemale');
-      const btnM = document.getElementById('btnVoiceMale');
-      if (btnF && btnM) {
-        btnF.classList.toggle('active', currentVoice === 'female');
-        btnM.classList.toggle('active', currentVoice === 'male');
-      }
-    }
-
-    function switchVoice(v) {
-      currentVoice = v;
-      localStorage.setItem('scc_preferred_voice', v);
-      initVoiceUI();
-
-      const vName = getVoiceName();
-      showToast(`Đã chọn: ${vName}`, "🎙️");
-
-      const curEp = episodes.find(e => e.id === currentTrackId);
-      if (curEp) {
-        document.getElementById('heroMeta').textContent = `Giọng đọc: ${vName} · Thời lượng: ${curEp.duration}`;
-      }
-
-      renderEpisodes(episodes);
-      selectTrack(currentTrackId, !audio.paused);
-    }
+    let currentVoice = localStorage.getItem(STORAGE_VOICE) || 'female';
+    let libraryView = localStorage.getItem(STORAGE_VIEW_MODE) || 'grid';
+    let readerTheme = localStorage.getItem(STORAGE_READER_THEME) || 'parchment';
+    let currentFontSize = parseInt(localStorage.getItem(STORAGE_FONT_SIZE) || '18', 10);
 
     const audio = document.getElementById('audioEl');
-    const btnPlayMain = document.getElementById('btnPlayMain');
-    const heroPlayIcon = document.getElementById('heroPlayIcon');
-    const heroPlayText = document.getElementById('heroPlayText');
-    const heroArt = document.getElementById('heroArt');
     const scrubberFill = document.getElementById('scrubberFill');
     const playerTitle = document.getElementById('playerTitle');
-    const playerIcon = document.getElementById('playerIcon');
+    const playerThumb = document.getElementById('playerThumb');
     const playerCurrentTime = document.getElementById('playerCurrentTime');
     const playerDuration = document.getElementById('playerDuration');
+    const playerVoiceShort = document.getElementById('playerVoiceShort');
     const waveformBox = document.getElementById('waveformBox');
+    const btnPlayMain = document.getElementById('btnPlayMain');
 
-    // Nạp dữ liệu
+    const SVG_PLAY = '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7-11-7z"/></svg>';
+    const SVG_PAUSE = '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h3.5v14H7V5zm6.5 0H17v14h-3.5V5z"/></svg>';
+
+    /* ==================== HEIRLOOM CLOTHBOUND SVG COVER GENERATOR ==================== */
+    const COVER_THEMES = {
+      '00': { bg1: '#162A21', bg2: '#0D1914', accent: '#EAB354', crest: 'CỘI NGUỒN', motif: 'oak' },
+      '01': { bg1: '#262117', bg2: '#16130E', accent: '#EAB354', crest: 'NÔNG TRANG', motif: 'dog' },
+      '02': { bg1: '#2B1E17', bg2: '#18110D', accent: '#E8B06A', crest: 'ĐÊM TRĂNG THU', motif: 'cat' },
+      '03': { bg1: '#1C291B', bg2: '#111910', accent: '#E2BA64', crest: 'ĐỒNG CỎ XANH', motif: 'cow' },
+      '04': { bg1: '#152429', bg2: '#0D171A', accent: '#DEB668', crest: 'BẾN SÔNG MÁT', motif: 'buffalo' },
+      '05': { bg1: '#2B2215', bg2: '#18130C', accent: '#EDC06B', crest: 'THẢO NGUYÊN GIÓ', motif: 'horse' },
+      '06': { bg1: '#1F2626', bg2: '#121717', accent: '#E3B968', crest: 'VÁCH ĐÁ CAO', motif: 'goat' },
+      '07': { bg1: '#29231E', bg2: '#171411', accent: '#F0C97D', crest: 'ĐỒI NẮNG ẤM', motif: 'sheep' },
+      '08': { bg1: '#271D16', bg2: '#16100C', accent: '#E4B263', crest: 'TÁN SỒI GIÀ', motif: 'pig' },
+      '09': { bg1: '#182822', bg2: '#0E1814', accent: '#E8BE6E', crest: 'BỜ CỎ MỀM', motif: 'rabbit' },
+      '10': { bg1: '#292116', bg2: '#17120C', accent: '#F0C36D', crest: 'CỐI XAY GIÓ', motif: 'mouse' }
+    };
+
+    function getMotifPath(motif, color) {
+      switch (motif) {
+        case 'oak':
+          return `
+            <path d="M90 156V116M90 128L74 114M90 124L106 112" stroke="${color}" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M90 66C70 66 56 80 58 98C52 106 58 118 70 118H110C122 118 128 106 122 98C124 80 110 66 90 66Z" fill="${color}" fill-opacity="0.14" stroke="${color}" stroke-width="1.8"/>
+            <circle cx="90" cy="92" r="16" stroke="${color}" stroke-opacity="0.35" stroke-dasharray="2 3"/>
+            <path d="M72 156H108" stroke="${color}" stroke-width="1.8" stroke-linecap="round"/>`;
+        case 'cat':
+          return `
+            <path d="M108 72A14 14 0 1 1 94 58A10.5 10.5 0 0 0 108 72Z" stroke="${color}" stroke-width="1.6" fill="${color}" fill-opacity="0.15"/>
+            <path d="M76 148C76 126 81 114 88 110L85 96L93 102H99L107 96L104 110C110 116 112 130 108 148H76Z" fill="${color}" fill-opacity="0.16" stroke="${color}" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M108 146C120 144 124 132 118 124" stroke="${color}" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M62 150C66 136 70 128 72 122M118 150C121 138 125 130 128 124" stroke="${color}" stroke-opacity="0.6" stroke-width="1.3" stroke-linecap="round"/>`;
+        case 'cow':
+          return `
+            <circle cx="90" cy="108" r="24" fill="${color}" fill-opacity="0.12" stroke="${color}" stroke-width="1.6"/>
+            <path d="M74 96C68 90 67 82 72 78M106 96C112 90 113 82 108 78" stroke="${color}" stroke-width="2" stroke-linecap="round"/>
+            <ellipse cx="90" cy="118" rx="13" ry="8" stroke="${color}" stroke-width="1.6"/>
+            <circle cx="85" cy="118" r="1.6" fill="${color}"/><circle cx="95" cy="118" r="1.6" fill="${color}"/>
+            <circle cx="82" cy="104" r="1.8" fill="${color}"/><circle cx="98" cy="104" r="1.8" fill="${color}"/>
+            <path d="M90 148V136M85 142C81 138 84 133 90 137C96 133 99 138 95 142" stroke="${color}" stroke-width="1.4" stroke-linecap="round"/>`;
+        case 'buffalo':
+          return `
+            <path d="M56 96C56 78 72 78 78 92H102C108 78 124 78 124 96C118 104 108 104 102 100V116C102 124 96 129 90 129C84 129 78 124 78 116V100C72 104 62 104 56 96Z" fill="${color}" fill-opacity="0.14" stroke="${color}" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M62 142C72 138 82 146 92 142C102 138 110 146 118 142M68 151C78 148 88 154 98 151C106 148 112 152 116 151" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>`;
+        case 'horse':
+          return `
+            <path d="M74 146L80 114L72 104L86 80L96 72L98 82L112 94L106 104L96 100L94 118L104 146" fill="${color}" fill-opacity="0.14" stroke="${color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M84 82C76 84 70 90 68 98" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M64 148H116" stroke="${color}" stroke-opacity="0.6" stroke-width="1.5" stroke-linecap="round"/>`;
+        case 'goat':
+          return `
+            <path d="M60 150L82 108L96 122L110 98L124 150H60Z" fill="${color}" fill-opacity="0.12" stroke="${color}" stroke-width="1.7" stroke-linejoin="round"/>
+            <path d="M84 88C78 74 66 74 64 84M96 88C102 74 114 74 116 84" stroke="${color}" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="90" cy="92" r="7" stroke="${color}" stroke-width="1.6"/>`;
+        case 'sheep':
+          return `
+            <path d="M68 116C62 114 60 104 66 98C66 88 76 82 86 86C94 80 106 84 108 94C116 96 118 108 112 116C112 124 102 128 90 128C78 128 68 124 68 116Z" fill="${color}" fill-opacity="0.16" stroke="${color}" stroke-width="1.8"/>
+            <path d="M80 128V146M100 128V146M86 106H86.01M96 106H96.01" stroke="${color}" stroke-width="2" stroke-linecap="round"/>`;
+        case 'pig':
+          return `
+            <circle cx="90" cy="110" r="23" fill="${color}" fill-opacity="0.14" stroke="${color}" stroke-width="1.8"/>
+            <ellipse cx="90" cy="115" rx="9.5" ry="6.5" stroke="${color}" stroke-width="1.7"/>
+            <circle cx="87" cy="115" r="1.5" fill="${color}"/><circle cx="93" cy="115" r="1.5" fill="${color}"/>
+            <path d="M72 93L68 81L80 87M108 93L112 81L100 87" stroke="${color}" stroke-width="1.7" stroke-linejoin="round"/>
+            <path d="M84 144C84 138 96 138 96 144C96 149 90 153 90 153C90 153 84 149 84 144Z" stroke="${color}" stroke-width="1.4"/>`;
+        case 'rabbit':
+          return `
+            <path d="M82 104C77 84 78 68 84 68C89 68 89 84 88 102M98 104C103 84 102 68 96 68C91 68 91 84 92 102" fill="${color}" fill-opacity="0.14" stroke="${color}" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="90" cy="120" r="19" fill="${color}" fill-opacity="0.14" stroke="${color}" stroke-width="1.8"/>
+            <circle cx="84" cy="117" r="1.6" fill="${color}"/><circle cx="96" cy="117" r="1.6" fill="${color}"/>
+            <path d="M87 124L90 127L93 124" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>`;
+        case 'mouse':
+          return `
+            <path d="M90 74L90 132M70 94L110 112M110 94L70 112" stroke="${color}" stroke-opacity="0.45" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="78" cy="118" r="9" fill="${color}" fill-opacity="0.14" stroke="${color}" stroke-width="1.7"/>
+            <circle cx="102" cy="118" r="9" fill="${color}" fill-opacity="0.14" stroke="${color}" stroke-width="1.7"/>
+            <path d="M76 126C76 116 104 116 104 126L90 144L76 126Z" fill="${color}" fill-opacity="0.18" stroke="${color}" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M64 148C74 140 80 140 90 148" stroke="${color}" stroke-width="1.4" stroke-linecap="round"/>`;
+        default:
+          return `
+            <circle cx="90" cy="110" r="24" fill="${color}" fill-opacity="0.14" stroke="${color}" stroke-width="1.8"/>
+            <path d="M90 80V140M74 102C82 94 98 94 106 102M76 120C84 112 96 112 104 120" stroke="${color}" stroke-width="1.6" stroke-linecap="round"/>`;
+      }
+    }
+
+    function buildHeirloomCoverMarkup(ep, preferSquareHero = false) {
+      const illus = ep.illustrations || [];
+      if (illus.length > 0) {
+        const chosen = (illus[1] || illus[0]).url;
+        return `<img src="${chosen}" alt="${escapeHtml(cleanDisplayTitle(ep))}" class="book-cover-img" loading="lazy" />`;
+      }
+
+      const cfg = COVER_THEMES[ep.id] || {
+        bg1: '#182822',
+        bg2: '#0E1814',
+        accent: '#EAB354',
+        crest: 'THUNG LŨNG RỪNG PHONG',
+        motif: 'default'
+      };
+      const c = cfg.accent;
+      const epLabel = ep.id === '00' ? 'KHỞI ĐẦU' : `TẬP ${ep.id}`;
+
+      return `
+        <svg class="book-cover-svg" viewBox="0 0 180 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs>
+            <linearGradient id="bg_${ep.id}" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="${cfg.bg1}"/>
+              <stop offset="100%" stop-color="${cfg.bg2}"/>
+            </linearGradient>
+            <radialGradient id="glow_${ep.id}" cx="50%" cy="46%" r="48%">
+              <stop offset="0%" stop-color="${c}" stop-opacity="0.22"/>
+              <stop offset="100%" stop-color="${c}" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect width="180" height="240" fill="url(#bg_${ep.id})"/>
+          <rect width="180" height="240" fill="url(#glow_${ep.id})"/>
+          <!-- Đường khâu gáy sách vải -->
+          <line x1="12" y1="0" x2="12" y2="240" stroke="${c}" stroke-opacity="0.22" stroke-width="1"/>
+          <line x1="15" y1="8" x2="15" y2="232" stroke="${c}" stroke-opacity="0.3" stroke-width="0.8" stroke-dasharray="3 4"/>
+          <!-- Khung viền mạ vàng đồng cổ điển -->
+          <rect x="22" y="16" width="144" height="208" rx="6" fill="none" stroke="${c}" stroke-opacity="0.45" stroke-width="1.1"/>
+          <rect x="26" y="20" width="136" height="200" rx="4" fill="none" stroke="${c}" stroke-opacity="0.22" stroke-width="0.8"/>
+          <!-- Hoa văn thực vật 4 góc -->
+          <path d="M26 32C32 32 34 30 34 24M154 24C154 30 156 32 162 32M26 208C32 208 34 210 34 216M154 216C154 210 156 208 162 208" stroke="${c}" stroke-opacity="0.65" stroke-width="1.2" fill="none"/>
+          <!-- Nhãn vòm trên -->
+          <text x="94" y="42" text-anchor="middle" fill="${c}" fill-opacity="0.88" font-family="Be Vietnam Pro, sans-serif" font-size="7.5" font-weight="700" letter-spacing="1.6">${cfg.crest}</text>
+          <line x1="62" y1="48" x2="126" y2="48" stroke="${c}" stroke-opacity="0.32" stroke-width="0.8"/>
+          <!-- Hình khắc nghệ thuật trung tâm -->
+          <g transform="translate(4, 2)">
+            ${getMotifPath(cfg.motif, c)}
+          </g>
+          <!-- Chân huy hiệu -->
+          <line x1="58" y1="176" x2="130" y2="176" stroke="${c}" stroke-opacity="0.32" stroke-width="0.8"/>
+          <text x="94" y="191" text-anchor="middle" fill="#F6F1E7" fill-opacity="0.92" font-family="Playfair Display, Georgia, serif" font-size="10.5" font-weight="600" letter-spacing="1">${epLabel}</text>
+          <text x="94" y="205" text-anchor="middle" fill="${c}" fill-opacity="0.7" font-family="Lora, Georgia, serif" font-style="italic" font-size="7.5">Lim &amp; Mẹ Vacci</text>
+        </svg>`;
+    }
+
+    /* ==================== HELPERS ==================== */
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function cleanDisplayTitle(ep) {
+      if (!ep) return '';
+      if (ep.id === '00') {
+        return 'Tập 00: Bí Mật Dưới Gốc Sồi Di Sản';
+      }
+      const raw = ep.title.replace(/^TẬP\s*\d+\s*:\s*/i, '').trim();
+      const titled = raw
+        .toLowerCase()
+        .split(/\s+/)
+        .map(w => w ? w.charAt(0).toUpperCase() + w.slice(1) : '')
+        .join(' ');
+      return `Tập ${ep.id}: ${titled}`;
+    }
+
+    function cleanStoryHeadingOnly(ep) {
+      if (!ep) return '';
+      if (ep.id === '00') return 'Chiếc Túi Rỗng Và Lời Hẹn 365 Đêm';
+      const raw = ep.title.replace(/^TẬP\s*\d+\s*:\s*/i, '').trim();
+      return raw
+        .toLowerCase()
+        .split(/\s+/)
+        .map(w => w ? w.charAt(0).toUpperCase() + w.slice(1) : '')
+        .join(' ');
+    }
+
+    function getVoiceName() {
+      return currentVoice === 'female' ? 'Mỹ Duyên (Nữ Nam Bộ)' : 'Thiền Tâm Đức (Nam Trầm)';
+    }
+
+    function getVoiceShort() {
+      return currentVoice === 'female' ? 'Mỹ Duyên' : 'Thiền Tâm Đức';
+    }
+
+    function formatTime(sec) {
+      if (isNaN(sec) || sec < 0) return '00:00';
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    function getProgressMap() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_PROGRESS_MAP) || '{}');
+      } catch (_) {
+        return {};
+      }
+    }
+
+    function saveProgress(id, currentTime, duration) {
+      if (!id || !duration || isNaN(duration) || duration <= 0) return;
+      const now = Date.now();
+      if (now - lastSaveStamp < 1800 && !audio.paused) return;
+      lastSaveStamp = now;
+
+      const payload = { id, time: Math.floor(currentTime), duration: Math.floor(duration), updatedAt: now };
+      localStorage.setItem(STORAGE_RESUME, JSON.stringify(payload));
+
+      const map = getProgressMap();
+      map[id] = {
+        time: Math.floor(currentTime),
+        duration: Math.floor(duration),
+        completed: currentTime >= duration - 18 || (map[id] && map[id].completed)
+      };
+      localStorage.setItem(STORAGE_PROGRESS_MAP, JSON.stringify(map));
+    }
+
+    function getSavedResume() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_RESUME) || 'null');
+      } catch (_) {
+        return null;
+      }
+    }
+
+    /* ==================== INITIALIZATION ==================== */
     async function initApp() {
+      initVoiceUI();
+      applyLibraryViewUI();
+      setReaderTheme(readerTheme, false);
+      document.getElementById('readerBodyText').style.fontSize = currentFontSize + 'px';
+
       try {
         const res = await fetch('data/episodes.json?v=' + Date.now());
         if (res.ok) {
           episodes = await res.json();
-          renderEpisodes(episodes);
+          document.getElementById('totalEpCount').textContent = `${episodes.length} Tập`;
+          renderCategoryChips();
 
-          initVoiceUI();
-          // Mặc định chọn Chương Mở Đầu (Tập 00) làm Featured Track vì có sẵn cả 2 giọng Mỹ Duyên (Nữ Nam Bộ) & Thiền Tâm Đức (Nam Trầm Bắc) 48kHz
-          const defaultTrack = episodes.find(e => e.id === "00") || episodes[0];
-          setFeatured(defaultTrack);
-          selectTrack(defaultTrack.id, false);
+          // Xác định tập "Đêm nay nghe tiếp" thông minh từ localStorage
+          const saved = getSavedResume();
+          let initialEp = episodes.find(e => e.id === '00') || episodes[0];
+          let resumeTime = 0;
+
+          if (saved && saved.id) {
+            const found = episodes.find(e => e.id === saved.id);
+            if (found) {
+              if (saved.time > 12 && saved.duration && saved.time < saved.duration - 18) {
+                initialEp = found;
+                resumeTime = saved.time;
+              } else if (saved.duration && saved.time >= saved.duration - 18) {
+                // Nếu tập trước đã nghe trọn vẹn -> gợi ý tập kế tiếp
+                const idx = episodes.findIndex(e => e.id === saved.id);
+                initialEp = episodes[(idx + 1) % episodes.length] || found;
+              } else {
+                initialEp = found;
+              }
+            }
+          }
+
+          setFeatured(initialEp, resumeTime, saved ? saved.duration : 0);
+          selectTrack(initialEp.id, false, resumeTime);
+          renderEpisodes();
         }
       } catch (err) {
-        console.error("Lỗi nạp episodes.json", err);
+        console.error('Lỗi nạp episodes.json:', err);
       }
     }
 
-    function setFeatured(ep) {
-      featuredTrackId = ep.id;
-      document.getElementById('heroTitle').textContent = ep.title;
-      document.getElementById('heroArt').textContent = ep.icon;
-      document.getElementById('heroMeta').textContent = `Giọng đọc: ${getVoiceName()} · Thời lượng: ${ep.duration}`;
+    /* ==================== VOICE & VIEW CONTROLS ==================== */
+    function initVoiceUI() {
+      document.querySelectorAll('.voice-btn-female').forEach(btn => {
+        btn.classList.toggle('active', currentVoice === 'female');
+      });
+      document.querySelectorAll('.voice-btn-male').forEach(btn => {
+        btn.classList.toggle('active', currentVoice === 'male');
+      });
+      playerVoiceShort.textContent = getVoiceShort();
     }
 
-    function renderEpisodes(items) {
+    function switchVoice(v) {
+      const wasPlaying = !audio.paused;
+      const prevTime = audio.currentTime || 0;
+      currentVoice = v;
+      localStorage.setItem(STORAGE_VOICE, v);
+      initVoiceUI();
+
+      showToast(`Đã chọn giọng đọc: ${getVoiceName()}`);
+
+      const curEp = episodes.find(e => e.id === currentTrackId);
+      if (curEp) {
+        const saved = getSavedResume();
+        const rTime = (saved && saved.id === curEp.id) ? saved.time : 0;
+        setFeatured(curEp, rTime, saved ? saved.duration : 0);
+      }
+
+      renderEpisodes();
+      selectTrack(currentTrackId, wasPlaying, prevTime);
+    }
+
+    function setLibraryView(mode) {
+      libraryView = mode === 'list' ? 'list' : 'grid';
+      localStorage.setItem(STORAGE_VIEW_MODE, libraryView);
+      applyLibraryViewUI();
+    }
+
+    function applyLibraryViewUI() {
+      const grid = document.getElementById('episodeContainer');
+      grid.classList.toggle('list-mode', libraryView === 'list');
+      document.getElementById('btnViewGrid').classList.toggle('active', libraryView === 'grid');
+      document.getElementById('btnViewList').classList.toggle('active', libraryView === 'list');
+    }
+
+    function toggleFireflyDim() {
+      const isDim = document.body.classList.toggle('firefly-dim');
+      const btn = document.getElementById('btnFireflyDim');
+      const lbl = document.getElementById('fireflyBtnLabel');
+      btn.classList.toggle('active', isDim);
+      lbl.textContent = isDim ? 'Đang bật Đèn Đom Đóm' : 'Đèn Đom Đóm (Dịu sáng)';
+      showToast(isDim ? 'Đã dịu độ sáng màn hình cho phòng ngủ tối' : 'Đã trở về độ sáng tiêu chuẩn');
+    }
+
+    /* ==================== RENDER HERO & SHELF ==================== */
+    function setFeatured(ep, resumeSec = 0, totalSec = 0) {
+      if (!ep) return;
+      featuredTrackId = ep.id;
+      const niceTitle = cleanDisplayTitle(ep);
+
+      document.getElementById('heroTitle').textContent = niceTitle;
+      document.getElementById('heroExcerpt').textContent = `“${ep.summary}”`;
+      document.getElementById('heroRelicText').textContent = ep.relic || 'Kỷ vật thiên nhiên';
+      document.getElementById('heroCoverBox').innerHTML = buildHeirloomCoverMarkup(ep, true);
+      document.getElementById('heroNightSub').textContent = `${ep.category} · ${ep.duration}`;
+
+      const progressWrap = document.getElementById('heroResumeProgressWrap');
+      const badgeEl = document.getElementById('heroBadgeText');
+      const playTextEl = document.getElementById('heroPlayText');
+
+      if (resumeSec > 12 && totalSec > resumeSec + 15) {
+        const pct = Math.min(98, Math.round((resumeSec / totalSec) * 100));
+        const remainMins = Math.max(1, Math.round((totalSec - resumeSec) / 60));
+        badgeEl.textContent = `ĐÊM NAY NGHE TIẾP · CÒN ${remainMins} PHÚT`;
+        document.getElementById('heroMeta').textContent = `Đang dừng ở ${formatTime(resumeSec)} / ${formatTime(totalSec)} · Giọng ${getVoiceShort()}`;
+        progressWrap.style.display = 'flex';
+        document.getElementById('heroResumeFill').style.width = pct + '%';
+        document.getElementById('heroResumeLeft').textContent = `Đã nghe ${formatTime(resumeSec)} (${pct}%)`;
+        document.getElementById('heroResumeRight').textContent = `Còn lại ${formatTime(totalSec - resumeSec)}`;
+        if (audio.paused) playTextEl.textContent = 'Nghe Tiếp Tập Này';
+      } else {
+        badgeEl.textContent = ep.id === '00' ? 'ĐÊM KHỞI HÀNH CHO BÉ' : 'ĐÊM NAY NGHE GÌ CHO BÉ';
+        document.getElementById('heroMeta').textContent = `Giọng đọc: ${getVoiceName()} · Thời lượng: ${ep.duration}`;
+        progressWrap.style.display = 'none';
+        if (audio.paused) playTextEl.textContent = 'Nghe Ngay';
+      }
+    }
+
+    function renderCategoryChips() {
+      const wrap = document.getElementById('categoryChipsContainer');
+      const counts = {};
+      episodes.forEach(e => {
+        counts[e.category] = (counts[e.category] || 0) + 1;
+      });
+
+      let html = `<button class="cat-chip ${activeCategory === 'all' ? 'active' : ''}" onclick="filterCategory('all')">Tất cả · ${episodes.length}</button>`;
+      Object.keys(counts).forEach(cat => {
+        const isAct = activeCategory === cat ? 'active' : '';
+        html += `<button class="cat-chip ${isAct}" onclick="filterCategory('${escapeHtml(cat)}')">${escapeHtml(cat)} · ${counts[cat]}</button>`;
+      });
+      wrap.innerHTML = html;
+    }
+
+    function filterCategory(cat) {
+      activeCategory = cat;
+      renderCategoryChips();
+      renderEpisodes();
+    }
+
+    function renderEpisodes() {
       const container = document.getElementById('episodeContainer');
+      const progressMap = getProgressMap();
+      const filtered = activeCategory === 'all'
+        ? episodes
+        : episodes.filter(e => e.category === activeCategory);
+
       container.innerHTML = '';
 
-      items.forEach(ep => {
+      filtered.forEach(ep => {
+        const isActive = ep.id === currentTrackId;
+        const isPlayingNow = isActive && !audio.paused;
         const hasAudioThisVoice = !!(currentVoice === 'male' ? ep.audio_male : ep.audio_female);
         const hasAnyAudio = !!(ep.audio_female || ep.audio_male);
-        const row = document.createElement('div');
-        row.className = `ep-row ${ep.id === currentTrackId ? 'active' : ''}`;
-        row.onclick = () => selectTrack(ep.id, true);
 
-        let badgeAudio = '';
+        let voiceHint = '';
         if (hasAudioThisVoice) {
-          badgeAudio = `<span style="font-size:9px; color:#F6BD60; font-weight:700;">★ 48kHz ${currentVoice === 'female' ? 'Mỹ Duyên' : 'Thiền Tâm Đức'}</span>`;
+          voiceHint = `48kHz · ${getVoiceShort()}`;
         } else if (hasAnyAudio) {
-          badgeAudio = `<span style="font-size:9px; color:#38BDF8;">🎙️ ${currentVoice === 'female' ? '(Có giọng Nam)' : '(Có giọng Nữ)'}</span>`;
+          voiceHint = currentVoice === 'female' ? 'Có bản Nam' : 'Có bản Nữ';
         } else {
-          badgeAudio = '<span style="font-size:9px; color:#94A3B8;">(Sắp có)</span>';
+          voiceHint = 'Đọc sách';
         }
 
-        row.innerHTML = `
-          <div class="ep-left">
-            <div class="ep-icon-box">${ep.icon}</div>
-            <div class="ep-info">
-              <div class="ep-badge-row">
-                <span class="ep-id-tag">TẬP ${ep.id}</span>
-                <span class="ep-dur-tag">${ep.duration}</span>
-                ${badgeAudio}
-              </div>
-              <div class="ep-title">${ep.title}</div>
+        const prog = progressMap[ep.id];
+        let pct = 0;
+        if (prog && prog.duration > 0 && prog.time > 10) {
+          pct = Math.min(100, Math.round((prog.time / prog.duration) * 100));
+        }
+
+        const card = document.createElement('article');
+        card.className = `book-card ${isActive ? 'active' : ''}`;
+        card.onclick = () => selectTrack(ep.id, true);
+
+        const topStatusBadge = isPlayingNow
+          ? `<span class="cover-pill-playing">● Đang phát</span>`
+          : `<span class="cover-pill-ep">${ep.id === '00' ? 'Mở đầu' : 'Tập ' + ep.id}</span>`;
+
+        card.innerHTML = `
+          <div class="book-cover-wrap">
+            ${buildHeirloomCoverMarkup(ep)}
+            <div class="cover-top-badges">
+              ${topStatusBadge}
+              <span class="cover-pill-dur">${escapeHtml(ep.duration)}</span>
+            </div>
+            <div class="cover-relic-ribbon">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3C7.5 3 4 6.5 4 11c0 4 2.8 7.2 6.8 7.9L12 21l1.2-2.1C17.2 18.2 20 15 20 11c0-4.5-3.5-8-8-8Z"/>
+              </svg>
+              <span>${escapeHtml(ep.relic)}</span>
             </div>
           </div>
-          <div class="ep-actions" onclick="event.stopPropagation()">
-            <button class="btn-row-read" onclick="openReaderForTrack('${ep.id}')">📖 Đọc</button>
-            <button class="btn-row-play" onclick="selectTrack('${ep.id}', true)">▶</button>
+
+          <div class="book-body">
+            <div class="book-eyebrow">
+              <span>${ep.id === '00' ? 'CHƯƠNG MỞ ĐẦU' : 'TẬP ' + ep.id}</span>
+              <span class="book-voice-hint">${escapeHtml(voiceHint)}</span>
+            </div>
+            <h3 class="book-title">${escapeHtml(cleanStoryHeadingOnly(ep))}</h3>
+            <p class="list-relic-sub">${escapeHtml(ep.duration)} · Kỷ vật: ${escapeHtml(ep.relic)}</p>
+            ${pct > 0 ? `<div class="book-mini-progress"><div class="book-mini-progress-fill" style="width:${pct}%"></div></div>` : ''}
+          </div>
+
+          <div class="book-actions" onclick="event.stopPropagation()">
+            <button class="btn-card-read" onclick="openReaderForTrack('${ep.id}')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#EAB354" stroke-width="2">
+                <path d="M2 5.5A2.5 2.5 0 0 1 4.5 3H11v17H4.5A2.5 2.5 0 0 0 2 22.5v-17ZM22 5.5A2.5 2.5 0 0 0 19.5 3H13v17h6.5a2.5 2.5 0 0 1 2.5 2.5v-17Z" stroke-linejoin="round"/>
+              </svg>
+              <span>Đọc</span>
+            </button>
+            <button class="btn-card-play" onclick="handleCardPlayBtn('${ep.id}')" aria-label="Phát ${escapeHtml(cleanDisplayTitle(ep))}">
+              ${isPlayingNow ? SVG_PAUSE : SVG_PLAY}
+            </button>
           </div>
         `;
-        container.appendChild(row);
+
+        container.appendChild(card);
       });
     }
 
-    function resolveAudioUrl(rawUrl) {
-      if (!rawUrl) return "";
-      // Đảm bảo đường dẫn chạy tốt trên cả GitHub Pages lẫn Vercel
-      if (rawUrl.startsWith("http")) return rawUrl;
-      return rawUrl;
+    function handleCardPlayBtn(id) {
+      if (id === currentTrackId && audio.src) {
+        togglePlay();
+      } else {
+        const map = getProgressMap();
+        const resumeAt = (map[id] && map[id].time > 12 && map[id].time < (map[id].duration || 99999) - 18)
+          ? map[id].time
+          : 0;
+        selectTrack(id, true, resumeAt);
+      }
     }
 
-    function selectTrack(id, autoPlay = true) {
+    /* ==================== AUDIO ENGINE & RESUME ==================== */
+    function selectTrack(id, autoPlay = true, seekToSec = 0) {
       const ep = episodes.find(e => e.id === id);
       if (!ep) return;
 
       currentTrackId = id;
-      setFeatured(ep);
-      playerTitle.textContent = ep.title;
-      playerIcon.textContent = ep.icon;
+      const progMap = getProgressMap();
+      const epProg = progMap[id];
+      const savedTime = seekToSec > 0
+        ? seekToSec
+        : (epProg && epProg.time > 12 && epProg.time < (epProg.duration || 99999) - 18 ? epProg.time : 0);
 
-      let trackAudio = "";
+      setFeatured(ep, savedTime, epProg ? epProg.duration : 0);
+      playerTitle.textContent = cleanDisplayTitle(ep);
+      playerThumb.innerHTML = buildHeirloomCoverMarkup(ep);
+      playerVoiceShort.textContent = getVoiceShort();
+
+      let trackAudio = '';
       if (currentVoice === 'male') {
-        trackAudio = ep.audio_male || "";
+        trackAudio = ep.audio_male || '';
         if (!trackAudio && ep.audio_female) {
           trackAudio = ep.audio_female;
+          playerVoiceShort.textContent = 'Mỹ Duyên';
           if (autoPlay) {
-            showToast(`Bản thu giọng Nam (Thiền Tâm Đức) đang hoàn thiện. Đang phát bản giọng Nữ (Mỹ Duyên)!`, "🌿");
+            showToast('Bản giọng Nam đang hoàn thiện, phát bản giọng Nữ Mỹ Duyên');
           }
         }
       } else {
-        trackAudio = ep.audio_female || "";
+        trackAudio = ep.audio_female || '';
         if (!trackAudio && ep.audio_male) {
           trackAudio = ep.audio_male;
+          playerVoiceShort.textContent = 'Thiền Tâm Đức';
           if (autoPlay) {
-            showToast(`Bản thu giọng Nữ (Mỹ Duyên) đang hoàn thiện. Đang phát tạm bản giọng Nam (Thiền Tâm Đức)!`, "🌿");
+            showToast('Bản giọng Nữ đang hoàn thiện, phát bản giọng Nam Thiền Tâm Đức');
           }
         }
       }
 
       if (!trackAudio) {
-        showToast(`Tập ${ep.id}: Âm thanh đang hoàn tất phòng thu 48kHz. Mời đọc truyện!`, "⏳");
-        openReaderForTrack(id);
-        renderEpisodes(episodes);
+        audio.removeAttribute('src');
+        scrubberFill.style.width = '0%';
+        playerCurrentTime.textContent = '00:00';
+        playerDuration.textContent = '00:00';
+        updatePlayUI(false);
+        renderEpisodes();
+        if (autoPlay) {
+          showToast(`Tập ${ep.id} hiện chưa có bản thu, mời bạn đọc sách tranh`);
+          openReaderForTrack(id);
+        }
         return;
       }
 
-      const finalUrl = resolveAudioUrl(trackAudio);
-      if (audio.src !== finalUrl && !audio.src.endsWith(finalUrl)) {
-        audio.src = finalUrl;
+      const needsNewSrc = !audio.src || !audio.src.endsWith(encodeURI(trackAudio)) && !audio.src.endsWith(trackAudio);
+      if (needsNewSrc) {
+        audio.src = trackAudio;
         audio.load();
       }
       audio.playbackRate = currentSpeed;
+      audio.volume = 1.0;
+
+      const applySeek = () => {
+        if (savedTime > 2 && audio.duration && savedTime < audio.duration - 5) {
+          audio.currentTime = savedTime;
+          const pct = (savedTime / audio.duration) * 100;
+          scrubberFill.style.width = pct + '%';
+          playerCurrentTime.textContent = formatTime(savedTime);
+          playerDuration.textContent = formatTime(audio.duration);
+        }
+      };
+
+      if (audio.readyState >= 1) {
+        applySeek();
+      } else {
+        audio.addEventListener('loadedmetadata', applySeek, { once: true });
+      }
 
       if ('mediaSession' in navigator) {
         navigator.mediaSession.metadata = new MediaMetadata({
-          title: ep.title,
-          artist: `Giọng đọc: ${getVoiceName()} (48kHz)`,
-          album: "Sách Của Con — Truyện Thiên Nhiên Ru Ngủ"
+          title: cleanDisplayTitle(ep),
+          artist: `Giọng đọc: ${getVoiceName()} · 48kHz`,
+          album: 'Sách Của Con — Tủ Sách Thiên Nhiên Ru Ngủ'
         });
       }
-
-      renderEpisodes(episodes);
 
       if (autoPlay) {
         audio.play().then(() => {
           updatePlayUI(true);
-        }).catch(err => {
-          console.warn("Autoplay notice:", err);
+          renderEpisodes();
+        }).catch(() => {
           updatePlayUI(false);
+          renderEpisodes();
         });
       } else {
         updatePlayUI(false);
+        renderEpisodes();
       }
     }
 
@@ -1345,121 +2877,176 @@
         selectTrack(currentTrackId, true);
         return;
       }
-
       if (audio.paused) {
+        audio.volume = 1.0;
         audio.play().then(() => {
           updatePlayUI(true);
-        }).catch(err => {
-          console.warn("Play error:", err);
-        });
+          renderEpisodes();
+        }).catch(() => {});
       } else {
         audio.pause();
+        if (audio.duration) {
+          saveProgress(currentTrackId, audio.currentTime, audio.duration);
+        }
         updatePlayUI(false);
+        renderEpisodes();
       }
     }
 
     function playHeroTrack() {
-      if (currentTrackId === featuredTrackId && !audio.paused) {
+      if (currentTrackId === featuredTrackId && audio.src) {
         togglePlay();
       } else {
-        selectTrack(featuredTrackId, true);
+        const saved = getSavedResume();
+        const rTime = (saved && saved.id === featuredTrackId) ? saved.time : 0;
+        selectTrack(featuredTrackId, true, rTime);
+      }
+    }
+
+    function playFromReader() {
+      if (readerTrackId !== currentTrackId) {
+        selectTrack(readerTrackId, true);
+      } else {
+        togglePlay();
       }
     }
 
     function updatePlayUI(isPlaying) {
-      btnPlayMain.textContent = isPlaying ? "⏸" : "▶";
-      heroPlayIcon.textContent = isPlaying ? "⏸" : "▶";
-      heroPlayText.textContent = isPlaying ? "Tạm Dừng" : "Nghe Ngay";
-      waveformBox.style.display = isPlaying ? "flex" : "none";
-      if (isPlaying) {
-        heroArt.classList.add("playing");
-      } else {
-        heroArt.classList.remove("playing");
-      }
-      document.getElementById('readerMiniPlayBtn').textContent = isPlaying ? "⏸ Tạm dừng" : "▶ Nghe truyện";
+      btnPlayMain.innerHTML = isPlaying ? SVG_PAUSE : SVG_PLAY;
+      document.getElementById('heroPlayIconWrap').innerHTML = isPlaying ? SVG_PAUSE : SVG_PLAY;
+      document.getElementById('heroPlayText').textContent = isPlaying ? 'Tạm Dừng' : 'Nghe Tiếp Tập Này';
+      waveformBox.style.display = isPlaying ? 'flex' : 'none';
+
+      const readerWave = document.getElementById('readerWaveBox');
+      readerWave.style.opacity = isPlaying ? '1' : '0.35';
+      document.getElementById('readerMiniPlayBtn').textContent = (isPlaying && readerTrackId === currentTrackId)
+        ? '⏸ Tạm dừng'
+        : '▶ Nghe truyện';
     }
 
     function playNext() {
+      if (!episodes.length) return;
       const idx = episodes.findIndex(e => e.id === currentTrackId);
       const nextIdx = (idx + 1) % episodes.length;
-      selectTrack(episodes[nextIdx].id, true);
+      selectTrack(episodes[nextIdx].id, true, 0);
     }
 
     function playPrev() {
+      if (!episodes.length) return;
       const idx = episodes.findIndex(e => e.id === currentTrackId);
       const prevIdx = (idx - 1 + episodes.length) % episodes.length;
-      selectTrack(episodes[prevIdx].id, true);
-    }
-
-    function formatTime(sec) {
-      if (isNaN(sec) || sec < 0) return "00:00";
-      const m = Math.floor(sec / 60);
-      const s = Math.floor(sec % 60);
-      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+      selectTrack(episodes[prevIdx].id, true, 0);
     }
 
     audio.ontimeupdate = () => {
       if (audio.duration) {
-        const percent = (audio.currentTime / audio.duration) * 100;
-        scrubberFill.style.width = percent + '%';
+        const pct = (audio.currentTime / audio.duration) * 100;
+        scrubberFill.style.width = pct + '%';
         playerCurrentTime.textContent = formatTime(audio.currentTime);
         playerDuration.textContent = formatTime(audio.duration);
+        saveProgress(currentTrackId, audio.currentTime, audio.duration);
+
+        if (currentTrackId === featuredTrackId) {
+          document.getElementById('heroResumeFill').style.width = Math.min(100, pct) + '%';
+        }
+        if (document.getElementById('readerModal').classList.contains('open') && readerTrackId === currentTrackId) {
+          document.getElementById('readerMiniTime').textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+        }
       }
     };
 
+    // Giữ nguyên cơ chế tự động chuyển tiếp liên tục sang tập sau khi nghe xong
     audio.onended = () => {
+      if (audio.duration) {
+        saveProgress(currentTrackId, audio.duration, audio.duration);
+      }
       playNext();
     };
 
+    window.addEventListener('beforeunload', () => {
+      if (audio.duration && audio.currentTime > 5) {
+        lastSaveStamp = 0;
+        saveProgress(currentTrackId, audio.currentTime, audio.duration);
+      }
+    });
+
     function seekAudio(e) {
       const rect = document.getElementById('scrubber').getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const width = rect.width;
+      const clickX = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
       if (audio.duration) {
-        audio.currentTime = (clickX / width) * audio.duration;
+        audio.currentTime = (clickX / rect.width) * audio.duration;
+        lastSaveStamp = 0;
+        saveProgress(currentTrackId, audio.currentTime, audio.duration);
       }
     }
 
-    // Tốc độ ru ngủ
-    const speeds = [1.0, 0.9, 0.8, 1.1];
+    /* ==================== SPEED & GENTLE FADE SLEEP TIMER ==================== */
+    const speeds = [1.0, 0.9, 0.85, 1.1];
     function cycleSpeed() {
       const idx = speeds.indexOf(currentSpeed);
       currentSpeed = speeds[(idx + 1) % speeds.length];
       audio.playbackRate = currentSpeed;
-      document.getElementById('speedBtn').textContent = currentSpeed.toFixed(1) + "x";
-      showToast(`Tốc độ ru ngủ: ${currentSpeed.toFixed(1)}x`, "⚡");
+      document.getElementById('speedBtn').textContent = currentSpeed + 'x';
+      showToast(`Tốc độ giọng đọc: ${currentSpeed}x`);
     }
 
-    // Hẹn giờ ngủ
     function setTimer(mins, btnEl) {
       document.querySelectorAll('.timer-btn').forEach(b => b.classList.remove('active'));
       btnEl.classList.add('active');
 
       if (sleepTimeout) clearTimeout(sleepTimeout);
+      if (fadeInterval) clearInterval(fadeInterval);
+      audio.volume = 1.0;
+
       if (mins > 0) {
         sleepTimeout = setTimeout(() => {
-          audio.pause();
-          updatePlayUI(false);
-          showToast("🌙 Đã hết giờ hẹn ru ngủ. Chúc bé ngủ ngoan!", "😴");
+          // Nhỏ dần âm lượng êm dịu trong 8 giây rồi dừng tĩnh lặng (0% câu chúc ngủ ngon kiểu MC)
+          let vol = audio.volume;
+          fadeInterval = setInterval(() => {
+            vol = Math.max(0, vol - 0.08);
+            audio.volume = vol;
+            if (vol <= 0.02) {
+              clearInterval(fadeInterval);
+              audio.pause();
+              audio.volume = 1.0;
+              updatePlayUI(false);
+              renderEpisodes();
+              showToast('Đã khép lại giờ hẹn nghe truyện trong đêm');
+            }
+          }, 600);
         }, mins * 60 * 1000);
-        showToast(`Đã hẹn giờ tắt nhạc sau ${mins} phút`, "⏱️");
+        showToast(`Đã hẹn giờ tự tắt sau ${mins} phút`);
       } else {
-        showToast("Đã tắt hẹn giờ ngủ", "⏱️");
+        showToast('Đã tắt bộ hẹn giờ');
       }
     }
 
-    // Full-Screen Bedtime Reader
+    /* ==================== STORYBOOK READER (GIẤY KEM / ĐÊM ẤM) ==================== */
+    function setReaderTheme(mode, notify = false) {
+      readerTheme = mode === 'night' ? 'night' : 'parchment';
+      localStorage.setItem(STORAGE_READER_THEME, readerTheme);
+      const modal = document.getElementById('readerModal');
+      modal.classList.toggle('theme-night', readerTheme === 'night');
+      document.getElementById('btnThemeNight').classList.toggle('active', readerTheme === 'night');
+      document.getElementById('btnThemeParchment').classList.toggle('active', readerTheme === 'parchment');
+    }
+
     function openReaderForTrack(id) {
       const ep = episodes.find(e => e.id === id);
       if (!ep) return;
+      readerTrackId = id;
 
-      document.getElementById('readerTitle').textContent = ep.title;
-      document.getElementById('readerRelicText').textContent = `Kỷ vật: ${ep.relic}`;
-      
+      document.getElementById('readerEyebrow').textContent = ep.id === '00'
+        ? 'CHƯƠNG MỞ ĐẦU · THUNG LŨNG RỪNG PHONG'
+        : `TẬP ${ep.id} · ${ep.category.toUpperCase()}`;
+      document.getElementById('readerTitle').textContent = cleanStoryHeadingOnly(ep);
+      document.getElementById('readerRelicText').textContent = ep.relic || 'Kỷ vật thiên nhiên';
+
       const bodyEl = document.getElementById('readerBodyText');
       bodyEl.innerHTML = '';
 
       let illustrationIndex = 0;
+      let firstNarrativeAssigned = false;
       const illustrations = ep.illustrations || [];
 
       const paragraphs = ep.content.split('\n\n');
@@ -1475,9 +3062,9 @@
             const safeCaption = illus.caption.replace(/'/g, "\\'");
             figure.innerHTML = `
               <div class="illustration-frame" onclick="openImageZoom('${illus.url}', '${safeCaption}')">
-                <img src="${illus.url}" class="illustration-img" alt="${illus.caption}" loading="lazy" />
+                <img src="${illus.url}" class="illustration-img" alt="${escapeHtml(illus.caption)}" loading="lazy" />
               </div>
-              <div class="illustration-caption">❦ ${illus.caption}</div>
+              <div class="illustration-caption">❦ ${escapeHtml(illus.caption)}</div>
             `;
             bodyEl.appendChild(figure);
             illustrationIndex++;
@@ -1489,21 +3076,76 @@
           }
         } else {
           const pEl = document.createElement('p');
+          const isDialogue = clean.startsWith('—') || clean.startsWith('-');
+          if (!firstNarrativeAssigned && !isDialogue) {
+            pEl.className = 'drop-cap-para';
+            firstNarrativeAssigned = true;
+          } else if (isDialogue) {
+            pEl.className = 'dialogue-para';
+          }
           pEl.textContent = clean;
           bodyEl.appendChild(pEl);
         }
       });
 
-      document.getElementById('readerModal').classList.add('open');
+      // Thẻ chuyển sang tập kế tiếp cuối chương
+      const curIdx = episodes.findIndex(e => e.id === id);
+      const nextEp = episodes[(curIdx + 1) % episodes.length];
+      const nextBox = document.getElementById('readerNextContainer');
+      if (nextEp && nextEp.id !== id) {
+        nextBox.innerHTML = `
+          <div class="reader-next-card" onclick="openReaderForTrack('${nextEp.id}')">
+            <div>
+              <div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.8px; color:var(--reader-muted); font-weight:700;">Đêm tiếp theo</div>
+              <div style="font-family:var(--font-display); font-size:15.5px; font-weight:600; margin-top:2px;">${escapeHtml(cleanDisplayTitle(nextEp))}</div>
+            </div>
+            <span style="font-size:18px; color:var(--reader-accent);">→</span>
+          </div>
+        `;
+      } else {
+        nextBox.innerHTML = '';
+      }
+
+      document.getElementById('readerMiniInfo').textContent = `${cleanDisplayTitle(ep)} · ${getVoiceShort()}`;
+      document.getElementById('readerMiniTime').textContent = (readerTrackId === currentTrackId && audio.duration)
+        ? `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`
+        : `Thời lượng đọc & nghe: ${ep.duration}`;
+      updatePlayUI(!audio.paused);
+
+      const scrollArea = document.getElementById('readerScrollArea');
+      scrollArea.scrollTop = 0;
+      document.getElementById('readerProgressFill').style.width = '0%';
+
+      const modal = document.getElementById('readerModal');
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
     }
 
+    document.getElementById('readerScrollArea').addEventListener('scroll', function () {
+      const maxScroll = this.scrollHeight - this.clientHeight;
+      const pct = maxScroll > 0 ? Math.min(100, (this.scrollTop / maxScroll) * 100) : 100;
+      document.getElementById('readerProgressFill').style.width = pct + '%';
+    });
+
+    function closeReader() {
+      const modal = document.getElementById('readerModal');
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function changeFontSize(delta) {
+      currentFontSize = Math.min(24, Math.max(15, currentFontSize + delta));
+      localStorage.setItem(STORAGE_FONT_SIZE, String(currentFontSize));
+      document.getElementById('readerBodyText').style.fontSize = currentFontSize + 'px';
+    }
+
+    /* ==================== IMAGE ZOOM & SEARCH ==================== */
     function openImageZoom(url, caption) {
       const modal = document.getElementById('zoomModal');
-      const img = document.getElementById('zoomImage');
-      const cap = document.getElementById('zoomCaption');
-      img.src = url;
-      cap.textContent = caption.startsWith('❦') ? caption : '❦ ' + caption;
+      document.getElementById('zoomImage').src = url;
+      document.getElementById('zoomCaption').textContent = caption.startsWith('❦') ? caption : '❦ ' + caption;
       modal.classList.add('open');
     }
 
@@ -1511,22 +3153,11 @@
       document.getElementById('zoomModal').classList.remove('open');
     }
 
-    function closeReader() {
-      document.getElementById('readerModal').classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    function changeFontSize(delta) {
-      currentFontSize = Math.min(24, Math.max(14, currentFontSize + delta));
-      document.getElementById('readerBodyText').style.fontSize = currentFontSize + 'px';
-    }
-
-    // Search Modal
     function openSearchModal() {
       document.getElementById('searchModal').classList.add('open');
       const input = document.getElementById('searchInput');
       input.value = '';
-      input.focus();
+      setTimeout(() => input.focus(), 50);
       handleSearch('');
     }
 
@@ -1546,28 +3177,33 @@
       const matched = episodes.filter(e => {
         if (!q) return true;
         return e.title.toLowerCase().includes(q) ||
-               e.relic.toLowerCase().includes(q) ||
-               e.category.toLowerCase().includes(q) ||
-               e.summary.toLowerCase().includes(q);
+               (e.relic || '').toLowerCase().includes(q) ||
+               (e.category || '').toLowerCase().includes(q) ||
+               (e.summary || '').toLowerCase().includes(q);
       });
 
       if (matched.length === 0) {
-        resContainer.innerHTML = '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:12px;">Không tìm thấy tập phù hợp.</div>';
+        resContainer.innerHTML = '<div style="font-size:13px; color:var(--text-sage); text-align:center; padding:18px;">Chưa tìm thấy tập truyện phù hợp trong Thung Lũng.</div>';
         return;
       }
 
       matched.forEach(ep => {
         const item = document.createElement('div');
-        item.style.cssText = 'padding:8px 10px; background:rgba(30,41,59,0.7); border-radius:12px; display:flex; align-items:center; justify-content:space-between; cursor:pointer;';
+        item.className = 'search-item';
         item.innerHTML = `
-          <div style="display:flex; align-items:center; gap:8px; overflow:hidden;">
-            <span style="font-size:16px;">${ep.icon}</span>
-            <div style="overflow:hidden;">
-              <div style="font-size:12px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${ep.title}</div>
-              <div style="font-size:10px; color:var(--text-muted);">${ep.relic.slice(0,30)}...</div>
+          <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
+            <div style="width:38px; height:48px; border-radius:8px; overflow:hidden; flex-shrink:0; border:1px solid var(--brass-border);">
+              ${buildHeirloomCoverMarkup(ep)}
+            </div>
+            <div style="min-width:0; flex:1;">
+              <div style="font-family:var(--font-display); font-size:13.5px; font-weight:600; color:var(--text-ivory); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(cleanDisplayTitle(ep))}</div>
+              <div style="font-size:11px; color:var(--text-sage); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(ep.duration)} · Kỷ vật: ${escapeHtml(ep.relic)}</div>
             </div>
           </div>
-          <button style="background:var(--gold-primary); color:#070B19; border:none; border-radius:50%; width:28px; height:28px; font-size:10px; font-weight:700; flex-shrink:0;">▶</button>
+          <div style="display:flex; gap:6px; flex-shrink:0;">
+            <button onclick="event.stopPropagation(); closeSearchModal(); openReaderForTrack('${ep.id}')" style="background:var(--bg-surface); color:var(--text-ivory); border:1px solid var(--subtle-border); border-radius:999px; padding:5px 11px; font-size:11px; font-weight:600;">Đọc</button>
+            <button style="background:var(--honey-gold); color:var(--ink-dark); border:none; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center;">${SVG_PLAY}</button>
+          </div>
         `;
         item.onclick = () => {
           closeSearchModal();
@@ -1577,38 +3213,25 @@
       });
     }
 
-    // Category Filter
-    function filterCategory(cat, chipEl) {
-      document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-      chipEl.classList.add('active');
-
-      if (cat === 'all') {
-        renderEpisodes(episodes);
-      } else {
-        const filtered = episodes.filter(e => e.category === cat);
-        renderEpisodes(filtered);
-      }
-    }
-
-    // Toast Notification
-    function showToast(text, icon = '✨') {
+    /* ==================== TOAST & SERVICE WORKER ==================== */
+    let toastTimer = null;
+    function showToast(text) {
       const toast = document.getElementById('toast');
       document.getElementById('toastText').textContent = text;
-      document.getElementById('toastIcon').textContent = icon;
       toast.classList.add('show');
-      setTimeout(() => {
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
         toast.classList.remove('show');
-      }, 3000);
+      }, 2800);
     }
 
-    // Đăng ký Service Worker cho PWA
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration notice:', err));
+        navigator.serviceWorker.register('sw.js').catch(() => {});
       });
     }
 
-    initApp();
+    window.addEventListener('DOMContentLoaded', initApp);
   </script>
 </body>
 </html>

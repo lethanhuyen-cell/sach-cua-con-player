@@ -11,7 +11,7 @@ import json
 
 BASE_DIR = "/Users/mac/Desktop/SÁCH CỦA CON"
 TAC_PHAM_DIR = os.path.join(BASE_DIR, "02_TAC_PHAM_HOAN_CHINH")
-WEB_DIR = os.path.join(BASE_DIR, "web_sach_cua_con")
+WEB_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_FILE = os.path.join(WEB_DIR, "data", "episodes.json")
 HUB_AUDIO_DIR = os.path.join(BASE_DIR, "AUDIO_HANG_DEM_CHO_BE_48KHZ")
 
@@ -28,6 +28,20 @@ FOLDERS = [
     ("09", "Dem_009_Ban_Tho_Hazel", "Thú kỳ diệu", "🐇"),
     ("10", "Dem_010_Chu_Chuot_Dusty", "Thú kỳ diệu", "🐭"),
 ]
+
+CANON_RELICS = {
+    "00": "Chiếc túi da mở đầu & cuốn sổ hành trình",
+    "01": "Mẩu gỗ thông thơm của bác Barley",
+    "02": "Sợi râu trắng bạc của cô mèo Amber",
+    "03": "Nhánh cỏ ba lá khô trên đồng cỏ",
+    "04": "Chiếc lông cò trắng bên đầm lầy",
+    "05": "Chiếc đinh móng ngựa mộc mạc",
+    "06": "Mẩu đá muối nơi vách núi cao",
+    "07": "Búp lông cừu ấm nắng mùa thu",
+    "08": "Mẩu vỏ hạt dẻ rừng của bác Pip",
+    "09": "Chiếc lông tơ mềm mại của bạn Hazel",
+    "10": "Hạt lúa mì vàng óng trong cối xay gió",
+}
 
 def extract_episode_data(ep_num, folder_name, category, icon):
     folder_path = os.path.join(TAC_PHAM_DIR, folder_name)
@@ -68,11 +82,20 @@ def extract_episode_data(ep_num, folder_name, category, icon):
         if main_name.upper().startswith(f"TẬP {ep_num}:"):
             title_clean = main_name
     
-    # Trích xuất kỷ vật túi da
-    relic = "Kỷ vật thiên nhiên"
-    relic_match = re.search(r'(chiếc túi da thuộc[^.\n]+?\.)', content, re.IGNORECASE)
-    if relic_match:
-        relic = relic_match.group(1).strip()
+    # Trích xuất kỷ vật túi da chuẩn Canon (hoặc tự động quét cho các tập mới)
+    relic = CANON_RELICS.get(ep_num, "")
+    if not relic:
+        relic_match = re.search(
+            r'(?:gắp lấy|nhặt lấy|đặt)\s+([^.\n]{4,70}?)\s+(?:vào\s+chiếc\s+túi|nằm\s+(?:cạnh|ngay ngắn|êm ái))',
+            content,
+            re.IGNORECASE,
+        )
+        if relic_match:
+            raw_r = relic_match.group(1).strip()
+            relic = raw_r[0].upper() + raw_r[1:]
+        else:
+            fallback_match = re.search(r'(chiếc túi da[^.\n]+?\.)', content, re.IGNORECASE)
+            relic = fallback_match.group(1).strip() if fallback_match else "Kỷ vật thiên nhiên Thung Lũng Rừng Phong"
         
     # Trích xuất tóm tắt ngắn từ cảnh 1
     paragraphs = [p.strip() for p in content.split("\n\n") if p.strip() and not p.startswith("#") and not p.startswith("---") and p != "❦"]
