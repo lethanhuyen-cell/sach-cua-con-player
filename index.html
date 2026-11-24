@@ -1908,14 +1908,14 @@
     <div class="top-bar-inner">
       <div class="brand-wrap">
         <div class="brand-medallion" aria-hidden="true">
-          <!-- Huy hiệu chú chim sẻ non Bé Lim đội mũ beret len xanh -->
+          <!-- Huy hiệu Chim Cổ Đỏ Châu Âu Lim đội mũ beret xanh đá -->
           <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
             <circle cx="18" cy="18" r="16" stroke="#EAB354" stroke-opacity="0.35" stroke-dasharray="2 2"/>
-            <path d="M11 23C11 17.5 14.8 14 19.5 14C23.5 14 26.5 16.8 26.5 20.5C26.5 24.5 23 27 17.5 27C13.5 27 11 25.3 11 23Z" fill="#F2D184"/>
-            <path d="M12.5 14.5C13.5 11.2 17.8 9.8 22 11.2C23.6 11.8 24.4 13 23.8 14.1C20.5 13.3 15.8 13.7 12.5 14.5Z" fill="#4A789C" stroke="#EAB354" stroke-width="0.8"/>
-            <circle cx="22.2" cy="18.2" r="1.4" fill="#1B140A"/>
-            <path d="M26.2 18.8L29.2 19.8L26.2 21Z" fill="#D98245"/>
-            <path d="M14 21.5C15.8 20.5 18.5 21 20 22.8" stroke="#8C6239" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M10.5 23C10.5 17.5 14.5 14 19.5 14C23.5 14 26.2 16.8 26.2 20.5C26.2 24.5 22.8 27 17.5 27C13.5 27 10.5 25.3 10.5 23Z" fill="#9E734E"/>
+            <path d="M17.5 15.2C21.8 15.2 25.5 17.4 25.5 20.6C25.5 23.4 22.8 25.4 19.5 25.4C17.2 25.4 16 23.6 16 20.8C16 17.8 16.5 15.2 17.5 15.2Z" fill="#D87A46"/>
+            <path d="M12.2 14.6C13.2 11.4 17.8 10 22.2 11.4C23.8 12 24.5 13.1 23.8 14.2C20.4 13.4 15.6 13.8 12.2 14.6Z" fill="#5B7F9E" stroke="#EAB354" stroke-width="0.7"/>
+            <circle cx="22" cy="18" r="1.35" fill="#1B140A"/>
+            <path d="M25.8 18.6L29.6 19.4L25.8 20.4Z" fill="#4A423B"/>
           </svg>
         </div>
         <div class="brand-text">
@@ -2395,10 +2395,9 @@
     }
 
     function buildHeirloomCoverMarkup(ep, preferSquareHero = false) {
-      const illus = ep.illustrations || [];
-      if (illus.length > 0) {
-        const chosen = (illus[1] || illus[0]).url;
-        return `<img src="${chosen}" alt="${escapeHtml(cleanDisplayTitle(ep))}" class="book-cover-img" loading="lazy" />`;
+      const coverSrc = ep.cover || ((ep.illustrations && ep.illustrations[0]) ? ep.illustrations[0].url : '');
+      if (coverSrc) {
+        return `<img src="${coverSrc}" alt="${escapeHtml(cleanDisplayTitle(ep))}" class="book-cover-img" loading="lazy" />`;
       }
 
       const cfg = COVER_THEMES[ep.id] || {
@@ -2733,12 +2732,7 @@
               ${topStatusBadge}
               <span class="cover-pill-dur">${escapeHtml(ep.duration)}</span>
             </div>
-            <div class="cover-relic-ribbon">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 3C7.5 3 4 6.5 4 11c0 4 2.8 7.2 6.8 7.9L12 21l1.2-2.1C17.2 18.2 20 15 20 11c0-4.5-3.5-8-8-8Z"/>
-              </svg>
-              <span>${escapeHtml(ep.relic)}</span>
-            </div>
+
           </div>
 
           <div class="book-body">
@@ -3242,7 +3236,7 @@
         }
       });
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js?v=9', { updateViaCache: 'none' }).then(r => r.update()).catch(() => {});
+        navigator.serviceWorker.register('sw.js?v=10', { updateViaCache: 'none' }).then(r => r.update()).catch(() => {});
       });
     }
 

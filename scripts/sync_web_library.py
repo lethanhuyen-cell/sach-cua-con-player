@@ -129,25 +129,19 @@ def extract_episode_data(ep_num, folder_name, category, icon):
     elif audio_male:
         audio_default = audio_male
     
-    # Tự động quét tranh minh họa nếu có
+    # Tự động quét bìa và tranh minh họa màu nước Miền Dâu Dại
     illustrations = []
-    ep_img_dir = os.path.join(WEB_DIR, "public", "images", "episodes", ep_num)
+    cover_url = ""
+    ep_img_dir = os.path.join(WEB_DIR, "images", "episodes", ep_num)
     if os.path.exists(ep_img_dir):
         for img_file in sorted(os.listdir(ep_img_dir)):
             if img_file.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
-                caption = "Minh họa tác phẩm phong cách tranh màu nước hoài niệm"
-                if "scene_1" in img_file:
-                    caption = "Thung Lũng Rừng Phong ngập tràn sắc vàng mật ong ấm áp của mùa thu."
-                elif "scene_2" in img_file:
-                    caption = "Bé Lim và mẹ Vacci dừng chân trò chuyện cùng Bác Chó Barley bên hàng rào gỗ."
-                elif "scene_3" in img_file:
-                    caption = "Chiếc mũi kỳ diệu của Bác Chó Barley bắt trọn từng làn hương thoang thoảng từ xa ba trăm mét."
-                elif "scene_4" in img_file:
-                    caption = "Lim cẩn thận cất mẩu gỗ thông vào chiếc túi da thuộc và chìm vào giấc ngủ an lành."
-
+                rel_u = f"images/episodes/{ep_num}/{img_file}"
+                if img_file.startswith("cover."):
+                    cover_url = rel_u
                 illustrations.append({
-                    "url": f"images/episodes/{ep_num}/{img_file}",
-                    "caption": caption
+                    "url": rel_u,
+                    "caption": f"{title_clean.title()} — Minh họa màu nước Miền Dâu Dại"
                 })
 
     word_count = len(content.split())
@@ -164,6 +158,7 @@ def extract_episode_data(ep_num, folder_name, category, icon):
         "audio": audio_female or audio_male or "",
         "audio_female": audio_female,
         "audio_male": audio_male,
+        "cover": cover_url,
         "illustrations": illustrations,
         "content": content
     }
