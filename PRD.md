@@ -1,13 +1,15 @@
-# PRD — Litibook (Release 1.0 · Tài liệu v1.2 — Đã phê duyệt)
+# PRD — Thư viện Đồi Mơ (Release 1.0 · Tài liệu v1.3 — Đã phê duyệt)
 
 | Thuộc tính | Thông tin |
 | :--- | :--- |
-| **Tên sản phẩm** | Litibook — Thư viện Sách nói Gia đình |
-| **Phiên bản** | Sản phẩm Release 1.0 · Tài liệu v1.2 (Đã hiệu đính sau thẩm định độc lập) |
+| **Tên thư viện** | **Thư viện Đồi Mơ** |
+| **Định danh** | **Sách đọc và nghe trước giờ ngủ** |
+| **Bản quyền** | **Copyright © Nancy & Liti** |
+| **Phiên bản** | Sản phẩm Release 1.0 · Tài liệu v1.3 (Đồng bộ Hiến pháp [GEMINI.md](./GEMINI.md)) |
 | **Vai trò biên soạn** | Principal Product Manager · UX Architect · Technical Product Lead |
 | **Phạm vi tài liệu** | Cấp độ sản phẩm (cơ sở chuẩn cho Kiến trúc Kỹ thuật & Thiết kế UX/UI) |
 | **Phong cách mỹ thuật** | Minimalist Watercolor Storybook (tinh thần màu nước của *Miền Dâu Dại*) |
-| **Trạng thái** | **Đã phê duyệt chính thức (Approved — Đã chốt OPD-01..06 & DEC-01..08)** |
+| **Trạng thái** | **Đã phê duyệt chính thức (Ràng buộc bất biến với [GEMINI.md](./GEMINI.md))** |
 
 ---
 
@@ -19,10 +21,11 @@
 ### 1.2. Mục tiêu sản phẩm Release 1.0
 1. **Đa bộ sách, tự chủ xuất bản:** Chủ thư viện tự tạo bộ sách mới, phân chia phần/tập, tải lên audio, ảnh bìa, tranh minh họa, bản chữ và xuất bản trực tiếp qua giao diện quản trị.
 2. **Trải nghiệm nghe ru ngủ trọn vẹn trên di động:** Trình phát audio ổn định khi khóa màn hình, nhớ vị trí nghe, có hẹn giờ tắt an toàn và giao diện ban đêm ấm áp.
-3. **Riêng tư mặc định:** Nội dung và tệp đa phương tiện chỉ dành cho gia đình và những người có mã mời hợp lệ; không bị lập chỉ mục công khai bởi công cụ tìm kiếm.
+3. **Chia sẻ đơn giản, không rào cản:** Người thân mở đường dẫn là vào thẳng thư viện nghe/đọc ngay lập tức (không cổng mã mời, không bắt đăng nhập); chỉ chặn lập chỉ mục công cụ tìm kiếm (`noindex`) và khóa xác thực tại khu vực Quản trị `/admin`.
 4. **Dữ liệu thuộc về chủ thư viện:** Toàn bộ cấu trúc nội dung, siêu dữ liệu, bản chữ và bảng kê đường dẫn tải tệp đa phương tiện có thể xuất ra định dạng chuẩn bất kỳ lúc nào; tệp gốc được tổ chức rõ ràng để chủ thư viện lưu bản sao tại máy cá nhân hoặc di chuyển nền tảng về sau.
 
 ### 1.3. Ngoài phạm vi (Out of Scope — Release 1.0)
+- **Không kiêm công cụ sáng tác / sinh nội dung AI:** Litibook chỉ tập trung làm nền tảng thư viện giới thiệu, lưu trữ, phát audio và hiển thị các bộ sách hoàn chỉnh được đưa lên qua CMS; việc viết truyện hay thiết kế/vẽ tranh minh họa thuộc các dự án tạo sách độc lập bên ngoài.
 - **Không thương mại hóa:** Không thanh toán, gói cước, giỏ hàng, mã giảm giá, quảng cáo hay liên kết tiếp thị.
 - **Không tính năng mạng xã hội:** Không bình luận công khai, thả tim, bảng xếp hạng, theo dõi người dùng hay chia sẻ công khai lên mạng xã hội.
 - **Không cơ chế gây nghiện cho trẻ:** Không thông báo đẩy thúc ép (streak, thông báo nhắc quay lại), không tự động gợi ý video/nội dung ngoài thư viện.
@@ -43,7 +46,7 @@
 1. **Giờ đi ngủ buổi tối (Bedtime):** Phụ huynh mở Litibook trên điện thoại trong phòng tối, bật chế độ ánh sáng đêm ấm, chạm mở tập đang nghe dở (hoặc tập kế tiếp được gợi ý sẵn), đặt hẹn giờ tắt 15 phút (hoặc "Hết tập này"), rồi khóa màn hình đặt điện thoại lên tủ đầu giường.
 2. **Đọc cùng con (Co-reading):** Phụ huynh và trẻ cùng ngồi xem tranh minh họa màu nước, nghe giọng đọc (hoặc đọc tập *"Chỉ đọc chữ"*) và lướt theo bản chữ với cỡ chữ dễ đọc.
 3. **Nghe trên xe / di chuyển:** Thao tác một tay ở vùng ngón cái để phát/tạm dừng hoặc tua lùi 15 giây; khi mạng 4G chập chờn ở đoạn hầm/đường xa, trình phát tự đệm lại êm ái thay vì văng lỗi khó hiểu.
-4. **Chia sẻ riêng tư cho ông bà / bạn thân:** Chủ thư viện tạo mã mời riêng cho từng hộ gia đình và gửi đường dẫn cổng thư viện (không lộ ảnh/tên sách qua khung xem trước ứng dụng chat) để người thân xác nhận mở nghe ngay trên trình duyệt mà không cần tạo tài khoản.
+4. **Chia sẻ nhanh cho ông bà / bạn thân:** Chủ thư viện gửi đường dẫn Litibook qua tin nhắn; người thân bấm vào mở thẳng Trang chủ Thư viện để nghe và đọc ngay mà không cần nhập mã mời hay tạo tài khoản.
 5. **Xuất bản tập mới cuối tuần:** Chủ thư viện đăng nhập khu vực quản trị, tạo Tập mới trong một bộ sách có sẵn, chọn Hồ sơ Giọng đọc và tải 1–2 file audio, dán bản thảo văn bản, thêm 3–4 tranh minh họa, bấm "Xem trước" kiểm tra giao diện di động rồi bấm "Xuất bản".
 
 ---
@@ -66,13 +69,13 @@ Thư viện (Library) [kèm Danh mục Hồ sơ Giọng đọc (Voice Profile) d
 
 | Thực thể | Thuộc tính bắt buộc | Thuộc tính tùy chọn / Mở rộng |
 | :--- | :--- | :--- |
-| **Bộ sách (Book)** | Mã định danh, Tên bộ sách, Trạng thái (`Nháp/Đang ẩn` · `Đã xuất bản`) + cờ `Thùng rác`, Thứ tự hiển thị, Cờ xác nhận quyền sử dụng hợp lệ | Mô tả ngắn, Tác giả chữ, Họa sĩ minh họa, Độ tuổi gợi ý, Ảnh bìa (`3:4`), Nhãn chủ đề, Sắc thái màu nước định sẵn (3–4 preset chuẩn WCAG AA), Nhãn "Ghi chú cuối tập" (rỗng = tắt), Mặc định `Auto-next`, Kiểu đánh số tập |
+| **Bộ sách (Book)** | Mã định danh, Tên bộ sách, Trạng thái (`Nháp/Đang ẩn` · `Đã xuất bản`) + cờ `Thùng rác`, Thứ tự hiển thị, Cờ xác nhận quyền sử dụng hợp lệ | Mô tả ngắn, Tác giả chữ, Họa sĩ minh họa, Độ tuổi gợi ý, Ảnh bìa (`3:4`), Nhãn chủ đề, Sắc thái màu nước định sẵn (3–4 preset chuẩn WCAG AA), Mặc định `Auto-next`, Kiểu đánh số tập |
 | **Phần (Part)** | Mã định danh, Tên phần, Thứ tự trong bộ sách | Mô tả ngắn, Ảnh bìa phần |
-| **Tập (Episode)** | Mã định danh, Tiêu đề tập, Thứ tự hiển thị, Trạng thái (`Nháp/Đang ẩn` · `Đã xuất bản`) + cờ `Thùng rác`, Cờ `Chỉ đọc chữ` | Mã/Số tập hiển thị (VD: `Tập 01`), Tóm tắt ngắn, Thẻ/nhãn, Nội dung "Ghi chú cuối tập" (hiển thị theo nhãn của Bộ sách), Ảnh bìa riêng (kế thừa Phần/Bộ sách nếu trống), Thời lượng hiển thị (từ audio mặc định hoặc ước tính phút đọc nếu `Chỉ đọc chữ`) |
+| **Tập (Episode)** | Mã định danh, Tiêu đề tập, Thứ tự hiển thị, Trạng thái (`Nháp/Đang ẩn` · `Đã xuất bản`) + cờ `Thùng rác`, Cờ `Chỉ đọc chữ` | Mã/Số tập hiển thị (VD: `Tập 01`), Tóm tắt ngắn (chỉ dùng ở danh sách quản trị/mô tả ngắn nếu cần, không tách hộp vụn trên trang đọc), Thẻ/nhãn, Ảnh bìa riêng (kế thừa Phần/Bộ sách nếu trống), Thời lượng hiển thị (từ audio mặc định hoặc ước tính phút đọc nếu `Chỉ đọc chữ`) |
 | **Hồ sơ Giọng đọc (Voice Profile)** | Mã giọng cố định (`voice_key`), Tên hiển thị chuẩn (VD: *Giọng Nữ · Mỹ Duyên*) | Tên người đọc, Ghi chú nguồn thu âm |
 | **Bản thu âm (Audio Track)** | Tệp audio, Tham chiếu `Voice Profile`, Cờ giọng mặc định, Mã phiên bản/thời điểm cập nhật | Thời lượng chính xác (giây), Dung lượng tệp, Ghi chú bản thu |
 | **Bản chữ (Text)** | Nội dung văn bản có cấu trúc cơ bản (tiêu đề nhỏ, đoạn văn, trích dẫn, dấu ngắt cảnh) | Số từ (tự tính, tối đa `30.000` từ/tập) |
-| **Tranh minh họa (Illustration)** | Tệp hình ảnh, Thứ tự hiển thị | Chú thích ảnh (caption), Mô tả thay thế (alt text) |
+| **Tranh minh họa (Illustration)** | Tệp hình ảnh, Thứ tự hiển thị | Mô tả thay thế ẩn cho trình đọc màn hình (`alt text` — **không có chú thích `caption` hiển thị trên giao diện đọc**) |
 
 ---
 
@@ -86,8 +89,14 @@ Thư viện (Library) [kèm Danh mục Hồ sơ Giọng đọc (Voice Profile) d
   - *Chế độ Ban đêm (Warm Night):* Nền tối ấm dịu mắt (tránh đen gắt và ánh sáng xanh gắt) phục vụ nghe truyện trước khi ngủ.
 - **Kiểu chữ (Typography):** Tiêu đề mềm mại có nét sách truyện; phần bản chữ thân bài thoáng, khoảng cách dòng rộng để phụ huynh đọc trong ánh sáng yếu không mỏi mắt.
 
-### 4.2. Quy chuẩn Mobile-first UX
+### 4.2. Quy chuẩn Mobile-first UX & Giao diện Đọc Nhiều Chữ (Bất khả xâm phạm)
 - **NFR-001 (Ưu tiên màn hình dọc):** Toàn bộ luồng người nghe được thiết kế chuẩn cho màn hình `360px–430px` trước, sau đó mở rộng hài hòa cho máy tính bảng và màn hình lớn.
+- **NFR-001B (Quy chuẩn Giao diện Đọc cho mọi bộ sách hiện tại & tương lai):**
+  1. **Cấm chi tiết phụ gây loãng mạch đọc:** Tuyệt đối bỏ chi tiết *"Kỷ vật trong túi da"*, *"Ghi chú cuối tập"* hoặc bất kỳ hộp thông tin phụ nào trên giao diện đọc của mọi bộ sách.
+  2. **Tối ưu cho màn hình nhiều chữ, không để không gian vụn:** Trên mỗi lần cuộn màn hình dọc phải ưu tiên diện tích liền mạch cho thân bài chữ; không tách nhiều thẻ viền rời rạc, không chèn banner thừa hay khoảng trống vụn.
+  3. **Thu gọn chọn giọng đọc:** Cụm nút Phát và chọn Giọng đọc trên trang đọc phải gom gọn vào **1 thanh ngang mảnh duy nhất (`≤ 40px`)** với bộ chọn giọng thu gọn; ẩn hoàn toàn nếu tập ở chế độ *"Chỉ đọc chữ"*.
+  4. **Tranh minh họa gọn trong mạch cuộn dọc & Không chú thích (`0 caption`):** Khi tập truyện tải lên có chèn tranh minh họa xen giữa các đoạn Markdown (hoặc đính kèm qua CMS, tối đa `20 tranh/tập`), mỗi ảnh tự giới hạn chiều cao gọn trong màn hình dọc di động mà không bị cắt xén, cuộn hết tranh nối tiếp ngay sang chữ và **tuyệt đối không sinh hộp chú thích (`caption`)**. Nếu tập có nhiều tranh (`≥ 2`), hỗ trợ chuyển gọn `[Đọc truyện | Xem tranh]` (hoặc chạm xem toàn màn hình) trong khi vẫn nghe Audio.
+  5. **Điều hướng thoát đọc cố định (`Sticky Exit Bar`):** Giao diện đọc luôn giữ cố định thanh điều hướng mảnh ở đầu màn hình có nút **về Thư mục mẹ (trang Bộ sách / Mục lục tập)** và nút **về Trang chủ** để người đọc dừng và thoát thuận tiện ở mọi vị trí cuộn.
 - **NFR-002 (Vùng chạm & Thao tác một tay):** Mọi nút tương tác chính có kích thước vùng chạm tối thiểu `44×44px`; các nút điều khiển cốt lõi của trình phát (Phát/Tạm dừng, Tua ±15s, Hẹn giờ) nằm trong vùng thuận tiện cho ngón cái.
 - **NFR-003 (An toàn cho trẻ):** Không có liên kết điều hướng ra trang web bên ngoài trong khu vực người nghe; khu vực Quản trị không hiển thị lộ liễu để trẻ không bấm nhầm.
 
@@ -107,8 +116,8 @@ Quy ước mức độ ưu tiên:
 | `LIS-001` | Kệ sách trang chủ | Hiển thị danh sách các **Bộ sách** đã xuất bản dưới dạng thẻ bìa trực quan (ảnh bìa `3:4`, tên bộ sách, số tập hiện có, tiến độ nghe hiển thị theo số tập audio đã hoàn thành, VD: *4/11 tập đã nghe*). Có trạng thái rỗng (Empty State) ấm áp khi chưa có bộ sách nào xuất bản. | **Must Have** |
 | `LIS-002` | Khu vực "Nghe tiếp" | Hiển thị ngay đầu trang chủ tập đang nghe dở gần nhất (< 95%) với 1 chạm để phát tiếp; nếu tập gần nhất đã hoàn thành và còn tập có audio kế tiếp trong bộ sách thì tự động gợi ý *"Nghe tiếp: Tập kế tiếp"*. Tự động ẩn nếu tập bị chủ thư viện chuyển về Nháp hoặc Thùng rác. | **Must Have** |
 | `LIS-003` | Trang chi tiết Bộ sách | Hiển thị bìa, tác giả chữ/họa sĩ, mô tả, danh sách Phần (nếu bộ sách có chia Phần) và danh sách Tập theo đúng thứ tự; gắn nhãn *"Chỉ đọc chữ"* và thời gian đọc ước tính với tập không có audio; đánh dấu rõ tập chưa nghe, đang nghe dở và đã nghe xong. | **Must Have** |
-| `LIS-004` | Trang chi tiết Tập | Hiển thị tiêu đề, tóm tắt, ảnh bìa/bộ tranh minh họa có chú thích, khối *"Ghi chú cuối tập"* (chỉ hiện nếu Bộ sách bật nhãn này) và bản chữ đầy đủ. Nếu tập có audio thì hiển thị nút phát chính và chọn giọng đọc; nếu tập *"Chỉ đọc chữ"* (`Audio Track = 0`) thì ẩn cụm điều khiển phát audio và hiển thị bố cục đọc sách tranh. | **Must Have** |
-| `LIS-005` | Trình đọc bản chữ & xem tranh | Cho phép đọc bản chữ rõ ràng, điều chỉnh cỡ chữ (Nhỏ / Vừa / Lớn), lướt xem bộ tranh minh họa theo thứ tự và phóng to tranh toàn màn hình; đảm bảo khoảng đệm đáy để Mini-player không che dòng chữ cuối. | **Must Have** |
+| `LIS-004` | Giao diện đọc Tập liền mạch | Thanh đỉnh cố định (`sticky`) có nút về **Thư mục mẹ (Bộ sách)** và **Trang chủ**; thanh điều khiển gọn tích hợp nút Phát + chọn Giọng đọc thu gọn; văn bản cuộn dọc liền mạch xen kẽ tranh minh họa của tập (mỗi ảnh tự giới hạn chiều cao gọn trong màn hình, **không hộp chú thích `caption`**, tuyệt đối không có *"Kỷ vật trong túi da"* hay hộp cuối tập). | **Must Have** |
+| `LIS-005` | Tùy chỉnh cỡ chữ & Xem tranh phóng to | Cho phép chỉnh cỡ chữ Nhỏ/Vừa/Lớn trên trang đọc; chạm vào tranh minh họa bất kỳ để xem rõ toàn màn hình (và hỗ trợ chuyển chế độ xem bộ tranh nếu tập có nhiều tranh đính kèm) mà không ngắt Audio đang phát. | **Must Have** |
 | `LIS-006` | Chuyển đổi chế độ Sáng / Đêm ấm | Cho phép chuyển nhanh giữa chế độ *Giấy ấm ban ngày* và *Đêm ấm ru ngủ*; ghi nhớ lựa chọn trên thiết bị. | **Must Have** |
 | `LIS-007` | Tìm kiếm & Lọc tập | Tìm nhanh theo tên bộ sách, tên tập hoặc lọc theo Phần/thẻ chủ đề trong thư viện; hiển thị trạng thái rỗng rõ ràng khi không tìm thấy kết quả. | **Should Have** |
 | `LIS-008` | Danh sách Yêu thích / Đánh dấu | Cho phép phụ huynh hoặc trẻ đánh dấu các tập yêu thích để mở lại nhanh vào buổi tối. | **Should Have** |
@@ -137,11 +146,11 @@ Quy ước mức độ ưu tiên:
 | :--- | :--- | :--- | :--- |
 | `ADM-001` | Đăng nhập quản trị tách biệt | Khu vực quản trị có đường dẫn riêng và yêu cầu xác thực riêng của chủ thư viện; khóa tạm 15 phút sau 5 lần nhập sai liên tiếp; hỗ trợ đặt lại mật khẩu qua email và nút *"Đăng xuất tất cả thiết bị quản trị"*. | **Must Have** |
 | `ADM-002` | Bảng điều khiển thư viện | Hiển thị tổng quan các bộ sách, số tập đã xuất bản/nháp và lối tắt tạo nhanh bộ sách hoặc tập mới. | **Must Have** |
-| `ADM-003` | Quản lý Bộ sách (CRUD) | Tạo mới, chỉnh sửa thông tin (bao gồm Tác giả chữ, Họa sĩ, sắc thái màu nước định sẵn, nhãn *"Ghi chú cuối tập"*, mặc định `Auto-next`), hộp xác nhận quyền sở hữu/lưu hành nội bộ hợp lệ, sắp xếp thứ tự hiển thị và chặn xuất bản Bộ sách rỗng chưa có tập `Đã xuất bản` nào. | **Must Have** |
+| `ADM-003` | Quản lý Bộ sách (CRUD) | Tạo mới, chỉnh sửa thông tin (bao gồm Tác giả chữ, Họa sĩ, sắc thái màu nước định sẵn, mặc định `Auto-next`), hộp xác nhận quyền sở hữu/lưu hành nội bộ hợp lệ, sắp xếp thứ tự hiển thị và chặn xuất bản Bộ sách rỗng chưa có tập `Đã xuất bản` nào. | **Must Have** |
 | `ADM-004` | Quản lý Phần trong Bộ sách | Tạo, đổi tên, sắp xếp thứ tự Phần và gán Tập vào Phần (cho phép Bộ sách không cần tạo Phần nếu không có nhu cầu); không làm mất dữ liệu khi thêm/bỏ Phần. | **Must Have** |
-| `ADM-005` | Quản lý Tập (CRUD) | Tạo, chỉnh sửa siêu dữ liệu tập, bật/tắt cờ `Chỉ đọc chữ`, nhập nội dung Ghi chú cuối tập (nếu Bộ sách bật), sắp xếp thứ tự tập (kéo-thả hoặc nhập số thứ tự), nhân bản cấu trúc tập nếu cần. | **Must Have** |
+| `ADM-005` | Quản lý Tập (CRUD) | Tạo, chỉnh sửa siêu dữ liệu tập, bật/tắt cờ `Chỉ đọc chữ`, sắp xếp thứ tự tập (kéo-thả hoặc nhập số thứ tự), nhân bản cấu trúc tập nếu cần. | **Must Have** |
 | `ADM-006` | Quản lý Hồ sơ Giọng đọc & Audio đa giọng | Quản lý danh mục **Hồ sơ Giọng đọc (`Voice Profiles`)** dùng chung toàn thư viện; tải một hoặc nhiều tệp audio cho mỗi tập (≤ 5 giọng/tập, ≤ 60MB/tệp), gắn vào Voice Profile, chọn giọng mặc định, nghe thử tại chỗ, thay thế hoặc xóa bản thu (tự thu dọn tệp cũ sau 24–48 giờ). | **Must Have** |
-| `ADM-007` | Tải lên Ảnh bìa & Tranh minh họa | Tải ảnh bìa Bộ sách/Tập qua **khung xem trước tỷ lệ `3:4` với tùy chọn điểm căn (Trên / Giữa / Dưới)**; tải nhiều tranh minh họa cho tập (≤ 15 tranh/tập, ≤ 5MB/tệp), sắp xếp thứ tự, nhập chú thích, alt text và tự thu dọn tệp cũ khi thay thế/xóa. | **Must Have** |
+| `ADM-007` | Tải lên Ảnh bìa & Tranh minh họa xen kẽ | Tải ảnh bìa Bộ sách/Tập (`3:4`, có chọn điểm căn `Trên / Giữa / Dưới`) và tranh minh họa đính kèm cho tập (`≤ 20` tranh/tập, `≤ 5MB`/tệp); hỗ trợ chèn ảnh xen giữa các đoạn Markdown liên quan (hiển thị gọn không sinh hộp chú thích, chỉ lưu `alt text` ẩn cho trợ năng) và tự thu dọn tệp cũ khi xóa. | **Must Have** |
 | `ADM-008` | Trình soạn thảo Bản chữ | Nhập hoặc dán văn bản (hỗ trợ định dạng cơ bản: tiêu đề, đoạn văn, in nghiêng/đậm, ngắt cảnh), tự đếm số từ (tối đa `30.000` từ/tập) và tự động lưu nháp cục bộ tránh mất nội dung khi tải lại trang. | **Must Have** |
 | `ADM-009` | Xem trước trước khi xuất bản | Cho phép chủ thư viện mở bản xem trước giao diện tập đúng như người nghe sẽ thấy trên màn hình di động (`390px`) ngay trong phiên đăng nhập quản trị. | **Must Have** |
 | `ADM-010` | Thùng rác & Khôi phục / Xóa vĩnh viễn | Thùng rác thống nhất cho Bộ sách và Tập: chuyển vào thùng rác giúp ẩn ngay khỏi người nghe mà không mất dữ liệu; cho phép khôi phục hoặc xóa vĩnh viễn kèm giải phóng tệp lưu trữ liên quan. | **Must Have** |
@@ -155,9 +164,7 @@ Quy ước mức độ ưu tiên:
 | `PUB-001` | Quản lý vòng đời trạng thái xuất bản | Vòng đời 2 trạng thái rõ ràng (`Nháp/Đang ẩn` ↔ `Đã xuất bản`) kết hợp cùng `Thùng rác` áp dụng đồng nhất cho cả cấp Bộ sách và cấp Tập. | **Must Have** |
 | `PUB-002` | Kiểm tra hợp lệ trước xuất bản | Tự động kiểm tra điều kiện tối thiểu trước khi chuyển sang `Đã xuất bản` (Tiêu đề không rỗng + Bộ sách hợp lệ đã xác nhận quyền sử dụng + ≥ 1 audio hợp lệ hoặc bật cờ `Chỉ đọc chữ`) và báo rõ trường còn thiếu. | **Must Have** |
 | `PUB-003` | Cập nhật không gián đoạn | Khi sửa bản chữ, ảnh hoặc thay audio của tập đã xuất bản, đường dẫn tập giữ nguyên; nếu bản thu mới thay thế có thời lượng nhỏ hơn mốc `resume` cũ hoặc lệch > 10% thì tự đặt lại về `00:00` an toàn; giao diện người nghe làm mới danh mục khi quay lại tiền cảnh. | **Must Have** |
-| `PRV-001` | Cổng thư viện riêng tư mặc định | Chặn lập chỉ mục (`noindex, nofollow, noarchive`); yêu cầu nhập mã mời (mã tự sinh ≥ 8 ký tự chữ-số, khóa tạm 15 phút sau 5 lần nhập sai). Trang chưa xác thực chỉ trả về thẻ meta chung chung (*"Litibook — Thư viện riêng tư"*), không làm lộ ảnh bìa/tên sách qua Link Preview ứng dụng chat và không tự kích hoạt mã trên request của bot. | **Must Have** |
-| `PRV-002` | Quản lý nhiều mã mời thu hồi lẻ | Chủ thư viện tạo tối đa **30 mã mời hoạt động đồng thời** (mỗi mã gắn nhãn người nhận, VD: *Ông bà*, *Nhà chị Lan*); thao tác **Thu hồi mã** chặn tức thì cả người mới nhập mã lẫn thiết bị đã đăng nhập trước đó bằng mã bị thu hồi ở lần mở trang hoặc phát tập kế tiếp. | **Must Have** |
-| `PRV-003` | Bảo vệ liên kết tệp đa phương tiện | Tệp audio và hình ảnh không truy cập công khai; mọi lượt tải/phát phải đi qua liên kết có chữ ký tạm thời (thời hạn đủ dài cho phiên ru ngủ qua đêm ~12 giờ để không đứt tiếng trên màn hình khóa iOS) chỉ cấp cho phiên mã mời còn hiệu lực. | **Must Have** |
+| `PRV-001` | Truy cập trực tiếp & Chặn lập chỉ mục | Người nghe mở đường dẫn là vào thẳng Trang chủ Thư viện (không cổng mã mời, không bắt đăng nhập); toàn bộ trang gắn `noindex, nofollow, noarchive` để tránh lập chỉ mục công khai trên máy tìm kiếm; chỉ khóa xác thực tại `/admin` cho Chủ thư viện. | **Must Have** |
 | `BKP-001` | Xuất dữ liệu cấu trúc (Metadata Export) | Chủ thư viện tải về tệp JSON chuẩn chứa toàn bộ cấu trúc bộ sách, phần, tập, bản chữ và bảng kê URL tải lại các tệp đa phương tiện gốc chỉ với 1 thao tác. | **Must Have** |
 | `BKP-002` | Sao lưu tự động tầng cơ sở dữ liệu | Cơ sở dữ liệu có cơ chế sao lưu tự động định kỳ phục vụ phục hồi sự cố hạ tầng (không xây giao diện ghi đè toàn bộ thư viện trên Web Admin Release 1.0). | **Should Have** |
 
@@ -235,7 +242,7 @@ Quy ước mức độ ưu tiên:
 | **Quyền riêng tư** | `NFR-008` | Không thu thập thông tin định danh cá nhân của trẻ em (tên thật, ngày sinh, ảnh cá nhân, vị trí địa lý). |
 | **Khả năng truy cập** | `NFR-009` | Độ tương phản màu chữ/nền đạt tối thiểu chuẩn WCAG 2.1 mức AA ở cả chế độ Ban ngày và Ban đêm ấm (áp dụng cho cả 3–4 preset sắc thái Bộ sách). |
 | **Khả năng truy cập** | `NFR-010` | Tất cả nút điều khiển trình phát đều có nhãn mô tả dễ hiểu (screen-reader friendly) và tranh minh họa hỗ trợ văn bản thay thế (alt text). |
-| **Độ tin cậy** | `NFR-011` | Hỗ trợ audio `MP3, M4A/AAC` (tối đa `60MB`/tệp, `≤ 5` giọng/tập), hình ảnh `JPG, PNG, WebP` (tối đa `5MB`/tệp, `≤ 15` tranh/tập) và bản chữ `≤ 30.000` từ/tập; từ chối sớm tệp sai định dạng hoặc vượt trần dung lượng với thông báo tiếng Việt rõ ràng. |
+| **Độ tin cậy** | `NFR-011` | Hỗ trợ audio `MP3, M4A/AAC` (tối đa `60MB`/tệp, `≤ 5` giọng/tập), hình ảnh `JPG, PNG, WebP` (tối đa `5MB`/tệp, `≤ 20` tranh/tập) và bản chữ `≤ 30.000` từ/tập; từ chối sớm tệp sai định dạng hoặc vượt trần dung lượng với thông báo tiếng Việt rõ ràng. |
 | **Sao lưu** | `NFR-012` | Chủ thư viện có thể xuất toàn bộ cấu trúc nội dung, bản chữ và danh sách đường dẫn tải tệp gốc bất kỳ lúc nào; tệp trên kho lưu trữ tổ chức gọn theo `Bộ sách / Tập` để dễ di chuyển nền tảng. |
 
 ---
@@ -261,10 +268,10 @@ Quy ước mức độ ưu tiên:
 - **When** người nghe chuyển sang Giọng Nam ngay trên trình phát.
 - **Then** trình phát tải bản thu Giọng Nam và tiếp tục phát từ mốc `05:00 ± 3 giây (300s ± 3s)`, đồng thời ghi nhớ lựa chọn giọng này cho tập kế tiếp nếu cùng `voice_key`.
 
-### AC-04: Đọc bản chữ & Xem tranh minh họa (`LIS-004`, `LIS-005`, `LIS-006`)
-- **Given** một tập có bản chữ `2.000` từ và `4` tranh minh họa.
-- **When** người nghe mở tập, đổi cỡ chữ sang Lớn và bật chế độ Đêm ấm trên màn hình `360px`.
-- **Then** toàn bộ chữ rõ ràng không tràn ngang, dòng chữ cuối cuộn lên không bị Mini-player che khuất, độ tương phản đạt WCAG AA, và bấm vào từng tranh mở được chế độ xem toàn màn hình kèm chú thích.
+### AC-04: Giao diện đọc nhiều chữ liền mạch & Tranh gọn không chú thích (`LIS-004`, `LIS-005`, `LIS-006`, `NFR-001B`)
+- **Given** một tập có bản chữ `3.000` từ, `2` giọng đọc và tranh minh họa chèn xen giữa các đoạn Markdown.
+- **When** người nghe mở trang đọc tập trên màn hình `360px–390px` và cuộn dọc bài đọc.
+- **Then** chữ cuộn dọc liền mạch ưu tiên diện tích văn bản, nút Phát và chọn Giọng đọc gom gọn trên 1 thanh ngang mảnh, mỗi tranh minh họa tự giới hạn chiều cao gọn trong màn hình (**0 hộp chú thích `caption`**, **0 hộp *"Kỷ vật trong túi da"***), và thanh đỉnh cố định (`sticky`) luôn giữ nút về **Bộ sách (Thư mục mẹ)** và **Trang chủ**.
 
 ### AC-05: Tự xuất bản tập mới không cần sửa code (`ADM-003` – `ADM-010`, `PUB-001`, `PUB-002`)
 - **Given** chủ thư viện đã đăng nhập khu vực quản trị.
@@ -280,11 +287,9 @@ Quy ước mức độ ưu tiên:
 - **When** chủ thư viện chọn tệp sai định dạng, vượt ngưỡng (`> 60MB` audio hoặc `> 5MB` ảnh), hoặc bị mất mạng giữa chừng khi đang tải.
 - **Then** hệ thống báo lỗi tiếng Việt rõ ràng tại ô tải tệp, cho phép chọn lại hoặc **"Thử lại"** mà toàn bộ tiêu đề và `1.500` từ bản chữ vẫn được giữ nguyên (kể cả khi tải lại trang nhờ lưu nháp cục bộ).
 
-### AC-07: Quyền riêng tư, Thu hồi mã tức thì & Chống dò mã (`PRV-001` – `PRV-003`)
-- **Given** thư viện đang bật 2 mã mời riêng biệt: Mã `X1` (*Ông bà*) và Mã `X2` (*Nhà chị Lan*), và Thiết bị A đã đăng nhập bằng Mã `X1`.
-- **When** người lạ mở URL thư viện mà chưa có mã → không xem được danh sách sách/tập, thẻ meta trang cổng không lộ tên sách nội bộ; nhập sai mã 5 lần liên tiếp bị khóa tạm 15 phút.
-- **When** chủ thư viện bấm **Thu hồi Mã `X1`**.
-- **Then** cả người mới nhập `X1` lẫn **Thiết bị A** (đang giữ phiên của `X1`) bị từ chối truy cập ngay ở lần mở trang hoặc yêu cầu phát tập kế tiếp, trong khi thiết bị dùng Mã `X2` vẫn nghe bình thường.
+### AC-07: Truy cập trực tiếp cho người nghe & Khóa quản trị (`/admin`) (`PRV-001`, `ADM-001`)
+- **Given** người thân bấm mở đường dẫn thư viện Litibook trên điện thoại.
+- **Then** vào thẳng Trang chủ Thư viện mà không bị chặn bởi cổng mã mời hay màn hình đăng nhập; trong khi truy cập `/admin` chưa xác thực bị chặn hoàn toàn và khóa tạm 15 phút sau 5 lần nhập sai mật khẩu quản trị.
 
 ### AC-08: Xuất bản sao lưu dữ liệu (`BKP-001`)
 - **Given** thư viện có ít nhất 1 bộ sách gồm nhiều tập có bản chữ và siêu dữ liệu.
@@ -313,11 +318,6 @@ Quy ước mức độ ưu tiên:
 - **When** đo toàn bộ nút điều khiển cốt lõi và kiểm tra phản hồi HTTP của các trang thư viện & quản trị.
 - **Then** 100% nút chính có vùng chạm `≥ 44×44px`, không tràn ngang, và các route trả về chỉ thị chặn lập chỉ mục (`noindex, nofollow, noarchive`).
 
-### AC-13: Bảo vệ tệp đa phương tiện (`PRV-003`)
-- **Given** đường dẫn lưu trữ của một tệp audio hoặc tranh minh họa trong thư viện.
-- **When** truy cập trực tiếp tệp đó mà không có phiên mã mời hợp lệ hoặc sử dụng chữ ký đã hết hạn.
-- **Then** hệ thống từ chối truy cập (`401/403`), không trả về nội dung tệp.
-
 ---
 
 ## 9. Rủi ro, Giả định & Các Quyết định Sản phẩm Đã phê duyệt
@@ -327,33 +327,33 @@ Quy ước mức độ ưu tiên:
    - *Giảm thiểu:* Kiểm thử thực tế trên iOS Safari & Android Chrome ngay từ nguyên mẫu trình phát; tách tiêu chí nghiệm thu thực tế tại `AC-02`.
 2. **Rủi ro Safari iOS xóa dữ liệu cục bộ sau 7 ngày (`localStorage`):** Nếu người thân nghe qua trình duyệt iOS mà không vào lại trong 7 ngày, lịch sử nghe và yêu thích lưu trên máy có thể bị trình duyệt dọn sạch.
    - *Giảm thiểu:* Giữ ưu tiên không bắt người thân tạo tài khoản ở Release 1.0 (`OPD-02`), kèm lời nhắc nhẹ *"Thêm vào Màn hình chính"* (`LIS-009`) để lưu dữ liệu bền vững dạng PWA.
-3. **Rủi ro lộ hoặc chuyển tiếp mã mời ngoài dự kiến:** Một mã mời có thể bị gửi tiếp cho nhiều người khác.
-   - *Giảm thiểu:* Dùng nhiều mã mời gắn nhãn từng hộ gia đình, giới hạn trần 30 mã hoạt động và hỗ trợ **Thu hồi tức thì** (`PRV-002`, `DEC-01`) vô hiệu hóa luôn các phiên cũ của mã bị thu hồi.
+3. **Rủi ro giao diện đọc bị chia vụn trên màn hình di động:** Nhiều hộp phụ, nút chọn giọng dàn trải hoặc tranh kèm chú thích dài làm đứt mạch đọc với các tập nhiều chữ.
+   - *Giảm thiểu:* Luật hóa trong `GEMINI.md` & `NFR-001B`: bỏ triệt để *"Kỷ vật trong túi da"* / hộp cuối tập, bỏ chú thích ảnh, thu gọn thanh chọn giọng đọc còn 1 dòng mảnh và dành tối đa mặt trang cho văn bản liền mạch.
 4. **Rủi ro dung lượng tệp audio lớn (48kHz ~10–20MB/tập):** Gây chậm khi tải lên từ di động hoặc tốn băng thông 4G của người thân.
    - *Giảm thiểu:* Giới hạn trần `≤ 60MB`/tệp (`NFR-011`) và truyền phát từng phần (`NFR-005`).
 5. **Rủi ro nhập liệu dài trên điện thoại:** Dán bản chữ dài và tải nhiều tệp trên màn hình nhỏ dễ mất nháp nếu rớt mạng.
    - *Giảm thiểu:* Tự động lưu nháp cục bộ khi soạn thảo (`ADM-008`) và giữ nguyên form khi lỗi upload (`AC-06`).
 
 ### 9.2. Giả định (Assumptions)
-- Quy mô người dùng ở Release 1.0 là nhóm nhỏ gia đình và bạn bè thân thiết (ước tính dưới 100 người nghe đồng thời, tối đa 30 mã mời hoạt động).
-- Chủ thư viện sở hữu hợp pháp hoặc có quyền lưu hành nội bộ đối với toàn bộ bản chữ, giọng đọc và tranh minh họa tải lên (được xác nhận tường minh trên CMS khi xuất bản Bộ sách).
+- Quy mô người dùng ở Release 1.0 là nhóm gia đình và bạn bè thân thiết được chia sẻ đường dẫn trực tiếp (ước tính dưới 100 người nghe đồng thời).
+- Chủ thư viện sở hữu hợp pháp hoặc có quyền lưu hành đối với toàn bộ bản chữ, giọng đọc và tranh minh họa tải lên (được xác nhận tường minh trên CMS khi xuất bản Bộ sách).
 - Người nghe chủ yếu sử dụng điện thoại thông minh hiện đại (iOS / Android) có kết nối Wi-Fi hoặc 4G.
 
 ### 9.3. Tổng hợp các Quyết định Sản phẩm Đã phê duyệt (`OPD-01`..`06` & `DEC-01`..`08`)
 
 | Mã | Quyết định sản phẩm | Phương án đã chốt cho Release 1.0 |
 | :--- | :--- | :--- |
-| `OPD-01` | **Cơ chế chia sẻ riêng tư** | Nhiều mã mời có thể thu hồi lẻ (tối đa 30 mã hoạt động đồng thời). |
+| `OPD-01` | **Cơ chế truy cập thư viện** | Mở thẳng qua đường dẫn chia sẻ (không cổng mã mời, không bắt đăng nhập người nghe; gắn `noindex`). |
 | `OPD-02` | **Lưu tiến độ nghe (Resume)** | Lưu cục bộ trên thiết bị (không yêu cầu tài khoản người nghe). |
 | `OPD-03` | **Tập chỉ có bản chữ** | Cho phép xuất bản tập không có audio với cờ *"Chỉ đọc chữ"* và nhãn phân biệt. |
-| `OPD-04` | **Quyền riêng tư theo Bộ sách** | Toàn bộ thư viện dùng chung 1 quyền truy cập ở Release 1.0. |
-| `OPD-05` | **Dữ liệu bộ sách hiện có** | Nhập trọn vẹn bộ *Lim & Mẹ Vacci* hiện có làm bộ sách mẫu đầu tiên. |
+| `OPD-04` | **Bảo vệ quyền chỉnh sửa** | Tách biệt hoàn toàn: chỉ khu vực `/admin` yêu cầu đăng nhập Chủ thư viện. |
+| `OPD-05` | **Dữ liệu bộ sách hiện có** | Nhập trọn vẹn 11 tập *Lim & Mẹ Vacci* sẵn có vào thư viện (làm sạch Markdown, chuẩn hóa tiêu đề, bỏ trường `relic`, `icon` emoji và `caption`). |
 | `OPD-06` | **Chuẩn chất lượng audio** | Phát trực tiếp tệp MP3/M4A chuẩn chủ thư viện tải lên (trần `≤ 60MB`/tệp). |
-| `DEC-01` | **Hiệu lực thu hồi mã mời** | Chặn tức thì cả người mới lẫn thiết bị đã đăng nhập trước đó bằng mã bị thu hồi. |
+| `DEC-01` | **Quy chuẩn Giao diện Đọc tinh gọn** | **Bất biến:** Bỏ hoàn toàn *"Kỷ vật trong túi da"* / hộp cuối tập; 1 thanh chọn giọng mảnh; tranh minh họa tải lên hiển thị gọn trong mạch cuộn dọc (**0 chú thích**); thanh `Sticky` cố định luôn có nút về Bộ sách & Trang chủ. |
 | `DEC-02` | **Phạm vi bản quyền nội dung** | Chỉ nội dung thuộc sở hữu gia đình / có phép hợp lệ, có xác nhận & ghi nguồn trên CMS. |
 | `DEC-03` | **Chống mất dữ liệu 7 ngày iOS** | Lưu cục bộ kèm lời nhắc nhẹ *"Thêm vào Màn hình chính"* (`LIS-009`). |
 | `DEC-04` | **Hành vi "Nghe tiếp" & Phát lại** | Tập gần nhất đã xong tự gợi ý tập kế tiếp; bấm phát lại tập đã xong chạy từ `00:00`. |
 | `DEC-05` | **Vòng đời trạng thái xuất bản** | Rút gọn còn **2 trạng thái (`Nháp/Đang ẩn` ↔ `Đã xuất bản`) + 1 `Thùng rác` (`Must Have`)**. |
-| `DEC-06` | **Định mức giới hạn tệp tải lên** | Audio `≤ 60MB` (`≤ 5` giọng/tập), Ảnh `≤ 5MB` (`≤ 15` tranh/tập), Bản chữ `≤ 30.000` từ/tập. |
+| `DEC-06` | **Định mức giới hạn tệp tải lên** | Audio `≤ 60MB` (`≤ 5` giọng/tập), Ảnh dọc `3:4` `≤ 5MB` (`≤ 20` tranh/tập), Bản chữ `≤ 30.000` từ/tập. |
 | `DEC-07` | **Phạm vi sao lưu dữ liệu** | Web xuất JSON cấu trúc + bản chữ + bảng kê URL tệp gốc; lưu trữ file gốc ở máy chủ thư viện. |
-| `DEC-08` | **Tùy biến CMS đa bộ sách** | Tổng quát hóa *"Ghi chú cuối tập"* (tắt/bật & đặt nhãn theo Bộ sách) và cấu hình `Auto-next` theo Bộ sách. |
+| `DEC-08` | **Tùy biến CMS đa bộ sách** | Cấu hình Preset sắc thái màu nước chuẩn WCAG AA và mặc định `Auto-next` theo từng Bộ sách (áp dụng chung chuẩn Giao diện Đọc tinh gọn nhiều chữ cho mọi bộ sách). |

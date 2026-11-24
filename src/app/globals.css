@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   LITIBOOK DESIGN SYSTEM — PHƯƠNG ÁN A: ẤN BẢN GIẤY COTTON (BOTANICAL PAPER)
+   Strictly aligned with GEMINI.md Constitution & DESIGN_SYSTEM.md
+   ========================================================================== */
+
+:root {
+  --bg-canvas: #F8F5EE;
+  --bg-surface: #F1ECE1;
+  --bg-elevated: #FDFBF6;
+  --border-hairline: #DED7C8;
+  --text-primary: #222923;
+  --text-secondary: #666D63;
+  --accent-primary: #354F3E;
+  --accent-primary-fg: #F8F5EE;
+  --accent-warm: #9E7B43;
+  --accent-berry: #9A5144;
+}
+
+html.dark {
+  --bg-canvas: #111613;
+  --bg-surface: #19201C;
+  --bg-elevated: #212A24;
+  --border-hairline: #2D3831;
+  --text-primary: #EFE9DC;
+  --text-secondary: #9EA69A;
+  --accent-primary: #89A892;
+  --accent-primary-fg: #111613;
+  --accent-warm: #D4AC6E;
+  --accent-berry: #CE7E6F;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-be-vietnam), -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Vietnamese Typography Guardrails (134/134 glyphs, never clip stacked diacritics) */
+.font-editorial {
+  font-family: var(--font-lora), Georgia, "Times New Roman", serif;
+  line-height: 1.48;
+}
+
+.story-prose {
+  font-family: var(--font-lora), Georgia, "Times New Roman", serif;
+  line-height: 1.82;
+}
+
+.vn-eyebrow {
+  font-size: 11px;
+  line-height: 1.45;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.truncate,
+.line-clamp-1,
+.line-clamp-2,
+.line-clamp-3 {
+  padding-top: 1px;
+  padding-bottom: 2px;
+  line-height: 1.48;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

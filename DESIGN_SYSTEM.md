@@ -2,9 +2,10 @@
 
 | Thuộc tính | Thông tin |
 | :--- | :--- |
-| **Tham chiếu sản phẩm** | [PRD.md](./PRD.md) (Release 1.0 · v1.2) · [UX_FLOWS.md](./UX_FLOWS.md) |
+| **Tham chiếu sản phẩm** | [GEMINI.md](./GEMINI.md) · [PRD.md](./PRD.md) (Release 1.0 · v1.3) · [UX_FLOWS.md](./UX_FLOWS.md) |
 | **Cảm hứng mỹ thuật** | Minimalist Watercolor Storybook — tinh thần màu nước của *Miền Dâu Dại*, thanh nhã, ấm áp, chín chắn như ấn bản sách nghệ thuật |
 | **Phạm vi tái sử dụng** | Dùng chung cho toàn bộ các dự án sách trong thư viện trên khung mobile-first `390px` |
+| **Phương án đã phê duyệt** | **Phương án A — *Ấn Bản Giấy Cotton* (*Botanical Paper Edition*)** |
 
 ---
 
@@ -19,7 +20,12 @@
    - **Không Dashboard công nghệ:** Không sidebar tối, không biểu đồ KPI, không sắc tím Indigo/xanh Neon.
    - **Không Ứng dụng học tập (EdTech):** Không điểm thưởng, huy hiệu thi đua, thanh streak.
    - **Không Cửa hàng thương mại:** Không nhãn giá, giỏ hàng, nút mua ngay hay banner khuyến mãi.
-4. **Đa dự án sách, một khung nền thống nhất:** Mỗi bộ sách giữ bản sắc riêng qua **tranh bìa nguyên bản `3:4`**, **1 trong 4 Preset màu nước trầm nhã** và nhãn khối ghi chú cuối tập tùy biến.
+4. **Đa dự án sách, một khung nền thống nhất:** Mỗi bộ sách giữ bản sắc riêng qua **tranh bìa nguyên bản `3:4`** và **1 trong 4 Preset màu nước trầm nhã** ở phần đầu trang Bộ sách.
+5. **Quy chuẩn Giao diện Đọc Nhiều Chữ (Bất biến cho mọi bộ sách):**
+   - **Tuyệt đối không có** chi tiết *"Kỷ vật trong túi da"*, *"Ghi chú cuối tập"* hay bất kỳ hộp phụ nào trên giao diện đọc.
+   - **Không tạo không gian vụn** trên mỗi lần cuộn dọc: gom nút Phát và chọn Giọng đọc vào **1 thanh ngang mảnh duy nhất (`≤ 40px`)** (ẩn hoàn toàn nếu tập *"Chỉ đọc chữ"*).
+   - **Tranh minh họa gọn trong mạch cuộn dọc & Không chú thích:** Khi tập truyện tải lên có chèn ảnh xen giữa các đoạn Markdown, mỗi bức tranh tự giới hạn chiều cao gọn trong khung màn hình dọc di động mà không cắt mất chi tiết tranh, cuộn hết tranh nối tiếp ngay sang chữ và **0 hộp chú thích `caption`** (chạm vào tranh mở xem toàn màn hình; nếu tập đính kèm nhiều tranh `≥ 2` thì hỗ trợ chuyển gọn sang chế độ xem bộ tranh kèm nghe Audio).
+   - **Lối thoát luôn sẵn sàng (`Sticky Exit Bar`):** Thanh đỉnh `42px` cố định (`sticky`) luôn có nút về **Thư mục mẹ (`← Bộ sách`)** và nút về **Trang chủ** để người đọc dừng và thoát bất kỳ lúc nào.
 
 ---
 
@@ -59,7 +65,7 @@ Cả hai phương án đều kế thừa trọn vẹn phong cách minh họa mà
 | `bg-elevated` | `#FBF8F1` | `#1E2E27` | Mini-player, ngăn kéo điều khiển |
 | `border-hairline` | `#D9CEBA` (`1px`) | `#2A3D34` (`1px`) | Viền khung giấy đôi & đường phân tách |
 | `text-primary` | `#241D17` *(14.2:1)* | `#F6F1E7` *(15.1:1)* | Chữ chính sắc mực nâu / trắng ngà |
-| `text-secondary` | `#6B5F54` *(5.3:1)* | `#9FB0A6` *(6.4:1)* | Chữ phụ, chú thích ảnh |
+| `text-secondary` | `#6B5F54` *(5.3:1)* | `#9FB0A6` *(6.4:1)* | Chữ phụ, thời lượng, tác giả |
 | `accent-primary` | `#243E32` *(Xanh Bách Xù)* | `#D6A14E` *(Vàng Đèn Lồng)* | Nút Phát chính, điểm nhấn chủ đạo |
 | `accent-secondary` | `#9B5B42` *(Gỗ Quế Trầm)* | `#C87D55` | Điểm nhấn phụ, biểu tượng đánh dấu |
 | `accent-warm` | `#B07D38` *(Mật Ong Cổ)* | `#EAB354` | Thanh tiến độ & bộ đếm giờ ngủ |
@@ -91,7 +97,7 @@ Cả hai phương án đều kế thừa trọn vẹn phong cách minh họa mà
 | **`Rosewood` (Gỗ Hồng)** | Truyện cổ tích, hồi ức gia đình | `#F2E7E3` | `#914D41` | `#CE7E6F` |
 | **`Lavender` (Hoa Chuông Tím)** | Thơ, khúc hát ru đêm (*Khúc Ru Thung Lũng*) | `#ECEAF1` | `#585270` | `#A69EC2` |
 
-**Quy tắc áp dụng Preset:** Chỉ nhuộm nhẹ vùng đầu trang Bộ sách (`8–10%` độ đậm), nhãn phụ bằng chữ nhỏ không nền gắt và khung *Ghi chú cuối tập*. **Tuyệt đối không** dán badge màu đè lên bìa sách hay phá vỡ màu nền chính.
+**Quy tắc áp dụng Preset:** Chỉ nhuộm nhẹ vùng đầu trang Bộ sách (`8–10%` độ đậm) và màu chữ nhấn phụ tinh gọn. **Tuyệt đối không** dán badge màu đè lên bìa sách hay chèn hộp màu vụn vào trang đọc.
 
 ---
 
@@ -102,6 +108,13 @@ Cả hai phương án đều kế thừa trọn vẹn phong cách minh họa mà
 - **Safe Area & Thanh cố định:** Đỉnh `44px`, đáy `34px`; `MiniPlayerBar` cao `62px`; `BottomNavBar` 3 tab cao `58px`; khoảng đệm cuối trang đọc chữ `140px`.
 - **Vùng chạm tối thiểu:** `44×44px` cho mọi nút tương tác; **`60×60px`** cho nút Phát/Tạm dừng chính trên Full-screen Player.
 - **Bộ Icon chuẩn:** Toàn bộ dùng **SVG nét mảnh `1.25px–1.5px` đầu tròn (`stroke-linecap="round"`)**, màu kế thừa theo token văn bản (`currentColor`). Tuyệt đối không dùng emoji.
+- **Quy chuẩn Hiển thị Tiếng Việt (*Vietnamese Typography Guardrails*):**
+  1. **Tải đúng subset `vietnamese`:** Khi nhúng `Lora`, `Playfair Display` và `Be Vietnam Pro` ở Phase 3, bắt buộc khai báo `subsets: ['vietnamese', 'latin']` (`font-display: swap`) và chuẩn hóa chuỗi văn bản ở dạng Unicode dựng sẵn **NFC**.
+  2. **Cấm phông dự phòng thiếu dấu móc (`ơ`, `ư`):** Tuyệt đối **không** đưa `Iowan Old Style`, `Charter`, `Athelas`, `Hoefler Text` hoặc `Palatino` vào chuỗi `font-family` dự phòng vì các phông hệ thống này trên macOS/iOS thiếu 24 ký tự nguyên âm có móc (`Ơ/ơ, Ư/ư` và các thanh điệu đi kèm), gây hiện tượng nhảy phông chữ giữa chừng trong cùng một từ.
+  3. **Chuỗi Fallback chuẩn đủ 134/134 ký tự tiếng Việt:**
+     - *Serif biên tập:* `"Lora", Georgia, "Times New Roman", serif`
+     - *Sans-serif giao diện:* `"Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif`
+  4. **Chống cắt dấu chồng (`Ấ, Ề, Ổ, Ứ, ệ, ộ, ợ`):** Tiêu đề tiếng Việt bắt buộc đặt `line-height ≥ 1.45`; các dòng dùng `text-overflow: ellipsis` phải có đệm dọc `padding-block: 1px–2px` và `line-height ≥ 1.5`; nhãn in hoa (`uppercase`) không giãn chữ quá `0.06em–0.08em` để giữ liền mạch âm tiết tiếng Việt.
 
 ---
 
@@ -114,5 +127,5 @@ Cả hai phương án đều kế thừa trọn vẹn phong cách minh họa mà
 | **`EditorialEpisodeRow`** | Hàng mục lục đánh số thẳng cột (`00`, `01`, `02`), tên tập Serif, thời lượng & số giọng bằng `tabular-nums`, trạng thái văn bản tinh gọn (*Đã nghe* · *Đang nghe 35%* · *Chỉ đọc chữ*) và icon `Bookmark` nét mảnh `44×44px`. |
 | **`MiniPlayerBar`** | Thanh nổi mảnh gọn trên đáy màn hình, viền chỉ `1px`, thanh tiến độ `2px` chạy sát mép trên, chạm để mở toàn màn hình. |
 | **`FullScreenPlayerDrawer`** | Thanh đỉnh gồm icon `Thu gọn`, nút `Khóa chạm` (biểu tượng ổ khóa nét mảnh), nút `Bản chữ`; trung tâm là tranh bìa lớn `232×310px`; cụm điều khiển `Lùi 15s · Phát/Dừng (60px) · Tới 15s`; hàng đáy `Giọng đọc · Hẹn giờ · Tốc độ · Tự tiếp`. |
-| **`StoryReaderView`** | Điều chỉnh cỡ chữ `16 / 18 / 21px`, Carousel tranh `4:3` sạch khung có icon phóng to Lightbox, và khối `EndNoteBox` đóng khung viền chỉ mảnh. |
+| **`StoryReaderView`** | Thanh đỉnh cố định (`sticky`, `42px`) có `← Bộ sách` + `Trang chủ` + `A-/A+` + `Đêm`; thanh mảnh `36px` gom `[Phát]` + `[Giọng đọc ▾]`; văn bản cuộn dọc liền mạch xen kẽ tranh minh họa của tập (giới hạn chiều cao gọn trong màn hình, chạm phóng to toàn màn hình, **0 hộp chú thích**, **0 hộp cuối tập**; nếu tập có `≥ 2` tranh đính kèm thì hiển thị thêm nút chuyển xem bộ tranh). |
 | **`AdminBookbinderyKit`** | Khu vực `/admin` dùng chung hệ giấy kem & đường kẻ mảnh: `VoiceProfileList`, `CoverFocalPreview3x4` (`Trên/Giữa/Dưới`), `AudioUploadCard`, `PrePublishChecklist`, `MobilePreview390Modal`. |

@@ -2,7 +2,7 @@
 
 | Thuộc tính | Thông tin |
 | :--- | :--- |
-| **Tham chiếu** | [PRD.md](./PRD.md) v1.2 · [UX_FLOWS.md](./UX_FLOWS.md) · [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) |
+| **Tham chiếu** | [GEMINI.md](./GEMINI.md) · [PRD.md](./PRD.md) v1.3 · [UX_FLOWS.md](./UX_FLOWS.md) · [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) |
 | **Khung chuẩn thiết kế** | Mobile `390 × 844px` (`padding` ngang `20px`, vùng nội dung `350px`) |
 | **Quy chuẩn biểu tượng** | 100% SVG nét mảnh `1.25px` đơn sắc (không dùng emoji hệ điều hành) |
 | **Mô hình truy cập** | Mở thẳng Thư viện cho người nghe (không cổng mã mời, không bắt đăng nhập); chỉ khóa đăng nhập riêng tại `/admin` cho Chủ thư viện |
@@ -10,41 +10,29 @@
 ---
 
 ## Màn hình 1: Trang chủ Thư viện (`/`)
-- **Mục đích:** Đón người nghe bằng không gian giấy kem điềm đạm; 1 chạm để phát tiếp tập đang nghe dở hoặc chuyển sang bộ sách yêu thích.
+- **Mục đích:** Giao diện trang chủ sạch, tĩnh tại: định danh rõ **Thư viện Đồi Mơ — Sách đọc và nghe trước giờ ngủ**, vào thẳng Tủ sách (chỉ hiện thẻ *Đang nghe dở* khi người nghe đã bắt đầu nghe) và chân trang **Copyright © Nancy & Liti**.
 - **Wireframe `390px`:**
 ```text
 ┌──────────────────────────────────────┐
-│ Litibook              (Đêm)  (Tìm)   │ 54px (Line icons 44×44)
+│ Thư viện Đồi Mơ       (Tìm)  (Đêm)   │ 22px Serif Display
+│ Sách đọc và nghe trước giờ ngủ       │ 12px secondary
 ├──────────────────────────────────────┤
-│ BUỔI TỐI AN LÀNH                     │ 10px uppercase tracked
-│ Thư viện Gia đình                    │ 24px Serif Display
-│                                      │
+│ (Chỉ hiện khi đang có tập nghe dở:)  │
 │ ┌──────────────────────────────────┐ │
-│ │ [54×72] ĐANG NGHE · 05:30        │ │
-│ │  Bìa    Bác chó Barley và con... │ │ NowReadingCard
-│ │         ───────────────          │ │ (Thanh tiến độ 2px)
-│ │                          (Phát)  │ │ 44×44px tròn mảnh
+│ │ [76×102] Tập 01: Bác chó Barley  │ │
+│ │          ────────────── 05:30    │ │
+│ │          [ ▶ Nghe tiếp ]         │ │
 │ └──────────────────────────────────┘ │
 │                                      │
-│ TỦ SÁCH                 Xem tất cả → │
+│ TỦ SÁCH                              │
 │ ┌──────────────┐   ┌──────────────┐  │
-│ │              │   │              │  │ 165×220 (3:4)
-│ │  Tranh bìa   │   │  Tranh bìa   │  │ Sạch hoàn toàn,
-│ │  sạch 3:4    │   │  sạch 3:4    │  │ không tem/badge đè
-│ │              │   │              │  │
-│ └──────────────┘   └──────────────┘  │
-│ Lim và Mẹ Vacci    Mùa Thu Hạt Dẻ    │ 14px Serif Bold
-│ 4 / 10 tập         0 / 6 tập         │ 11px tabular-nums
+│ │  Tranh bìa   │   │  Tranh bìa   │  │ 165×220 (3:4)
+│ │  sạch 3:4    │   │  sạch 3:4    │  │ Sạch hoàn toàn,
+│ └──────────────┘   └──────────────┘  │ không tem/badge đè
+│ Lim và Mẹ Vacci    ...               │
 │                                      │
-│ BẢN THU ĐÃ LƯU              Mở mục → │
-│ ┌──────────────────────────────────┐ │
-│ │ [44×44] Chiếc bánh hương thảo... │ │
-│ │         Mùa Thu Hạt Dẻ · 11 phút │ │ (Icon Bookmark)
-│ └──────────────────────────────────┘ │
+│      Copyright © Nancy & Liti        │ 11px secondary
 ├──────────────────────────────────────┤
-│ ┌──────────────────────────────────┐ │
-│ │ [40×52] Bác chó Barley... (Dừng) │ │ Mini-player 62px
-│ └──────────────────────────────────┘ │
 │ [ Thư viện ]  [ Tủ sách ]  [ Lưu trữ ]│ Bottom Tab 58px
 └──────────────────────────────────────┘
 ```
@@ -129,35 +117,37 @@
 └──────────────────────────────────────┘
 ```
 
-### 4B. Trang Chi tiết Tập — Bản chữ & Tranh minh họa (`/episodes/[id]`)
+### 4B. Giao diện Đọc Tập (`/episodes/[id]`)
+- **Quy tắc bất biến (áp dụng mọi bộ sách):**
+  1. **Thanh đỉnh cố định (`Sticky 42px`):** Luôn hiển thị ở mọi vị trí cuộn với nút **về Thư mục mẹ (`← Bộ sách`)** và nút **về Trang chủ (`Trang chủ`)** để người đọc thoát ra bất cứ lúc nào.
+  2. **Không không gian vụn & không hộp cuối tập:** Bỏ tuyệt đối *"Kỷ vật trong túi da"* / *"Ghi chú cuối tập"*; gom nút Phát & chọn Giọng đọc vào duy nhất 1 thanh mảnh `36px` (ẩn hoàn toàn nếu tập *Chỉ đọc chữ*).
+  3. **Tranh minh họa gọn trong mạch đọc & Không chú thích:** Tranh chèn trong Markdown hiển thị theo dòng cuộn từ trên xuống, tự giới hạn chiều cao gọn trong màn hình di động (không cắt xén hình, cuộn hết tranh đến chữ, **0 hộp chú thích `caption`**; chạm mở xem toàn màn hình, và nếu tập có `≥ 2` tranh thì có nút xem bộ tranh).
 ```text
 ┌──────────────────────────────────────┐
-│ ← Lim và Mẹ Vacci    [A-][A+]  (Đêm) │ 52px (Line icons)
+│ ← Bộ sách   [Trang chủ] [A-][A+](Đêm)│ Sticky 42px (luôn cố định)
+├──────────────────────────────────────┤
+│ TẬP 01                               │
+│ Bác chó Barley và con đường vô hình  │ 20px Serif
+│ [▶ 05:30 / 16:00] [Nữ · Mỹ Duyên ▾]  │ 1 thanh mảnh 36px (ẩn nếu Chỉ đọc chữ)
+│                                      │
+│ Bác chó Barley đang đánh hơi chiếc   │ (Vào thẳng nội dung chữ liền
+│ cổng gỗ thì Lim và mẹ Vacci tới nông │ mạch; tranh chèn trong bài tự
+│ trang. Chiếc mũi đen ươn ướt của bác │ giới hạn chiều cao gọn trong
+│ liên tục phập phồng giữa bụi cỏ thu. │ màn hình dọc, không chú thích)
 │ ┌──────────────────────────────────┐ │
 │ │                                  │ │
-│ │       Tranh minh họa 4:3         │ │ Chạm phóng to Lightbox
-│ │       (Sạch khung, vuốt ngang)   │ │
+│ │       Tranh minh họa truyện      │ │ Giới hạn chiều cao gọn,
+│ │    (Không cắt hình · 0 caption)  │ │ cuộn hết tranh đến chữ
+│ │                                  │ │
 │ └──────────────────────────────────┘ │
-│ Tranh 1 / 4 — Thung lũng rừng phong  │ Caption 12px italic
-│                                      │
-│ TẬP 01                               │
-│ Bác chó Barley và con đường vô hình  │ 22px Serif Display
-│ [Giọng Nữ · Mỹ Duyên*] [Giọng Nam]   │ (Ẩn cụm này nếu Chỉ đọc chữ)
-│ ┌──────────────────────────────────┐ │
-│ │       Phát tập này · 16 phút     │ │ 46px Primary Accent
-│ └──────────────────────────────────┘ │
-│                                      │
-│ Thân bài văn học (18px, line 1.78)   │
-│ Dòng chữ thoáng, lề rộng dễ đọc...   │
-│                                      │
-│ ┌──────────────────────────────────┐ │ EndNoteBox (chỉ hiện khi
-│ │ KỶ VẬT TRONG TÚI DA              │ │ Bộ sách cấu hình nhãn)
-│ │ Mẩu gỗ thông thơm của bác Barley │ │
-│ └──────────────────────────────────┘ │
-│       [Khoảng đệm đáy 140px]         │ Tránh Mini-player che chữ
+│ — Mỗi sinh vật đi qua đều để lại một │
+│ sợi mùi hương riêng — bác Barley đáp │
+│ chậm rãi giữa làn gió sớm...         │
+│ ──────────────────────────────────── │
+│ ← Mục lục sách · Trang chủ · Tập tiếp → │
 └──────────────────────────────────────┘
 ```
-- **Liên kết PRD:** `LIS-003`–`LIS-005`, `PLY-005`, `OPD-03`, `DEC-08`, `AC-04`, `AC-10`.
+- **Liên kết PRD:** `NFR-001B`, `LIS-003`–`LIS-005`, `PLY-005`, `OPD-03`, `DEC-01`, `AC-04`, `AC-10`.
 
 ---
 
@@ -254,7 +244,7 @@
 ---
 
 ## Màn hình 8 (Quản trị): Thêm và Chỉnh sửa Bộ sách (`/admin/books/[id]`)
-- **Mục đích:** Thiết lập bản sắc riêng cho Bộ sách (bìa `3:4`, điểm căn, Preset màu nước, nhãn ghi chú cuối tập, cấu hình Phần) và xác nhận quyền sử dụng hợp lệ.
+- **Mục đích:** Thiết lập bản sắc riêng cho Bộ sách (bìa `3:4`, điểm căn, Preset màu nước, cấu hình Phần) và xác nhận quyền sử dụng hợp lệ.
 - **Wireframe `390px`:**
 ```text
 ┌──────────────────────────────────────┐
@@ -268,8 +258,6 @@
 │ Họa sĩ         [____________________]│
 │ Sắc thái màu nước (WCAG AA):         │
 │ [Rêu Sồi*] [Hoàng Thổ] [Gỗ Hồng] [Tím]
-│ Nhãn ghi chú cuối tập (trống = ẩn):  │
-│ [ Kỷ vật trong túi da______________ ]│ (DEC-08)
 │ [x] Mặc định tự chuyển tập tiếp theo │
 │ Phần / Mùa (tùy chọn):               │
 │   Phần 1: Thung Lũng Phong     [Sửa] │

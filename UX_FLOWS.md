@@ -2,13 +2,13 @@
 
 | Thuộc tính | Thông tin |
 | :--- | :--- |
-| **Tham chiếu sản phẩm** | [PRD.md](./PRD.md) (Release 1.0 · Tài liệu v1.2 — Đã phê duyệt chính thức) |
+| **Tham chiếu sản phẩm** | [GEMINI.md](./GEMINI.md) · [PRD.md](./PRD.md) (Release 1.0 · Tài liệu v1.3 — Đã phê duyệt chính thức) |
 | **Phạm vi thiết kế** | Kiến trúc Thông tin (IA) & Luồng tương tác Mobile-first (`390px`) |
-| **Nguyên tắc cốt lõi** | 2 chạm để phát truyện · Một tay thao tác đêm · Văn phong sách in điềm đạm · Không emoji/quảng cáo |
+| **Nguyên tắc cốt lõi** | 2 chạm để phát truyện · Trang đọc ưu tiên nhiều chữ, không không gian vụn · Không emoji/quảng cáo |
 
 ---
 
-## 1. Phân tích UX từ `PRD.md` v1.2
+## 1. Phân tích UX từ `PRD.md` v1.3
 
 ### 1.1. Mô hình "Hai lớp người dùng trên một mái nhà"
 Litibook phục vụ đồng thời hai ngữ cảnh đối lập nhưng cùng chung ngôn ngữ sách nghệ thuật ấm áp:
@@ -21,7 +21,7 @@ Litibook phục vụ đồng thời hai ngữ cảnh đối lập nhưng cùng c
 ### 1.2. Cơ chế Đa dự án sách (Multi-Book Architecture)
 Thay vì thiết kế một ứng dụng đóng cứng cho duy nhất bộ *Lim & Mẹ Vacci*, UX của Litibook tách bạch rạch ròi:
 - **85% Hệ khung chung (Platform Shell):** Cấu trúc mở thẳng không rào cản đăng nhập, 3 tab điều hướng đáy (`Thư viện` · `Tủ sách` · `Lưu trữ`), thẻ *Đang nghe*, trình đọc chữ, Mini-player & Full-screen Player giữ cố định để người nghe mở bộ sách nào cũng thấy quen tay ngay lập tức.
-- **15% Bản sắc từng Bộ sách (Book Identity):** Mỗi bộ sách có bìa màu nước `3:4` sạch sẽ (không dán nhãn đè góc), chọn **1 trong 4 Preset sắc thái màu nước** (chỉ nhuộm nhẹ phần đầu trang bộ sách `8–10%` độ đậm để giữ tương phản chữ WCAG AA), tùy chọn bật/tắt nhãn **Ghi chú cuối tập** (VD: *"Kỷ vật trong túi da"* cho *Lim & Mẹ Vacci*, hoặc tắt hẳn cho *Khúc Ru Thung Lũng*), và cấu hình mặc định `Auto-next`.
+- **15% Bản sắc từng Bộ sách (Book Identity):** Mỗi bộ sách có bìa màu nước `3:4` sạch sẽ (không dán nhãn đè góc), chọn **1 trong 4 Preset sắc thái màu nước** (chỉ nhuộm nhẹ phần đầu trang bộ sách `8–10%` độ đậm để giữ tương phản chữ WCAG AA) và cấu hình mặc định `Auto-next`. Riêng **Giao diện Đọc (`Màn hình 4B`)** áp dụng kỷ luật thống nhất cho mọi bộ sách: bỏ hoàn toàn chi tiết *"Kỷ vật trong túi da"* / hộp ghi chú phụ, gom chọn giọng đọc vào 1 thanh mảnh, đặt tranh minh họa gọn không chú thích để ưu tiên tối đa mặt trang cho văn bản dài.
 
 ---
 
@@ -45,7 +45,7 @@ flowchart TD
     T1 -->|Chạm Đang nghe| S5
 
     S3["3. Chi tiết Bộ sách (/books/slug)<br/>Header wash Preset • Tác giả/Họa sĩ • Lọc Phần • 4A. Mục lục Tập"]
-    S3 -->|Chạm tập bất kỳ| S4["4B. Trang Tập & Đọc chữ (/episodes/id)<br/>Chuyển giọng • Tranh minh họa 4:3 • Bản chữ A-/A+ • Ghi chú cuối tập"]
+    S3 -->|Chạm tập bất kỳ| S4["4B. Giao diện Tập (/episodes/id)<br/>Sticky: ← Bộ sách & Trang chủ • 1 thanh giọng đọc gọn • Chữ liền mạch xen tranh không chú thích"]
     S3 -->|Chạm Phát trên tập| S5
     S4 -->|Mở trình phát| S5["5. Full-screen Audio Player (Drawer)<br/>Bìa lớn 3:4 • Đổi giọng • Tua ±15s • Hẹn giờ tắt • Tốc độ • Khóa chạm (2s)"]
 
@@ -92,7 +92,7 @@ flowchart LR
 1. Khi đưa điện thoại cho trẻ ngắm bìa tranh trên Full-screen Player, phụ huynh bấm nút **Khóa chạm** (icon ổ khóa nét mảnh ở đỉnh trình phát).
 2. **Trạng thái khóa chạm:** Thanh tua và toàn bộ nút điều khiển mờ đi và ngừng nhận chạm đơn; bìa tranh giữ nguyên sắc độ dịu; đáy màn hình hiện viên thuốc nhỏ: *"Giữ 2 giây để mở khóa"*.
 3. **Mở khóa:** Chạm giữ đủ `2 giây` để khôi phục quyền điều khiển.
-4. Tại trang đọc tập (`Màn hình 4B`), chạm vào tranh `4:3` để mở **Lightbox toàn màn hình** vuốt xem từng trang tranh kèm chú thích.
+4. Tại trang đọc tập (`Màn hình 4B`), thanh đầu trang luôn cố định (`sticky`) với hai lối thoát 1 chạm về **Thư mục mẹ (`← Bộ sách`)** và **Trang chủ**; các tranh minh họa chèn trong bài cuộn dọc xen kẽ với chữ, tự giới hạn chiều cao gọn trong màn hình (**0 hộp chú thích**) và chạm vào để xem toàn màn hình.
 
 ### Flow 5: Lưu Yêu thích & Bảo toàn Lịch sử nghe iOS (`LIS-008`, `LIS-009`, `DEC-03`)
 - Trên mỗi hàng mục lục tập (`Màn hình 4A`) hoặc Full-screen Player, chạm icon **Đánh dấu (Bookmark / Star)** (`44×44px`) để lưu vào tab **Lưu trữ (`Màn hình 6`)**.

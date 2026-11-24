@@ -1,4 +1,12 @@
 .DS_Store
-Thumbs.db
 node_modules/
-.vercel/
+.next/
+out/
+.env
+.env.local
+.env.*.local
+*.tsbuildinfo
+next-env.d.ts
+legacy_static_backup/
+*.mhtml
+/*.jpeg
