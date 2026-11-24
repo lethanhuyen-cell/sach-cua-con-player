@@ -1,43 +1,41 @@
-const CACHE_NAME = 'sach-cua-con-v8';
+const CACHE_NAME = 'sach-cua-con-v9';
 
-// Chiến lược Network-First: Ưu tiên tải mới từ máy chủ, chỉ fallback cache khi offline
 self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => caches.delete(key))
-      );
-    })
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((key) => caches.delete(key)));
+      await self.clients.claim();
+      // Tự động làm mới các tab đang bị kẹt giao diện cũ
+      const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+      for (const client of clients) {
+        client.postMessage({ type: 'SW_UPDATED_RELOAD' });
+      }
+    })()
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
-  // Bỏ qua cache cho các request audio để tránh lỗi range request và cache file lớn
   if (event.request.url.includes('/audio/') || event.request.url.endsWith('.mp3')) {
     event.respondWith(fetch(event.request));
     return;
   }
 
-  // Network-First cho HTML và JSON
+  // Luôn bypass HTTP disk cache cho HTML và JSON để nhận dữ liệu mới tức thì
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request, { cache: 'no-cache' })
       .then((response) => {
         if (!response || response.status !== 200) {
           return response;
         }
-        const responseToCache = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         return response;
       })
-      .catch(() => {
-        return caches.match(event.request);
-      })
+      .catch(() => caches.match(event.request))
   );
 });

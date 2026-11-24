@@ -3232,8 +3232,17 @@
     }
 
     if ('serviceWorker' in navigator) {
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) { refreshing = true; window.location.reload(); }
+      });
+      navigator.serviceWorker.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'SW_UPDATED_RELOAD' && !refreshing) {
+          refreshing = true; window.location.reload();
+        }
+      });
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js?v=8').then(r => r.update()).catch(() => {});
+        navigator.serviceWorker.register('sw.js?v=9', { updateViaCache: 'none' }).then(r => r.update()).catch(() => {});
       });
     }
 
