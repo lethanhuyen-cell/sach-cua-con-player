@@ -8,6 +8,7 @@ Dự án: Truyện Kể Thiên Nhiên Ru Ngủ Cho Bé
 import os
 import re
 import json
+import shutil
 
 BASE_DIR = "/Users/mac/Desktop/SÁCH CỦA CON"
 TAC_PHAM_DIR = os.path.join(BASE_DIR, "02_TAC_PHAM_HOAN_CHINH")
@@ -167,19 +168,52 @@ def extract_episode_data(ep_num, folder_name, category, icon):
         "content": content
     }
 
+def sync_audio_directories():
+    """Đồng bộ 1-1 toàn bộ file MP3 từ HUB_AUDIO_DIR sang cả audio/ và public/audio/."""
+    if not os.path.exists(HUB_AUDIO_DIR):
+        return
+    src_mp3s = {f for f in os.listdir(HUB_AUDIO_DIR) if f.endswith(".mp3")}
+    for rel_target in ["audio", os.path.join("public", "audio")]:
+        dst_dir = os.path.join(WEB_DIR, rel_target)
+        os.makedirs(dst_dir, exist_ok=True)
+        # Xóa file mp3 cũ không còn tồn tại ở kho Master
+        for existing in os.listdir(dst_dir):
+            if existing.endswith(".mp3") and existing not in src_mp3s:
+                os.remove(os.path.join(dst_dir, existing))
+        # Sao chép file mới hoặc file có thay đổi kích thước/thời gian
+        for f in sorted(src_mp3s):
+            s_file = os.path.join(HUB_AUDIO_DIR, f)
+            d_file = os.path.join(dst_dir, f)
+            if not os.path.exists(d_file) or os.path.getsize(s_file) != os.path.getsize(d_file):
+                shutil.copy2(s_file, d_file)
+    print(f"🔊 Đã đồng bộ {len(src_mp3s)} file âm thanh 48kHz sang cả /audio/ và /public/audio/.")
+
 def sync():
+    sync_audio_directories()
     episodes = []
     for ep_num, folder, cat, icon in FOLDERS:
         data = extract_episode_data(ep_num, folder, cat, icon)
         if data:
             episodes.append(data)
-            print(f"✅ Đã nạp: [{data['id']}] {data['title']} ({data['duration']})")
+            f_tag = "Nữ✓" if data["audio_female"] else "Nữ✗"
+            m_tag = "Nam✓" if data["audio_male"] else "Nam✗"
+            print(f"✅ Đã nạp: [{data['id']}] {data['title']} ({data['duration']}) | [{f_tag} | {m_tag}]")
             
     os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(episodes, f, ensure_ascii=False, indent=2)
+
+    pub_data = os.path.join(WEB_DIR, "public", "data", "episodes.json")
+    os.makedirs(os.path.dirname(pub_data), exist_ok=True)
+    shutil.copy2(DATA_FILE, pub_data)
+
+    for root_asset in ["index.html", "manifest.json", "sw.js"]:
+        s_asset = os.path.join(WEB_DIR, root_asset)
+        d_asset = os.path.join(WEB_DIR, "public", root_asset)
+        if os.path.exists(s_asset):
+            shutil.copy2(s_asset, d_asset)
         
-    print(f"\n🎉 Đã cập nhật database thành công: {DATA_FILE} ({len(episodes)} tập)")
+    print(f"\n🎉 Đã cập nhật database & đồng bộ toàn diện thành công: {DATA_FILE} ({len(episodes)} tập)")
 
 if __name__ == "__main__":
     sync()

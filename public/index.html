@@ -1863,10 +1863,6 @@
         display: inline-flex;
       }
 
-      .mobile-voice-section {
-        display: none;
-      }
-
       .hero-showcase {
         padding: 32px 36px;
       }
@@ -2034,17 +2030,17 @@
       </div>
     </section>
 
-    <!-- 2. VOICE SWITCHER BAR (Nổi bật ngay đầu trang Mobile & Tablet) -->
+    <!-- 2. VOICE SWITCHER BAR (Luôn nổi bật ngay trên kệ sách cho mọi màn hình) -->
     <section class="voice-switcher-bar mobile-voice-section" aria-label="Chọn giọng kể ru ngủ">
       <span class="voice-bar-label">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#EAB354" stroke-width="2">
           <path d="M12 3v18M8 8v8M16 7v10M4 11v2M20 11v2" stroke-linecap="round"/>
         </svg>
-        Giọng ru ngủ:
+        Chọn giọng kể (Đủ 2 giọng):
       </span>
       <div class="voice-pills-group">
-        <button class="voice-pill-btn voice-btn-female active" onclick="switchVoice('female')">Mỹ Duyên (Nữ)</button>
-        <button class="voice-pill-btn voice-btn-male" onclick="switchVoice('male')">Thiền Tâm Đức (Nam)</button>
+        <button class="voice-pill-btn voice-btn-female active" onclick="switchVoice('female')">Mỹ Duyên (Giọng Nữ)</button>
+        <button class="voice-pill-btn voice-btn-male" onclick="switchVoice('male')">Thiền Tâm Đức (Giọng Nam)</button>
       </div>
     </section>
 
@@ -2154,6 +2150,7 @@
 
       <div class="player-sub-row">
         <div class="sub-left-group">
+          <button class="speed-pill" onclick="toggleQuickVoice()" id="quickVoiceBtn" title="Chuyển đổi Giọng Nữ Mỹ Duyên / Giọng Nam Thiền Tâm Đức">⇄ Đổi giọng</button>
           <span>Tốc độ:</span>
           <button class="speed-pill" onclick="cycleSpeed()" id="speedBtn">1.0x</button>
         </div>
@@ -2233,9 +2230,12 @@
           <div class="reader-mini-sub" id="readerMiniTime">Sẵn sàng phát ru ngủ</div>
         </div>
       </div>
-      <button class="btn-reader-play" onclick="playFromReader()" id="readerMiniPlayBtn">
-        ▶ Nghe truyện
-      </button>
+      <div style="display:flex; gap:8px; align-items:center; flex-shrink:0;">
+        <button class="speed-pill" onclick="toggleQuickVoice(); document.getElementById('readerMiniInfo').textContent = cleanDisplayTitle(episodes.find(e=>e.id===readerTrackId)) + ' · ' + getVoiceShort();" style="min-height:36px; padding:6px 12px;">⇄ Nữ / Nam</button>
+        <button class="btn-reader-play" onclick="playFromReader()" id="readerMiniPlayBtn">
+          ▶ Nghe truyện
+        </button>
+      </div>
     </div>
   </div>
 
@@ -2585,6 +2585,10 @@
       playerVoiceShort.textContent = getVoiceShort();
     }
 
+    function toggleQuickVoice() {
+      switchVoice(currentVoice === 'female' ? 'male' : 'female');
+    }
+
     function switchVoice(v) {
       const wasPlaying = !audio.paused;
       const prevTime = audio.currentTime || 0;
@@ -2698,7 +2702,9 @@
         const hasAnyAudio = !!(ep.audio_female || ep.audio_male);
 
         let voiceHint = '';
-        if (hasAudioThisVoice) {
+        if (ep.audio_female && ep.audio_male) {
+          voiceHint = `Nữ & Nam · ${getVoiceShort()}`;
+        } else if (hasAudioThisVoice) {
           voiceHint = `48kHz · ${getVoiceShort()}`;
         } else if (hasAnyAudio) {
           voiceHint = currentVoice === 'female' ? 'Có bản Nam' : 'Có bản Nữ';
@@ -3227,7 +3233,7 @@
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(() => {});
+        navigator.serviceWorker.register('sw.js?v=8').then(r => r.update()).catch(() => {});
       });
     }
 
