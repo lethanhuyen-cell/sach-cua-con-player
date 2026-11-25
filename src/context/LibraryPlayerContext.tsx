@@ -27,6 +27,12 @@ interface ContinueSuggestion {
   durationSeconds: number;
 }
 
+interface NewEpisodeItem {
+  book: HydratedBook;
+  episode: HydratedEpisode;
+  publishedMs: number;
+}
+
 interface LibraryPlayerContextValue {
   books: HydratedBook[];
   isNight: boolean;
@@ -34,6 +40,9 @@ interface LibraryPlayerContextValue {
   favorites: string[];
   toggleFavorite: (episodeId: string) => void;
   progressMap: Record<string, LocalEpisodeProgress>;
+  isEpisodeNew: (episode: HydratedEpisode) => boolean;
+  markEpisodeOpened: (episodeId: string) => void;
+  newEpisodesAcrossLibrary: NewEpisodeItem[];
   preferredVoiceKey: string;
   selectVoicePreference: (voiceKey: string) => void;
   readerFontSize: number;
@@ -79,8 +88,12 @@ const STORAGE_KEYS = {
   favorites: 'litibook_favorites_v1',
   progress: 'litibook_progress_v1',
   voice: 'litibook_preferred_voice_v1',
-  fontSize: 'litibook_reader_fontsize_v1'
+  fontSize: 'litibook_reader_fontsize_v1',
+  openedEpisodes: 'litibook_opened_episodes_v1',
+  visitBaseline: 'litibook_visit_baseline_v1'
 };
+
+const NEW_EPISODE_WINDOW_MS = 14 * 24 * 3600 * 1000; // 14 days
 
 export function LibraryPlayerProvider({
   initialBooks,
@@ -93,6 +106,8 @@ export function LibraryPlayerProvider({
   const [isNight, setIsNight] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [progressMap, setProgressMap] = useState<Record<string, LocalEpisodeProgress>>({});
+  const [openedEpisodeIds, setOpenedEpisodeIds] = useState<string[]>([]);
+  const [previousVisitMs, setPreviousVisitMs] = useState<number | null>(null);
   const [preferredVoiceKey, setPreferredVoiceKey] = useState<string>('female_my_duyen');
   const [readerFontSize, setReaderFontSize] = useState<number>(18);
 
@@ -146,6 +161,33 @@ export function LibraryPlayerProvider({
 
       const savedFont = Number(localStorage.getItem(STORAGE_KEYS.fontSize));
       if (savedFont >= 16 && savedFont <= 22) setReaderFontSize(savedFont);
+
+      const savedOpened = localStorage.getItem(STORAGE_KEYS.openedEpisodes);
+      if (savedOpened) setOpenedEpisodeIds(JSON.parse(savedOpened));
+
+      const rawBaseline = localStorage.getItem(STORAGE_KEYS.visitBaseline);
+      const nowMs = Date.now();
+      if (rawBaseline) {
+        const parsed = JSON.parse(rawBaseline);
+        // Keep previous visit timestamp across same-day refreshes; roll forward after 12h
+        if (parsed.currentSessionMs && nowMs - parsed.currentSessionMs > 12 * 3600 * 1000) {
+          setPreviousVisitMs(parsed.currentSessionMs);
+          localStorage.setItem(
+            STORAGE_KEYS.visitBaseline,
+            JSON.stringify({
+              previousVisitMs: parsed.currentSessionMs,
+              currentSessionMs: nowMs
+            })
+          );
+        } else if (parsed.previousVisitMs) {
+          setPreviousVisitMs(parsed.previousVisitMs);
+        }
+      } else {
+        localStorage.setItem(
+          STORAGE_KEYS.visitBaseline,
+          JSON.stringify({ previousVisitMs: null, currentSessionMs: nowMs })
+        );
+      }
     } catch {}
   }, []);
 
@@ -204,6 +246,54 @@ export function LibraryPlayerProvider({
       return next;
     });
   }, []);
+
+  const markEpisodeOpened = useCallback((episodeId: string) => {
+    if (!episodeId) return;
+    setOpenedEpisodeIds((prev) => {
+      if (prev.includes(episodeId)) return prev;
+      const next = [...prev, episodeId];
+      try {
+        localStorage.setItem(STORAGE_KEYS.openedEpisodes, JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+  }, []);
+
+  const isEpisodeNew = useCallback(
+    (ep: HydratedEpisode): boolean => {
+      const prog = progressMap[ep.id];
+      if (
+        openedEpisodeIds.includes(ep.id) ||
+        (prog && (prog.positionSeconds > 0 || prog.completed))
+      ) {
+        return false;
+      }
+      const dateStr = ep.publishedAt || ep.createdAt;
+      const pubMs = dateStr ? Date.parse(dateStr) : 0;
+      if (!Number.isFinite(pubMs) || pubMs <= 0) return false;
+
+      const withinWindow = Date.now() - pubMs <= NEW_EPISODE_WINDOW_MS;
+      const newerThanLastVisit = previousVisitMs !== null && pubMs > previousVisitMs;
+      return withinWindow || newerThanLastVisit;
+    },
+    [openedEpisodeIds, previousVisitMs, progressMap]
+  );
+
+  const newEpisodesAcrossLibrary = useMemo<NewEpisodeItem[]>(() => {
+    const items: NewEpisodeItem[] = [];
+    for (const book of books) {
+      for (const ep of book.episodes) {
+        if (isEpisodeNew(ep)) {
+          const pubMs = Date.parse(ep.publishedAt || ep.createdAt || '') || 0;
+          items.push({ book, episode: ep, publishedMs: pubMs });
+        }
+      }
+    }
+    return items.sort((a, b) => {
+      if (b.publishedMs !== a.publishedMs) return b.publishedMs - a.publishedMs;
+      return b.episode.sortOrder - a.episode.sortOrder;
+    });
+  }, [books, isEpisodeNew]);
 
   const activeBook = useMemo(
     () => books.find((b) => b.id === activeBookId) || null,
@@ -286,6 +376,7 @@ export function LibraryPlayerProvider({
       setActiveTrackId(track.id);
       setAutoNext(book.defaultAutoNext);
       setPlayerError(null);
+      markEpisodeOpened(episode.id);
 
       const saved = progressMap[episode.id];
       let startSec = 0;
@@ -324,7 +415,7 @@ export function LibraryPlayerProvider({
         audio.load();
       }
     },
-    [activeEpisodeId, activeTrackId, playbackRate, progressMap, selectBestTrack]
+    [activeEpisodeId, activeTrackId, markEpisodeOpened, playbackRate, progressMap, selectBestTrack]
   );
 
   const togglePlayPause = useCallback(() => {
@@ -617,6 +708,9 @@ export function LibraryPlayerProvider({
         favorites,
         toggleFavorite,
         progressMap,
+        isEpisodeNew,
+        markEpisodeOpened,
+        newEpisodesAcrossLibrary,
         preferredVoiceKey,
         selectVoicePreference,
         readerFontSize,

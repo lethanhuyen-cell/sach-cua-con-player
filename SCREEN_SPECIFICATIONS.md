@@ -24,12 +24,19 @@
 │ │          [ ▶ Nghe tiếp ]         │ │
 │ └──────────────────────────────────┘ │
 │                                      │
+│ MỚI LÊN KỆ          3 tập mới chưa mở│ (Tự ẩn từng tập khi đã đọc/nghe)
+│ ┌──────────────────────────────────┐ │
+│ │ [54×72] MỚI · HÔM QUA            │ │
+│ │         Tập 10: Chú chuột... (▶) │ │
+│ └──────────────────────────────────┘ │
+│                                      │
 │ TỦ SÁCH                              │
 │ ┌──────────────┐   ┌──────────────┐  │
 │ │  Tranh bìa   │   │  Tranh bìa   │  │ 165×220 (3:4)
 │ │  sạch 3:4    │   │  sạch 3:4    │  │ Sạch hoàn toàn,
 │ └──────────────┘   └──────────────┘  │ không tem/badge đè
 │ Lim và Mẹ Vacci    ...               │
+│ 3 tập mới · Tập 10                   │ Dòng chữ nhỏ màu Đồng Cổ dưới bìa
 │                                      │
 │      Copyright © Nancy & Liti        │ 11px secondary
 ├──────────────────────────────────────┤
@@ -107,9 +114,13 @@
 ```text
 ┌──────────────────────────────────────┐
 │ Mục lục tập truyện   [Nữ·Mỹ Duyên ▾] │ Thanh chọn giọng kể đầu mục lục
-│ [Tất cả (11)] [Chưa nghe]  [Từ đầu ↑]│ Bộ lọc trạng thái & Đảo thứ tự
-│                                      │
-│ ┌──────────────────────────────────┐ │ Thẻ nổi độc lập (cách 12px)
+│ [Tất cả] [Mới (3)] [Chưa nghe] [Từ đầu↑]
+│ ┌──────────────────────────────────┐ │ Hộp ghim "Vừa ra mắt" đầu mục lục
+│ │ VỪA RA MẮT · HÔM QUA  Xem 3 tập→│ │ (Giúp vào ngay không phải cuộn xa)
+│ │ [62×82] Tập 10: Chú chuột Dusty  │ │
+│ │         [▶ Nghe ngay]  Đọc truyện│ │
+│ └──────────────────────────────────┘ │
+│ ┌──────────────────────────────────┐ │ Thẻ nổi độc lập (mạch từ Tập 00)
 │ │ ┌──────────┐ TẬP 01 · THÚ KỲ [☆]│ │
 │ │ │ Tranh    │ Bác chó Barley và...│ │ 16px Serif Bold
 │ │ │ riêng    │ Bác chó Barley đang │ │ 2 dòng dẫn truyện ngắn

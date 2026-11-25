@@ -15,7 +15,8 @@ function normalizeSearch(s: string): string {
 }
 
 export default function BooksShelfPage() {
-  const { books, isNight, toggleNight, progressMap, playEpisode } = useLibraryPlayer();
+  const { books, isNight, toggleNight, progressMap, isEpisodeNew, playEpisode } =
+    useLibraryPlayer();
   const [query, setQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState<string>('ALL');
 
@@ -190,6 +191,9 @@ export default function BooksShelfPage() {
             const completedCount = book.episodes.filter(
               (ep) => progressMap[ep.id]?.completed
             ).length;
+            const unreadNewEps = book.episodes.filter((ep) => isEpisodeNew(ep));
+            const latestNewEp =
+              unreadNewEps.length > 0 ? unreadNewEps[unreadNewEps.length - 1] : null;
             return (
               <Link
                 key={book.id}
@@ -219,6 +223,16 @@ export default function BooksShelfPage() {
                       ? `${completedCount} / ${book.episodes.length} tập đã nghe`
                       : `${book.episodes.length} tập`}
                   </p>
+                  {latestNewEp && (
+                    <p
+                      className="text-[11.5px] font-medium mt-0.5 truncate tabular-nums"
+                      style={{ color: 'var(--accent-warm)' }}
+                    >
+                      {unreadNewEps.length > 1
+                        ? `${unreadNewEps.length} tập mới · Tập ${latestNewEp.episodeCode}`
+                        : `Mới: Tập ${latestNewEp.episodeCode}`}
+                    </p>
+                  )}
                 </div>
               </Link>
             );

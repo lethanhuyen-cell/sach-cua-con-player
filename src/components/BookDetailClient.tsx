@@ -7,7 +7,8 @@ import {
   BOOK_PRESETS,
   estimateReadingMinutes,
   formatClock,
-  formatDurationShort
+  formatDurationShort,
+  formatRelativePublishDate
 } from '@/lib/presets';
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { BookCover } from './BookCover';
@@ -52,6 +53,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
     favorites,
     toggleFavorite,
     progressMap,
+    isEpisodeNew,
     preferredVoiceKey,
     selectVoicePreference,
     activeEpisode,
@@ -62,7 +64,9 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
   } = useLibraryPlayer();
 
   const [selectedPartId, setSelectedPartId] = useState<string>('ALL');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'unheard' | 'saved'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'new' | 'unheard' | 'saved'>(
+    'all'
+  );
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const preset = BOOK_PRESETS[book.themePreset] || BOOK_PRESETS.moss;
@@ -109,6 +113,19 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
     [partFilteredEpisodes, progressMap]
   );
 
+  const newEpisodesInBook = useMemo(() => {
+    return partFilteredEpisodes
+      .filter((ep) => isEpisodeNew(ep))
+      .sort((a, b) => {
+        const aMs = Date.parse(a.publishedAt || a.createdAt || '') || 0;
+        const bMs = Date.parse(b.publishedAt || b.createdAt || '') || 0;
+        if (bMs !== aMs) return bMs - aMs;
+        return b.sortOrder - a.sortOrder;
+      });
+  }, [isEpisodeNew, partFilteredEpisodes]);
+
+  const newestUnreadEpisode = newEpisodesInBook[0] || null;
+
   const savedInBookCount = useMemo(
     () => partFilteredEpisodes.filter((ep) => favorites.includes(ep.id)).length,
     [partFilteredEpisodes, favorites]
@@ -116,6 +133,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
 
   const visibleEpisodes = useMemo(() => {
     let list = partFilteredEpisodes.filter((ep) => {
+      if (statusFilter === 'new') return isEpisodeNew(ep);
       if (statusFilter === 'unheard') return !progressMap[ep.id]?.completed;
       if (statusFilter === 'saved') return favorites.includes(ep.id);
       return true;
@@ -124,7 +142,14 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
       list = [...list].reverse();
     }
     return list;
-  }, [favorites, partFilteredEpisodes, progressMap, sortOrder, statusFilter]);
+  }, [
+    favorites,
+    isEpisodeNew,
+    partFilteredEpisodes,
+    progressMap,
+    sortOrder,
+    statusFilter
+  ]);
 
   // Smart primary CTA target: in-progress episode in this book -> next unheard audio episode -> first episode
   const primaryAudioTarget = useMemo(() => {
@@ -361,12 +386,16 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
             {(
               [
-                { key: 'all', label: `Tất cả (${partFilteredEpisodes.length})` },
-                { key: 'unheard', label: `Chưa nghe (${unheardCount})` },
-                { key: 'saved', label: `Đã lưu (${savedInBookCount})` }
-              ] as const
+                { key: 'all' as const, label: `Tất cả (${partFilteredEpisodes.length})` },
+                ...(newEpisodesInBook.length > 0 || statusFilter === 'new'
+                  ? [{ key: 'new' as const, label: `Mới (${newEpisodesInBook.length})` }]
+                  : []),
+                { key: 'unheard' as const, label: `Chưa nghe (${unheardCount})` },
+                { key: 'saved' as const, label: `Đã lưu (${savedInBookCount})` }
+              ]
             ).map((pill) => {
               const isSelected = statusFilter === pill.key;
+              const isNewPill = pill.key === 'new';
               return (
                 <button
                   key={pill.key}
@@ -374,7 +403,11 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
                   onClick={() => setStatusFilter(pill.key)}
                   style={{
                     backgroundColor: isSelected ? accentColor : 'var(--bg-surface)',
-                    color: isSelected ? accentTextOnSolid : 'var(--text-secondary)',
+                    color: isSelected
+                      ? accentTextOnSolid
+                      : isNewPill
+                        ? 'var(--accent-warm)'
+                        : 'var(--text-secondary)',
                     border: '1px solid var(--border-hairline)'
                   }}
                   className="h-8 px-3 rounded-[7px] text-[11.5px] font-medium shrink-0 tabular-nums transition"
@@ -399,6 +432,93 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
           </button>
         </div>
 
+        {/* Pinned "Vừa ra mắt" Spotlight Card at top when viewing from Ep 00 so reader doesn't have to scroll down */}
+        {newestUnreadEpisode && statusFilter === 'all' && sortOrder === 'asc' && (
+          <div
+            style={{
+              backgroundColor: washBg,
+              border: '1px solid var(--accent-warm)'
+            }}
+            className="rounded-[11px] p-3.5 space-y-2.5"
+          >
+            <div className="flex items-center justify-between gap-2">
+              <span
+                className="vn-eyebrow"
+                style={{ color: 'var(--accent-warm)' }}
+              >
+                Vừa ra mắt · {formatRelativePublishDate(newestUnreadEpisode.publishedAt)}
+              </span>
+              {newEpisodesInBook.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => setStatusFilter('new')}
+                  style={{ color: accentColor }}
+                  className="text-xs font-semibold underline shrink-0 tabular-nums"
+                >
+                  Xem cả {newEpisodesInBook.length} tập mới
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Link
+                href={`/episodes/${newestUnreadEpisode.id}`}
+                className="w-[62px] shrink-0 block"
+              >
+                <BookCover
+                  src={newestUnreadEpisode.effectiveCoverUrl}
+                  alt={newestUnreadEpisode.title}
+                  focalPoint={book.coverFocalPoint}
+                />
+              </Link>
+
+              <div className="flex-1 min-w-0">
+                <Link href={`/episodes/${newestUnreadEpisode.id}`}>
+                  <h3 className="text-[15.5px] font-bold font-editorial line-clamp-2">
+                    Tập {newestUnreadEpisode.episodeCode}: {newestUnreadEpisode.title}
+                  </h3>
+                </Link>
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  {!newestUnreadEpisode.isTextOnly &&
+                    newestUnreadEpisode.audioTracks.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          playEpisode(
+                            book,
+                            newestUnreadEpisode,
+                            effectiveSelectedVoice || undefined
+                          )
+                        }
+                        style={{
+                          backgroundColor: accentColor,
+                          color: accentTextOnSolid
+                        }}
+                        className="h-8 px-3 rounded-[7px] text-xs font-semibold inline-flex items-center gap-1.5 tabular-nums"
+                      >
+                        <PlayIcon size={12} />
+                        <span>
+                          Nghe ngay ·{' '}
+                          {formatDurationShort(
+                            newestUnreadEpisode.audioTracks[0]?.durationSeconds || 0
+                          )}
+                        </span>
+                      </button>
+                    )}
+                  <Link
+                    href={`/episodes/${newestUnreadEpisode.id}`}
+                    style={{ color: 'var(--text-primary)' }}
+                    className="h-8 px-2 inline-flex items-center gap-1 text-xs font-medium underline"
+                  >
+                    <BookOpenIcon size={13} />
+                    <span>Đọc truyện</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Chapter Cards List */}
         {visibleEpisodes.length === 0 ? (
           <div
@@ -412,7 +532,9 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
             <p className="text-sm font-editorial">
               {statusFilter === 'saved'
                 ? 'Chưa có tập nào được đánh dấu lưu trong bộ sách này.'
-                : 'Bạn đã nghe trọn vẹn tất cả các tập trong mục này.'}
+                : statusFilter === 'new'
+                  ? 'Bạn đã mở xem hết các tập mới ra mắt gần đây.'
+                  : 'Bạn đã nghe trọn vẹn tất cả các tập trong mục này.'}
             </p>
             <button
               type="button"
@@ -430,6 +552,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
               const isEpActive = activeEpisode?.id === ep.id;
               const isEpPlaying = isEpActive && isPlaying;
               const isSaved = favorites.includes(ep.id);
+              const isNew = isEpisodeNew(ep);
               const pct =
                 prog && prog.durationSeconds > 0
                   ? Math.min(
@@ -477,6 +600,14 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-1.5 min-w-0">
+                          {isNew && (
+                            <span
+                              style={{ color: 'var(--accent-warm)' }}
+                              className="vn-eyebrow shrink-0"
+                            >
+                              Mới · {formatRelativePublishDate(ep.publishedAt)} ·
+                            </span>
+                          )}
                           <span
                             className="vn-eyebrow truncate"
                             style={{

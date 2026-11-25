@@ -13,7 +13,12 @@ import {
   SearchIcon,
   SunIcon
 } from '@/components/Icons';
-import { estimateReadingMinutes, formatClock, formatDurationShort } from '@/lib/presets';
+import {
+  estimateReadingMinutes,
+  formatClock,
+  formatDurationShort,
+  formatRelativePublishDate
+} from '@/lib/presets';
 
 export default function HomeLibraryPage() {
   const {
@@ -22,6 +27,8 @@ export default function HomeLibraryPage() {
     toggleNight,
     favorites,
     progressMap,
+    isEpisodeNew,
+    newEpisodesAcrossLibrary,
     activeEpisode,
     isPlaying,
     playEpisode,
@@ -30,6 +37,32 @@ export default function HomeLibraryPage() {
 
   // Only show the Continue Listening card when the listener has actual listening history
   const resumeItem = continueItems.length > 0 ? continueItems[0] : null;
+
+  // Up to 3 newest unread/unheard episodes across all books
+  const recentArrivals = useMemo(
+    () => newEpisodesAcrossLibrary.slice(0, 3),
+    [newEpisodesAcrossLibrary]
+  );
+
+  // Order bookshelf so books with newly published unread episodes gently surface first
+  const orderedBooks = useMemo(() => {
+    return [...books].sort((a, b) => {
+      const aLatestNewMs = Math.max(
+        0,
+        ...a.episodes
+          .filter((ep) => isEpisodeNew(ep))
+          .map((ep) => Date.parse(ep.publishedAt || ep.createdAt || '') || 0)
+      );
+      const bLatestNewMs = Math.max(
+        0,
+        ...b.episodes
+          .filter((ep) => isEpisodeNew(ep))
+          .map((ep) => Date.parse(ep.publishedAt || ep.createdAt || '') || 0)
+      );
+      if (aLatestNewMs !== bLatestNewMs) return bLatestNewMs - aLatestNewMs;
+      return a.sortOrder - b.sortOrder;
+    });
+  }, [books, isEpisodeNew]);
 
   const savedEpisodes = useMemo(() => {
     const list: {
@@ -63,7 +96,10 @@ export default function HomeLibraryPage() {
 
   const resumePct =
     resumeItem && resumeItem.durationSeconds > 0
-      ? Math.min(100, Math.round((resumeItem.progressSeconds / resumeItem.durationSeconds) * 100))
+      ? Math.min(
+          100,
+          Math.round((resumeItem.progressSeconds / resumeItem.durationSeconds) * 100)
+        )
       : 0;
 
   return (
@@ -205,6 +241,97 @@ export default function HomeLibraryPage() {
         </section>
       )}
 
+      {/* Mới lên kệ (Recent Unread Releases Across All Books — Auto-clears when opened/listened) */}
+      {recentArrivals.length > 0 && (
+        <section aria-label="Mới lên kệ">
+          <div className="flex items-baseline justify-between mb-2.5">
+            <h2 className="text-[17px] font-semibold font-editorial">Mới lên kệ</h2>
+            <span className="text-xs tabular-nums" style={{ color: 'var(--accent-warm)' }}>
+              {newEpisodesAcrossLibrary.length} tập mới chưa mở
+            </span>
+          </div>
+
+          <div
+            style={{
+              backgroundColor: 'var(--bg-elevated)',
+              border: '1px solid var(--border-hairline)'
+            }}
+            className="rounded-[10px] divide-y divide-[var(--border-hairline)]"
+          >
+            {recentArrivals.map(({ book, episode }) => {
+              const isItemPlaying = activeEpisode?.id === episode.id && isPlaying;
+              const durLabel = episode.isTextOnly
+                ? estimateReadingMinutes(episode.wordCount)
+                : formatDurationShort(episode.audioTracks[0]?.durationSeconds || 0);
+
+              return (
+                <div
+                  key={episode.id}
+                  className="p-3 flex items-center gap-3"
+                >
+                  <Link
+                    href={`/episodes/${episode.id}`}
+                    className="w-[54px] shrink-0 block"
+                  >
+                    <BookCover
+                      src={episode.effectiveCoverUrl}
+                      alt={episode.title}
+                      focalPoint={book.coverFocalPoint}
+                    />
+                  </Link>
+
+                  <Link
+                    href={`/episodes/${episode.id}`}
+                    className="flex-1 min-w-0"
+                  >
+                    <div className="flex items-center gap-1.5 text-[11px] truncate">
+                      <span
+                        className="font-semibold uppercase tracking-wider shrink-0"
+                        style={{ color: 'var(--accent-warm)' }}
+                      >
+                        Mới · {formatRelativePublishDate(episode.publishedAt)}
+                      </span>
+                      <span style={{ color: 'var(--text-secondary)' }} className="truncate">
+                        · {book.title}
+                      </span>
+                    </div>
+                    <h3 className="text-[14.5px] font-semibold font-editorial line-clamp-2 mt-0.5">
+                      Tập {episode.episodeCode}: {episode.title}
+                    </h3>
+                    <p
+                      className="text-[11.5px] mt-0.5 tabular-nums"
+                      style={{ color: 'var(--text-secondary)' }}
+                    >
+                      {durLabel}
+                    </p>
+                  </Link>
+
+                  {!episode.isTextOnly && episode.audioTracks.length > 0 && (
+                    <button
+                      type="button"
+                      aria-label={isItemPlaying ? `Tạm dừng ${episode.title}` : `Nghe ${episode.title}`}
+                      onClick={() => playEpisode(book, episode)}
+                      style={{
+                        backgroundColor: isItemPlaying
+                          ? 'var(--accent-primary)'
+                          : 'var(--bg-surface)',
+                        color: isItemPlaying
+                          ? 'var(--accent-primary-fg)'
+                          : 'var(--accent-primary)',
+                        border: '1px solid var(--border-hairline)'
+                      }}
+                      className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                    >
+                      {isItemPlaying ? <PauseIcon size={14} /> : <PlayIcon size={14} />}
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       {/* Clean Bookshelf */}
       <section aria-label="Tủ sách">
         <div className="flex items-baseline justify-between mb-3">
@@ -220,7 +347,7 @@ export default function HomeLibraryPage() {
           )}
         </div>
 
-        {books.length === 0 ? (
+        {orderedBooks.length === 0 ? (
           <div
             style={{
               backgroundColor: 'var(--bg-surface)',
@@ -233,10 +360,15 @@ export default function HomeLibraryPage() {
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4">
-            {books.map((book) => {
+            {orderedBooks.map((book) => {
               const completedCount = book.episodes.filter(
                 (ep) => progressMap[ep.id]?.completed
               ).length;
+              const unreadNewEps = book.episodes.filter((ep) => isEpisodeNew(ep));
+              const latestNewEp =
+                unreadNewEps.length > 0
+                  ? unreadNewEps[unreadNewEps.length - 1]
+                  : null;
 
               return (
                 <Link
@@ -269,6 +401,16 @@ export default function HomeLibraryPage() {
                         ? `${completedCount} / ${book.episodes.length} tập đã nghe`
                         : `${book.episodes.length} tập`}
                     </p>
+                    {latestNewEp && (
+                      <p
+                        className="text-[11.5px] font-medium mt-0.5 truncate tabular-nums"
+                        style={{ color: 'var(--accent-warm)' }}
+                      >
+                        {unreadNewEps.length > 1
+                          ? `${unreadNewEps.length} tập mới · Tập ${latestNewEp.episodeCode}`
+                          : `Mới: Tập ${latestNewEp.episodeCode}`}
+                      </p>
+                    )}
                   </div>
                 </Link>
               );

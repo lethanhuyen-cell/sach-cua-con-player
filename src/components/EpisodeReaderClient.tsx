@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { HydratedBook, HydratedEpisode } from '@/lib/types';
 import { collectEpisodeIllustrations, parseStoryMarkdown } from '@/lib/markdown';
@@ -45,6 +45,7 @@ export function EpisodeReaderClient({
     toggleNight,
     readerFontSize,
     adjustReaderFontSize,
+    markEpisodeOpened,
     preferredVoiceKey,
     activeEpisode,
     activeTrack,
@@ -69,6 +70,13 @@ export function EpisodeReaderClient({
     );
   });
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  // Opening an episode to read automatically clears its "Mới" badge on this device
+  useEffect(() => {
+    if (!isPreview) {
+      markEpisodeOpened(episode.id);
+    }
+  }, [episode.id, isPreview, markEpisodeOpened]);
 
   const blocks = useMemo(
     () => parseStoryMarkdown(episode.contentMarkdown, episode.title),

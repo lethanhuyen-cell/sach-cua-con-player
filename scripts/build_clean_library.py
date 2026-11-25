@@ -197,6 +197,22 @@ def main():
         plain_words = len(re.sub(r"!\[[^\]]*\]\([^)]+\)", " ", md_clean).split())
         clean_sum = build_clean_summary(raw_ep.get("summary", ""), clean_title, md_clean)
 
+        # Stagger publishedAt dates realistically: Ep 00..07 earlier, Ep 08..10 recent arrivals
+        staggered_dates = {
+            "00": "2026-10-15T14:00:00.000Z",
+            "01": "2026-10-18T14:00:00.000Z",
+            "02": "2026-10-22T14:00:00.000Z",
+            "03": "2026-10-26T14:00:00.000Z",
+            "04": "2026-10-30T14:00:00.000Z",
+            "05": "2026-11-03T14:00:00.000Z",
+            "06": "2026-11-06T14:00:00.000Z",
+            "07": "2026-11-09T14:00:00.000Z",
+            "08": "2026-11-19T14:00:00.000Z",
+            "09": "2026-11-22T14:00:00.000Z",
+            "10": "2026-11-24T15:00:00.000Z",
+        }
+        ep_pub_at = staggered_dates.get(eid, now)
+
         episodes.append(
             {
                 "id": ep_uuid,
@@ -212,9 +228,9 @@ def main():
                 "isTextOnly": False,
                 "sortOrder": idx,
                 "status": "published",
-                "publishedAt": now,
-                "createdAt": now,
-                "updatedAt": now,
+                "publishedAt": ep_pub_at,
+                "createdAt": ep_pub_at,
+                "updatedAt": ep_pub_at,
                 "deletedAt": None,
             }
         )

@@ -67,3 +67,20 @@ export function estimateReadingMinutes(wordCount: number): string {
   const mins = Math.max(1, Math.round((wordCount || 0) / 160));
   return `~${mins} phút đọc`;
 }
+
+export function formatRelativePublishDate(isoDate: string | null | undefined): string {
+  if (!isoDate) return 'Mới cập nhật';
+  const ts = Date.parse(isoDate);
+  if (!Number.isFinite(ts)) return 'Mới cập nhật';
+
+  const diffMs = Math.max(0, Date.now() - ts);
+  const diffDays = Math.floor(diffMs / (24 * 3600 * 1000));
+  if (diffDays === 0) return 'Hôm nay';
+  if (diffDays === 1) return 'Hôm qua';
+  if (diffDays < 7) return `${diffDays} ngày trước`;
+
+  const d = new Date(ts);
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  return `${day}/${month}`;
+}
