@@ -13,7 +13,7 @@ self.addEventListener('activate', (event) => {
       .then((clients) => {
         clients.forEach((client) => {
           if ('navigate' in client) {
-            client.navigate('https://thuviencualiti.vercel.app/');
+            client.navigate('https://sach-cua-con-player.vercel.app/');
           }
         });
       })
