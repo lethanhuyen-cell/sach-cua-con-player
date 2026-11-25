@@ -164,6 +164,7 @@ def main():
             "coverUrl": "/images/books/lim-vacci-cover.jpg",
             "coverFocalPoint": "center",
             "themePreset": "moss",
+            "tocMode": "thematic",
             "defaultAutoNext": False,
             "showEpisodeNumbers": True,
             "sortOrder": 0,

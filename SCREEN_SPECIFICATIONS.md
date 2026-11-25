@@ -109,25 +109,24 @@
 
 ---
 
-## Màn hình 4: Mục lục Thẻ Chương Minh họa & Trang Đọc Tập
-### 4A. Mục lục Tập truyện dạng Thẻ Chương Minh họa (dưới đầu trang Bộ sách)
+## Màn hình 4: Mục lục Tập truyện Mật độ cao (100–365+ tập) & Trang Đọc Tập
+### 4A. Mục lục Tập truyện Phương án 1: Tab Tuyển tập + Chặng 20 tập + Hàng mảnh
 ```text
 ┌──────────────────────────────────────┐
-│ Mục lục tập truyện   [Nữ·Mỹ Duyên ▾] │ Thanh chọn giọng kể đầu mục lục
-│ [Tất cả] [Mới (3)] [Chưa nghe] [Từ đầu↑]
-│ ┌──────────────────────────────────┐ │ Hộp ghim "Vừa ra mắt" đầu mục lục
-│ │ VỪA RA MẮT · HÔM QUA  Xem 3 tập→│ │ (Giúp vào ngay không phải cuộn xa)
-│ │ [62×82] Tập 10: Chú chuột Dusty  │ │
-│ │         [▶ Nghe ngay]  Đọc truyện│ │
-│ └──────────────────────────────────┘ │
-│ ┌──────────────────────────────────┐ │ Thẻ nổi độc lập (mạch từ Tập 00)
-│ │ ┌──────────┐ TẬP 01 · THÚ KỲ [☆]│ │
-│ │ │ Tranh    │ Bác chó Barley và...│ │ 16px Serif Bold
-│ │ │ riêng    │ Bác chó Barley đang │ │ 2 dòng dẫn truyện ngắn
-│ │ │ 84 × 112 │ đánh hơi chiếc cổng │ │
-│ │ │ (3:4)    │ [▶ Nghe·16p] Đọc →  │ │ Tách rõ 2 lối Nghe & Đọc
-│ │ └──────────┘                     │ │
-│ │ ════════════─────────────── (35%)│ │ Thanh tiến độ mảnh 2.5px
+│ ← Tủ sách          Trang chủ   (Đêm) │ Đầu trang thu gọn để hiện nhiều tập
+│ [62×82] Lim và Mẹ Vacci              │
+│         365 Đêm · 128 tập            │
+│         [▶ Tiếp Tập 04] [Mỹ Duyên ▾] │
+├──────────────────────────────────────┤
+│ [Tìm số tập hoặc tên tập...] [Mới(3)]│ Tìm nhanh & Lọc tập mới
+│ [Tất cả] [Cội nguồn] [Thú kỳ diệu]   │ Tab Tuyển tập trượt ngang (ẩn nếu tuần tự)
+│ [01–20*] [21–40] [41–60] [61–80]...  │ Tự chia chặng 20 tập nhẹ mượt
+│ ┌──────────────────────────────────┐ │
+│ │ 01 [38×50] Bác chó Barley...  (▶)│ │ Hàng mảnh ~56px (6–7 tập/màn hình)
+│ │            16 phút · Đã nghe     │ │ Chạm tên: Đọc · Chạm ▶: Nghe ngay
+│ ├──────────────────────────────────┤ │
+│ │ 02 [38×50] Cô mèo Amber và... (▶)│ │ Chỉ ghi "15 phút" tối giản
+│ │            15 phút               │ │
 │ └──────────────────────────────────┘ │
 └──────────────────────────────────────┘
 ```

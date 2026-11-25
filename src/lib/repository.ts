@@ -187,6 +187,7 @@ async function fetchDatabaseFromSupabase(): Promise<LibraryDatabase> {
       coverUrl: r.cover_url || '',
       coverFocalPoint: r.cover_focal_point || 'center',
       themePreset: r.theme_preset || 'moss',
+      tocMode: r.toc_mode === 'sequential' ? 'sequential' : 'thematic',
       defaultAutoNext: Boolean(r.default_auto_next),
       showEpisodeNumbers: r.show_episode_numbers !== false,
       sortOrder: r.sort_order || 0,
@@ -406,6 +407,7 @@ export async function upsertBook(input: {
   coverUrl?: string;
   coverFocalPoint?: Book['coverFocalPoint'];
   themePreset?: Book['themePreset'];
+  tocMode?: Book['tocMode'];
   defaultAutoNext?: boolean;
   showEpisodeNumbers?: boolean;
   sortOrder?: number;
@@ -455,6 +457,7 @@ export async function upsertBook(input: {
       cover_url: (input.coverUrl || '').trim(),
       cover_focal_point: input.coverFocalPoint || 'center',
       theme_preset: input.themePreset || 'moss',
+      toc_mode: input.tocMode || 'thematic',
       default_auto_next: Boolean(input.defaultAutoNext),
       show_episode_numbers: input.showEpisodeNumbers !== false,
       sort_order: input.sortOrder ?? db.books.length,
@@ -503,6 +506,7 @@ export async function upsertBook(input: {
       coverUrl: data.cover_url || '',
       coverFocalPoint: data.cover_focal_point || 'center',
       themePreset: data.theme_preset || 'moss',
+      tocMode: data.toc_mode === 'sequential' ? 'sequential' : 'thematic',
       defaultAutoNext: Boolean(data.default_auto_next),
       showEpisodeNumbers: data.show_episode_numbers !== false,
       sortOrder: data.sort_order || 0,
@@ -533,6 +537,7 @@ export async function upsertBook(input: {
       coverUrl: (input.coverUrl ?? localDb.books[idx].coverUrl).trim(),
       coverFocalPoint: input.coverFocalPoint || localDb.books[idx].coverFocalPoint || 'center',
       themePreset: input.themePreset || localDb.books[idx].themePreset || 'moss',
+      tocMode: input.tocMode || localDb.books[idx].tocMode || 'thematic',
       defaultAutoNext: input.defaultAutoNext ?? localDb.books[idx].defaultAutoNext,
       showEpisodeNumbers: input.showEpisodeNumbers ?? localDb.books[idx].showEpisodeNumbers,
       sortOrder: input.sortOrder ?? localDb.books[idx].sortOrder,
@@ -560,6 +565,7 @@ export async function upsertBook(input: {
       coverUrl: (input.coverUrl || '').trim(),
       coverFocalPoint: input.coverFocalPoint || 'center',
       themePreset: input.themePreset || 'moss',
+      tocMode: input.tocMode || 'thematic',
       defaultAutoNext: Boolean(input.defaultAutoNext),
       showEpisodeNumbers: input.showEpisodeNumbers !== false,
       sortOrder: input.sortOrder ?? localDb.books.length,

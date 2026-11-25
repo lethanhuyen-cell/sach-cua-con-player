@@ -35,6 +35,7 @@
       "coverUrl": "/images/books/lim-vacci-cover.jpg",
       "coverFocalPoint": "center",
       "themePreset": "moss",
+      "tocMode": "thematic",
       "defaultAutoNext": false,
       "showEpisodeNumbers": true,
       "sortOrder": 0,

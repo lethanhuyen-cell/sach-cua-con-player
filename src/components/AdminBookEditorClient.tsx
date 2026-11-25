@@ -3,7 +3,13 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { BookPreset, CoverFocalPoint, HydratedBook, PublishStatus } from '@/lib/types';
+import {
+  BookPreset,
+  CoverFocalPoint,
+  HydratedBook,
+  PublishStatus,
+  TocMode
+} from '@/lib/types';
 import { BOOK_PRESETS } from '@/lib/presets';
 import { uploadMediaWithProgress } from '@/lib/uploadClient';
 import { BookCover } from './BookCover';
@@ -31,6 +37,9 @@ export function AdminBookEditorClient({
   );
   const [themePreset, setThemePreset] = useState<BookPreset>(
     initialBook?.themePreset || 'moss'
+  );
+  const [tocMode, setTocMode] = useState<TocMode>(
+    initialBook?.tocMode || 'thematic'
   );
   const [defaultAutoNext, setDefaultAutoNext] = useState(
     initialBook?.defaultAutoNext ?? false
@@ -92,6 +101,7 @@ export function AdminBookEditorClient({
           coverUrl,
           coverFocalPoint,
           themePreset,
+          tocMode,
           defaultAutoNext,
           showEpisodeNumbers,
           rightsConfirmed,
@@ -484,6 +494,36 @@ export function AdminBookEditorClient({
           />
           <span>Hiển thị cột số thứ tự tập (00, 01, 02...) trong mục lục</span>
         </label>
+
+        <div className="pt-2 border-t border-[var(--border-hairline)] space-y-2">
+          <span className="font-semibold block font-editorial text-sm">
+            Kiểu tổ chức Mục lục tập truyện (Quy mô 100–365 tập)
+          </span>
+          <label className="flex items-start gap-2.5 cursor-pointer">
+            <input
+              type="radio"
+              name="tocMode"
+              checked={tocMode === 'thematic'}
+              onChange={() => setTocMode('thematic')}
+              className="mt-0.5"
+            />
+            <span>
+              <strong>Chia theo Tuyển tập chủ đề + Chặng 20 tập:</strong> Phù hợp bộ sách nhiều nhánh nội dung (như <em>Lim &amp; Mẹ Vacci</em>: Thú, Cây, Nấm...); tự động gom theo Phần hoặc Nhãn chủ đề.
+            </span>
+          </label>
+          <label className="flex items-start gap-2.5 cursor-pointer">
+            <input
+              type="radio"
+              name="tocMode"
+              checked={tocMode === 'sequential'}
+              onChange={() => setTocMode('sequential')}
+              className="mt-0.5"
+            />
+            <span>
+              <strong>Xếp tuần tự theo Chặng 20 tập (01–20, 21–40...):</strong> Phù hợp truyện nối tiếp mạch thời gian từ đầu tới cuối (như <em>Tiểu Hạt Dẻ</em>).
+            </span>
+          </label>
+        </div>
       </section>
 
       {/* Optional Parts / Seasons */}

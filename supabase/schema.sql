@@ -30,6 +30,7 @@ create table if not exists public.books (
   cover_url text default '',
   cover_focal_point text not null default 'center' check (cover_focal_point in ('top', 'center', 'bottom')),
   theme_preset text not null default 'moss' check (theme_preset in ('moss', 'ochre', 'rosewood', 'lavender')),
+  toc_mode text not null default 'thematic' check (toc_mode in ('thematic', 'sequential')),
   default_auto_next boolean not null default false,
   show_episode_numbers boolean not null default true,
   sort_order integer not null default 0,

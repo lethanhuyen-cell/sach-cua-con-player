@@ -1,6 +1,7 @@
 export type BookPreset = 'moss' | 'ochre' | 'rosewood' | 'lavender';
 export type CoverFocalPoint = 'top' | 'center' | 'bottom';
 export type PublishStatus = 'draft' | 'published';
+export type TocMode = 'thematic' | 'sequential';
 
 export interface VoiceProfile {
   id: string;
@@ -77,6 +78,7 @@ export interface Book {
   coverUrl: string;
   coverFocalPoint: CoverFocalPoint;
   themePreset: BookPreset;
+  tocMode?: TocMode;
   defaultAutoNext: boolean;
   showEpisodeNumbers: boolean;
   sortOrder: number;
