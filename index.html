@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>Thư viện Đồi Mơ — Đang chuyển trang</title>
+  <link rel="canonical" href="https://thuviencualiti.vercel.app/" />
+  <meta http-equiv="refresh" content="0; url=https://thuviencualiti.vercel.app/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500&family=Lora:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      var BASE_TARGET = 'https://thuviencualiti.vercel.app';
+      var PREFIX = '/sach-cua-con-player';
+      var pathname = window.location.pathname || '/';
+      if (pathname.indexOf(PREFIX) === 0) {
+        pathname = pathname.slice(PREFIX.length) || '/';
+      }
+      pathname = pathname.replace(/\/index\.html$/i, '/') || '/';
+      if (pathname.charAt(0) !== '/') pathname = '/' + pathname;
+      var target = BASE_TARGET + pathname + (window.location.search || '') + (window.location.hash || '');
+
+      if ('serviceWorker' in navigator) {
+        try {
+          navigator.serviceWorker.getRegistrations().then(function (regs) {
+            for (var i = 0; i < regs.length; i++) {
+              regs[i].unregister();
+            }
+          }).catch(function () {});
+        } catch (e) {}
+      }
+
+      window.location.replace(target);
+    })();
+  </script>
+  <style>
+    :root {
+      --bg: #F8F5EE;
+      --card: #FDFBF6;
+      --border: #DED7C8;
+      --text: #222923;
+      --muted: #5C665E;
+      --accent: #354F3E;
+      --accent-text: #FDFBF6;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111613;
+        --card: #19201C;
+        --border: #2D3831;
+        --text: #EFE9DC;
+        --muted: #A3AEA6;
+        --accent: #89A892;
+        --accent-text: #111613;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .card {
+      max-width: 400px;
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px 24px;
+      text-align: center;
+    }
+    h1 {
+      font-family: 'Lora', Georgia, "Times New Roman", serif;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    a.btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 6px;
+      background: var(--accent);
+      color: var(--accent-text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Thư viện Đồi Mơ</h1>
+    <p>Đang mở thư viện sách đọc và nghe trước giờ ngủ tại địa chỉ mới…</p>
+    <a id="fallback-link" class="btn" href="https://thuviencualiti.vercel.app/">
+      <span>Mở Thư viện Đồi Mơ</span>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14" />
+        <path d="m13 6 6 6-6 6" />
+      </svg>
+    </a>
+  </main>
+</body>
+</html>

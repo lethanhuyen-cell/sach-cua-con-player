@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>Thư viện Đồi Mơ — Đang chuyển trang</title>
+  <link rel="canonical" href="https://thuviencualiti.vercel.app/" />
+  <meta http-equiv="refresh" content="0; url=https://thuviencualiti.vercel.app/" />
+  <script>
+    (function () {
+      var BASE_TARGET = 'https://thuviencualiti.vercel.app';
+      var PREFIX = '/sach-cua-con-player';
+      var pathname = window.location.pathname || '/';
+      if (pathname.indexOf(PREFIX) === 0) {
+        pathname = pathname.slice(PREFIX.length) || '/';
+      }
+      pathname = pathname.replace(/\/index\.html$/i, '/') || '/';
+      if (pathname.charAt(0) !== '/') pathname = '/' + pathname;
+      var target = BASE_TARGET + pathname + (window.location.search || '') + (window.location.hash || '');
+      window.location.replace(target);
+    })();
+  </script>
+</head>
+<body>
+  <p><a href="https://thuviencualiti.vercel.app/">Mở Thư viện Đồi Mơ</a></p>
+</body>
+</html>
