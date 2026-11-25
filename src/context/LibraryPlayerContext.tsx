@@ -35,6 +35,7 @@ interface LibraryPlayerContextValue {
   toggleFavorite: (episodeId: string) => void;
   progressMap: Record<string, LocalEpisodeProgress>;
   preferredVoiceKey: string;
+  selectVoicePreference: (voiceKey: string) => void;
   readerFontSize: number;
   adjustReaderFontSize: (delta: number) => void;
 
@@ -400,6 +401,24 @@ export function LibraryPlayerProvider({
     [activeBook, activeEpisode, activeTrack, playbackRate]
   );
 
+  const selectVoicePreference = useCallback(
+    (voiceKey: string) => {
+      setPreferredVoiceKey(voiceKey);
+      try {
+        localStorage.setItem(STORAGE_KEYS.voice, voiceKey);
+      } catch {}
+      if (activeBook && activeEpisode) {
+        const hasVoice = activeEpisode.audioTracks.some(
+          (t) => t.voiceProfile.voiceKey === voiceKey
+        );
+        if (hasVoice) {
+          switchVoice(voiceKey);
+        }
+      }
+    },
+    [activeBook, activeEpisode, switchVoice]
+  );
+
   // PLY-007 & AC-10: Skip across episodes in book, skipping Text-Only episodes
   const findAdjacentAudioEpisode = useCallback(
     (dir: -1 | 1): HydratedEpisode | null => {
@@ -599,6 +618,7 @@ export function LibraryPlayerProvider({
         toggleFavorite,
         progressMap,
         preferredVoiceKey,
+        selectVoicePreference,
         readerFontSize,
         adjustReaderFontSize,
         activeBook,

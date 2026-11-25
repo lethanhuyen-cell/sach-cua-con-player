@@ -96,6 +96,34 @@ def clean_markdown(raw_md: str, inline_images=None) -> str:
     return "\n\n".join(cleaned)
 
 
+def build_clean_summary(raw_summary: str, title: str, md_clean: str) -> str:
+    s = (raw_summary or "").strip()
+    # Ignore legacy summaries that are truncated with '...' or just repeat the ALL-CAPS title
+    const_upper = s.upper()
+    is_bad = (
+        not s
+        or s.endswith("...")
+        or s == s.upper()
+        or const_upper == title.upper()
+        or "CHƯƠNG" in const_upper
+        or "TẬP " in const_upper
+    )
+    if not is_bad:
+        return s
+
+    # Extract genuine opening prose sentences from cleaned Markdown
+    for block in md_clean.split("\n\n"):
+        b = block.strip()
+        if not b or b.startswith("#") or b.startswith("![") or b == "❦":
+            continue
+        sentences = re.split(r"(?<=[.!?])\s+", b)
+        excerpt = " ".join(sentences[:2]).strip()
+        if len(excerpt) > 190:
+            excerpt = excerpt[:187].rsplit(" ", 1)[0] + "…"
+        return excerpt
+    return ""
+
+
 def main():
     with open(LEGACY_JSON, "r", encoding="utf-8") as f:
         legacy_eps = json.load(f)
@@ -167,6 +195,7 @@ def main():
 
         md_clean = clean_markdown(raw_ep["content"], inline_images=inline_imgs)
         plain_words = len(re.sub(r"!\[[^\]]*\]\([^)]+\)", " ", md_clean).split())
+        clean_sum = build_clean_summary(raw_ep.get("summary", ""), clean_title, md_clean)
 
         episodes.append(
             {
@@ -175,7 +204,7 @@ def main():
                 "partId": None,
                 "episodeCode": eid,
                 "title": clean_title,
-                "summary": raw_ep.get("summary", ""),
+                "summary": clean_sum,
                 "categoryTag": raw_ep.get("category", "Thiên nhiên"),
                 "coverUrl": cover_rel,
                 "contentMarkdown": md_clean,

@@ -102,18 +102,22 @@
 
 ---
 
-## Màn hình 4: Danh sách các Tập truyện & Trang Đọc Tập
-### 4A. Danh sách các Tập (Mục lục sách in dưới đầu trang Bộ sách)
+## Màn hình 4: Mục lục Thẻ Chương Minh họa & Trang Đọc Tập
+### 4A. Mục lục Tập truyện dạng Thẻ Chương Minh họa (dưới đầu trang Bộ sách)
 ```text
 ┌──────────────────────────────────────┐
-│ 00  Chương mở đầu: Chiếc túi rỗng [☆]│
-│     32 phút · 2 giọng · Đã nghe xong │ (Touch row >= 68px)
-├──────────────────────────────────────┤ (Đường kẻ chỉ 1px)
-│ 01  Bác chó Barley và con đường... [★]│
-│     16 phút · 2 giọng · Đang nghe 35%│ (Thanh tiến độ mảnh)
-├──────────────────────────────────────┤
-│ 02  Lá thư đêm của Đốm Đốm       [☆] │
-│     Chỉ đọc chữ · ~6 phút đọc        │ (OPD-03: không audio)
+│ Mục lục tập truyện   [Nữ·Mỹ Duyên ▾] │ Thanh chọn giọng kể đầu mục lục
+│ [Tất cả (11)] [Chưa nghe]  [Từ đầu ↑]│ Bộ lọc trạng thái & Đảo thứ tự
+│                                      │
+│ ┌──────────────────────────────────┐ │ Thẻ nổi độc lập (cách 12px)
+│ │ ┌──────────┐ TẬP 01 · THÚ KỲ [☆]│ │
+│ │ │ Tranh    │ Bác chó Barley và...│ │ 16px Serif Bold
+│ │ │ riêng    │ Bác chó Barley đang │ │ 2 dòng dẫn truyện ngắn
+│ │ │ 84 × 112 │ đánh hơi chiếc cổng │ │
+│ │ │ (3:4)    │ [▶ Nghe·16p] Đọc →  │ │ Tách rõ 2 lối Nghe & Đọc
+│ │ └──────────┘                     │ │
+│ │ ════════════─────────────── (35%)│ │ Thanh tiến độ mảnh 2.5px
+│ └──────────────────────────────────┘ │
 └──────────────────────────────────────┘
 ```
 
