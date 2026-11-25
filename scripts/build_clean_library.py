@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-LITIBOOK — CLEAN DATA MIGRATION SCRIPT (Aligned with GEMINI.md & PRD v1.3)
-Strictly imports existing episodes from `data/episodes.json` into `data/library_db.json`
-without inventing or generating new book content:
-- Strips OS emojis, `relic`, and `caption`
-- Normalizes ALL-CAPS titles into literary Vietnamese capitalization
-- Strips duplicate # / ## headers at top of Markdown and fixes accidental ## paragraph in Ep 00
-- Measures real MP3 durations & file sizes from public/audio/
+THƯ VIỆN ĐỒI MƠ — CLEAN DATA MIGRATION SCRIPT (Aligned with GEMINI.md & PRD v1.3)
+Imports existing book series into `data/library_db.json`:
+1. `Lim và Mẹ Vacci` (`data/episodes.json` — 11 episodes, 22 dual-voice 48kHz MP3s, `tocMode: 'thematic'`)
+2. `Tiểu Hạt Dẻ Thích Ăn Vụng` (`data/tieu_hat_de_episodes.json` — 21 episodes across 3 stages, `tocMode: 'sequential'` 20-ep chunks, dual-voice audio on Ep 01 + clean text-only on Ep 02..21)
 """
 
 import os
@@ -17,6 +14,7 @@ import subprocess
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LEGACY_JSON = os.path.join(ROOT, "data", "episodes.json")
+THD_JSON = os.path.join(ROOT, "data", "tieu_hat_de_episodes.json")
 OUT_DB = os.path.join(ROOT, "data", "library_db.json")
 
 CLEAN_TITLES = {
@@ -66,7 +64,6 @@ def clean_markdown(raw_md: str, inline_images=None) -> str:
     for b in blocks:
         if b.startswith("#"):
             txt = re.sub(r"^#+\s*", "", b).strip()
-            # Fix accidental ## paragraph in Ep 00
             if len(txt) > 80:
                 cleaned.append(txt)
                 started = True
@@ -88,7 +85,6 @@ def clean_markdown(raw_md: str, inline_images=None) -> str:
             started = True
 
     if inline_images:
-        # Place the episode's existing illustration cleanly after the opening scene paragraphs
         insert_pos = min(3, len(cleaned))
         for url, alt in reversed(inline_images):
             cleaned.insert(insert_pos, f"![{alt}]({url})")
@@ -98,7 +94,6 @@ def clean_markdown(raw_md: str, inline_images=None) -> str:
 
 def build_clean_summary(raw_summary: str, title: str, md_clean: str) -> str:
     s = (raw_summary or "").strip()
-    # Ignore legacy summaries that are truncated with '...' or just repeat the ALL-CAPS title
     const_upper = s.upper()
     is_bad = (
         not s
@@ -111,7 +106,6 @@ def build_clean_summary(raw_summary: str, title: str, md_clean: str) -> str:
     if not is_bad:
         return s
 
-    # Extract genuine opening prose sentences from cleaned Markdown
     for block in md_clean.split("\n\n"):
         b = block.strip()
         if not b or b.startswith("#") or b.startswith("![") or b == "❦":
@@ -128,7 +122,7 @@ def main():
     with open(LEGACY_JSON, "r", encoding="utf-8") as f:
         legacy_eps = json.load(f)
 
-    now = "2026-11-24T15:00:00.000Z"
+    now = "2026-11-25T14:00:00.000Z"
 
     voice_profiles = [
         {
@@ -137,6 +131,14 @@ def main():
             "displayName": "Nữ · Mỹ Duyên",
             "narratorName": "Mỹ Duyên",
             "notes": "Giọng đọc nữ ấm dịu chuẩn 48kHz",
+            "createdAt": now,
+        },
+        {
+            "id": "vp-female-quynh-anh",
+            "voiceKey": "female_quynh_anh",
+            "displayName": "Nữ · Quỳnh Anh",
+            "narratorName": "Quỳnh Anh",
+            "notes": "Giọng đọc nữ trong trẻo kể chuyện",
             "createdAt": now,
         },
         {
@@ -169,8 +171,8 @@ def main():
             "showEpisodeNumbers": True,
             "sortOrder": 0,
             "status": "published",
-            "createdAt": now,
-            "updatedAt": now,
+            "createdAt": "2026-10-15T14:00:00.000Z",
+            "updatedAt": "2026-11-24T15:00:00.000Z",
             "deletedAt": None,
         }
     ]
@@ -179,6 +181,21 @@ def main():
     episodes = []
     audio_tracks = []
     illustrations = []
+
+    # 1. Import Lim và Mẹ Vacci
+    staggered_dates = {
+        "00": "2026-10-15T14:00:00.000Z",
+        "01": "2026-10-18T14:00:00.000Z",
+        "02": "2026-10-22T14:00:00.000Z",
+        "03": "2026-10-26T14:00:00.000Z",
+        "04": "2026-10-30T14:00:00.000Z",
+        "05": "2026-11-03T14:00:00.000Z",
+        "06": "2026-11-06T14:00:00.000Z",
+        "07": "2026-11-09T14:00:00.000Z",
+        "08": "2026-11-19T14:00:00.000Z",
+        "09": "2026-11-22T14:00:00.000Z",
+        "10": "2026-11-24T15:00:00.000Z",
+    }
 
     for idx, raw_ep in enumerate(legacy_eps):
         eid = raw_ep["id"]
@@ -197,21 +214,6 @@ def main():
         md_clean = clean_markdown(raw_ep["content"], inline_images=inline_imgs)
         plain_words = len(re.sub(r"!\[[^\]]*\]\([^)]+\)", " ", md_clean).split())
         clean_sum = build_clean_summary(raw_ep.get("summary", ""), clean_title, md_clean)
-
-        # Stagger publishedAt dates realistically: Ep 00..07 earlier, Ep 08..10 recent arrivals
-        staggered_dates = {
-            "00": "2026-10-15T14:00:00.000Z",
-            "01": "2026-10-18T14:00:00.000Z",
-            "02": "2026-10-22T14:00:00.000Z",
-            "03": "2026-10-26T14:00:00.000Z",
-            "04": "2026-10-30T14:00:00.000Z",
-            "05": "2026-11-03T14:00:00.000Z",
-            "06": "2026-11-06T14:00:00.000Z",
-            "07": "2026-11-09T14:00:00.000Z",
-            "08": "2026-11-19T14:00:00.000Z",
-            "09": "2026-11-22T14:00:00.000Z",
-            "10": "2026-11-24T15:00:00.000Z",
-        }
         ep_pub_at = staggered_dates.get(eid, now)
 
         episodes.append(
@@ -251,7 +253,7 @@ def main():
                     "mimeType": "audio/mpeg",
                     "isDefault": True,
                     "sortOrder": t_order,
-                    "updatedAt": now,
+                    "updatedAt": ep_pub_at,
                 }
             )
             t_order += 1
@@ -270,7 +272,7 @@ def main():
                     "mimeType": "audio/mpeg",
                     "isDefault": t_order == 0,
                     "sortOrder": t_order,
-                    "updatedAt": now,
+                    "updatedAt": ep_pub_at,
                 }
             )
 
@@ -282,7 +284,114 @@ def main():
                     "imageUrl": img_u,
                     "altText": img_alt,
                     "sortOrder": ill_i,
-                    "createdAt": now,
+                    "createdAt": ep_pub_at,
+                }
+            )
+
+    # 2. Import Tiểu Hạt Dẻ Thích Ăn Vụng (if dataset exists)
+    if os.path.isfile(THD_JSON):
+        thd_data = json.load(open(THD_JSON, "r", encoding="utf-8"))
+        copied_audios = thd_data.get("copiedAudios", {})
+        thd_eps = thd_data.get("episodes", [])
+
+        books.append(
+            {
+                "id": "book-tieu-hat-de",
+                "slug": "tieu-hat-de-thich-an-vung",
+                "title": "Tiểu Hạt Dẻ Thích Ăn Vụng",
+                "subtitle": "Những căn bếp ấm qua đôi mắt mèo nâu",
+                "description": "Theo bước chân êm của chú mèo lông nâu hạt dẻ có chiếc tai trái cụp đi qua những căn bếp gia đình ấm áp — nơi mỗi món ăn quen mà lạ mở ra một câu chuyện dịu dàng trước giờ đi ngủ.",
+                "author": "Nancy & Liti",
+                "illustrator": "",
+                "ageRange": "4–10 tuổi",
+                "genreTag": "Ẩm thực & Đời sống",
+                "rightsConfirmed": True,
+                "coverUrl": "/images/books/mua-thu-hat-de-cover.jpg",
+                "coverFocalPoint": "center",
+                "themePreset": "ochre",
+                "tocMode": "sequential",
+                "defaultAutoNext": False,
+                "showEpisodeNumbers": True,
+                "sortOrder": 1,
+                "status": "published",
+                "createdAt": "2026-11-01T14:00:00.000Z",
+                "updatedAt": now,
+                "deletedAt": None,
+            }
+        )
+
+        for idx, item in enumerate(thd_eps):
+            code = item["episodeCode"]
+            ep_uuid = f"ep-thd-{code}"
+            md = item["contentMarkdown"]
+            clean_sum = build_clean_summary("", item["title"], md)
+
+            # Stagger dates: 01..19 earlier November, 20 & 21 fresh arrivals today
+            if item["num"] <= 19:
+                day = min(10, 1 + item["num"] // 2)
+                ep_pub_at = f"2026-11-{day:02d}T13:00:00.000Z"
+            elif item["num"] == 20:
+                ep_pub_at = "2026-11-25T11:00:00.000Z"
+            else:
+                ep_pub_at = "2026-11-25T14:00:00.000Z"
+
+            ep_tracks = []
+            if code == "01":
+                if copied_audios.get("01_male"):
+                    u = copied_audios["01_male"]
+                    dur, sz = get_mp3_info(u)
+                    ep_tracks.append(
+                        {
+                            "id": "trk-thd-01-male",
+                            "episodeId": ep_uuid,
+                            "voiceProfileId": "vp-male-tam-duc",
+                            "audioUrl": u,
+                            "durationSeconds": dur,
+                            "fileSizeBytes": sz,
+                            "mimeType": "audio/mpeg",
+                            "isDefault": True,
+                            "sortOrder": 0,
+                            "updatedAt": ep_pub_at,
+                        }
+                    )
+                if copied_audios.get("01_female"):
+                    u = copied_audios["01_female"]
+                    dur, sz = get_mp3_info(u)
+                    ep_tracks.append(
+                        {
+                            "id": "trk-thd-01-female",
+                            "episodeId": ep_uuid,
+                            "voiceProfileId": "vp-female-quynh-anh",
+                            "audioUrl": u,
+                            "durationSeconds": dur,
+                            "fileSizeBytes": sz,
+                            "mimeType": "audio/mpeg",
+                            "isDefault": len(ep_tracks) == 0,
+                            "sortOrder": len(ep_tracks),
+                            "updatedAt": ep_pub_at,
+                        }
+                    )
+
+            audio_tracks.extend(ep_tracks)
+            episodes.append(
+                {
+                    "id": ep_uuid,
+                    "bookId": "book-tieu-hat-de",
+                    "partId": None,
+                    "episodeCode": code,
+                    "title": item["title"],
+                    "summary": clean_sum,
+                    "categoryTag": item["categoryTag"],
+                    "coverUrl": "",
+                    "contentMarkdown": md,
+                    "wordCount": item["wordCount"],
+                    "isTextOnly": len(ep_tracks) == 0,
+                    "sortOrder": idx,
+                    "status": "published",
+                    "publishedAt": ep_pub_at,
+                    "createdAt": ep_pub_at,
+                    "updatedAt": ep_pub_at,
+                    "deletedAt": None,
                 }
             )
 
@@ -303,7 +412,7 @@ def main():
         json.dump(db, f, ensure_ascii=False, indent=2)
 
     print(
-        f"Built clean library_db.json: {len(books)} book, {len(episodes)} episodes, "
+        f"Built clean library_db.json: {len(books)} books, {len(episodes)} episodes, "
         f"{len(audio_tracks)} audio tracks, {len(illustrations)} illustrations."
     )
 
