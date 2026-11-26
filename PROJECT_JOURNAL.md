@@ -1,6 +1,6 @@
 # NHẬT KÝ & SỔ TAY BÀN GIAO DỰ ÁN THƯ VIỆN ĐỒI MƠ (`PROJECT_JOURNAL.md`)
 
-**Cập nhật lần cuối:** `2026-11-26 16:25 (GMT+7)`  
+**Cập nhật lần cuối:** `2026-11-26 19:20 (GMT+7)`  
 **Định danh chính thức:** **Thư viện Đồi Mơ** (*Sách đọc và nghe trước giờ ngủ · Copyright © Nancy & Liti*)  
 **Ranh giới dự án:** Thư viện chỉ đảm nhận lưu trữ, phân loại, trình bày sách đọc/sách nói gia đình và quản trị xuất bản qua `/admin` — **tách biệt hoàn toàn** với khâu sáng tác nội dung gốc hay vẽ tranh minh họa.
 
@@ -37,6 +37,7 @@
 | **Chiều 26/11/2026** | **Chặng 5: Hoàn thiện Mobile-First Cổng Đồi Mơ, Đồng nhất Tranh & PWA Xuất bản Vercel** | Đồng nhất 100% khung cảnh **Thư viện Cây Sồi trên Đỉnh Đồi Mơ** xuyên suốt Ngày – Đêm (`896x1200`) – OpenGraph `16:9` (`1280x714`) – Icon vuông `public/icons/` (`512`, `192`, `180`, `32`): vòm sồi đại thụ liền mạch sum suê, vầng trăng ngoài tán lá ở góc trời trên trái, cột biển gỗ **`Thư viện Đồi Mơ`** chuẩn dấu kèm đèn lồng nhỏ, mẹ con nhà cáo ngủ bên sách mở, sóc ôm hạt dẻ, đôi chim nhỏ & giỏ sách mây bên thềm. Tối ưu giao diện điện thoại `100dvh` (`viewportFit: 'cover'`, `safe-area-inset-bottom`), khung tranh `3:4` bo góc `18px` hiển thị trọn vẹn không cắt góc trời + nút Sáng/Đêm nổi gọn góc trên phải, hoàn thiện `manifest.ts` + `appleWebApp` iOS Standalone và đẩy lên Vercel. |
 | **Chiều 26/11/2026** | **Giai đoạn 6: Rà soát & Vá 9 Điểm Mù Thực Tế** | Sửa lỗi React Rules of Hooks tại `page.tsx`; thống nhất suy luận tập đọc chữ `isEpisodeReadingOnly` / `getEpisodeDurationLabel`; gỡ bẫy văng Cổng khi mở deep-link và ẩn `Mini-player` ở Cổng; hỗ trợ tối đa `2` bộ đang đọc/nghe dở trên Sảnh; khóa nhấn vào gian chưa có sách; hỗ trợ **Gian giao thoa (`+`)** để *Lim và Mẹ Vacci* + *Tiểu Hạt Dẻ* đồng thời sáng đèn **Gian Văn học** (`3/6` gian); bổ sung Web Audio `GainNode` giảm âm `8s` cho iOS Safari; đồng bộ mốc Đêm `19:30–05:30` & `<meta name="theme-color">` động; hoàn tất kiểm chứng `npm run typecheck && npm run build`. |
 | **Chiều muộn 26/11/2026** | **Chặng 7: Khung Tranh 2/3 Màn Hình Đầu Tiên (`StorybookHeroStage`) & Bộ 14 Tranh Nội Thất Đồi Mơ** | Chốt qua `/grill-me` và triển khai `StorybookHeroStage` (`~2/3` chiều cao màn hình đầu tiên, giữ nguyên tỷ lệ `3:4` sạch 100% không đè chữ, chạm mở Lightbox toàn màn hình, `1/3` dưới hiện tiêu đề + nút chính + hé lộ mạch cuộn) trên toàn bộ Sảnh sách, 6 Gian sách, Tủ sách, Trang Bộ sách và các Tập truyện có tranh riêng; sáng tạo đồng bộ bộ `14` tranh màu nước bút sắt Ngày/Đêm cho Sảnh sách (`foyer-day/night.jpg`) và 6 Gian sách (`public/images/halls/*-day/night.jpg`) có các bạn thú rừng sinh hoạt yên bình. |
+| **Tối 26/11/2026** | **Chặng 8: Đồng bộ Bản văn Mới & 7 Track Audio 48kHz Chặng 1 Tiểu Hạt Dẻ** | Cập nhật bản văn đã biên tập khử lỗi AI và gắn đủ `7` file MP3 `48kHz` giọng `Nam · Thiền Tâm Đức` (`01..07_THD_001..007_Thien_Tam_Duc_48kHz.mp3`, tổng `1h 24m 05s`) cho `ep-thd-01` → `ep-thd-07` trong `data/library_db.json`, dọn bỏ 2 file thu nháp cũ lệch bản văn và đẩy lên GitHub/Vercel (`commit 312e642`). |
 
 ---
 
@@ -54,3 +55,34 @@
 - [PRD.md](./PRD.md) · [UX_FLOWS.md](./UX_FLOWS.md) · [SCREEN_SPECIFICATIONS.md](./SCREEN_SPECIFICATIONS.md) — Hồ sơ đặc tả Phase 1–2 gốc.
 - [design_mockups_spatial_v2/README.md](./design_mockups_spatial_v2/README.md) — Bộ 4 màn hình Stitch `390px` mô hình Không gian 6 Lớp (Project `12208283992779232055`).
 - [design_mockups_package_a/README.md](./design_mockups_package_a/README.md) — Bộ 5 màn hình Stitch `390px` công thái học đọc/nghe ban đầu (Project `10062734016695037708`).
+
+---
+
+## 4. Trạng thái Dự án Hiện tại & Bàn giao Đóng máy (Handover Status)
+
+- **Trạng thái Git:** Sạch 100% (`working tree clean`). Toàn bộ mã nguồn, dữ liệu JSON và tranh ảnh đã commit và đồng bộ lên `origin/main` & `vercel-origin/main` (Commit `312e642`).
+- **Trạng thái Triển khai (Deploy):** Production trên Vercel tự động nhận diện và cập nhật thành công.
+- **Trạng thái Thư viện:**
+  - *Bộ 1 — Lim và Mẹ Vacci:* 11 tập đầy đủ chữ, tranh minh họa xen kẽ và 3 tùy chọn giọng đọc Studio.
+  - *Bộ 2 — Tiểu Hạt Dẻ Thích Ăn Vụng:* 21 tập đọc chữ mượt mà, trong đó 7 tập đầu (`ep-thd-01` → `ep-thd-07`) đã tích hợp audio chuẩn Studio 48kHz giọng `Nam · Thiền Tâm Đức` (tổng thời lượng 1 giờ 24 phút).
+  - *Không gian 6 Lớp:* Đầy đủ 14 tranh Ngày/Đêm bút sắt màu nước cho Sảnh và 6 Gian sách, hoạt động trơn tru với `StorybookHeroStage` (2/3 màn hình đầu tiên, chạm mở Lightbox).
+
+---
+
+## 5. Chỉ dẫn Khởi động lại khi Làm tiếp (Resume Guide)
+
+Khi bật máy và tiếp tục dự án, chỉ cần thực hiện:
+
+1. **Kiểm tra trạng thái dự án:**
+   ```bash
+   cd "/Users/mac/Desktop/THƯ VIỆN DƯỚI GỐC CÂY SỒI"
+   git status
+   ```
+2. **Khởi chạy Local Dev Server (nếu cần xem trước trên máy):**
+   ```bash
+   npm run dev
+   # Mở trình duyệt tại: http://localhost:3000
+   ```
+3. **Kế hoạch tiếp theo khi quay lại (Backlog):**
+   - **Chặng 2 Tiểu Hạt Dẻ:** Khi có thêm file audio thu âm 48kHz các tập 08 đến 14 (hoặc đến tập 21), copy vào `public/audio/tieu-hat-de/` và cập nhật trường `audioSources` tương ứng trong `data/library_db.json`.
+   - **Rà soát trải nghiệm:** Mở điện thoại kiểm tra PWA trên màn hình thực tế trong phòng ngủ để cảm nhận âm lượng và ánh sáng chế độ Đêm.
