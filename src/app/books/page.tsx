@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { BookCover } from '@/components/BookCover';
 import { StorybookHeroStage } from '@/components/StorybookHeroStage';
+import { LibraryWayfinder } from '@/components/LibraryWayfinder';
 import {
-  ChevronLeftIcon,
   CloseIcon,
   MoonIcon,
   PlayIcon,
@@ -105,28 +105,21 @@ export default function BooksShelfPage() {
 
   return (
     <div className="pb-6">
-      {/* Sticky 44px Header with direct 1-tap Home exit */}
+      {/* Sticky 44px 5-Step Pinned Wayfinder */}
       <header
         style={{
           backgroundColor: 'var(--bg-canvas)',
           borderBottom: '1px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[44px] px-3.5 flex items-center justify-between gap-2"
+        className="sticky top-0 z-20 h-[44px] px-3 flex items-center justify-between gap-1.5"
       >
-        <Link
-          href="/"
-          style={{ color: 'var(--accent-primary)' }}
-          className="h-9 inline-flex items-center gap-1 text-xs font-semibold"
-        >
-          <ChevronLeftIcon size={16} />
-          <span>Sảnh sách</span>
-        </Link>
+        <LibraryWayfinder currentStep="shelf" shelfBranch="all_books" />
         <button
           type="button"
           onClick={toggleNight}
           aria-label={isNight ? 'Giao diện ban ngày' : 'Giao diện ban đêm'}
           style={{ color: 'var(--text-primary)' }}
-          className="w-9 h-9 rounded-[7px] flex items-center justify-center shrink-0"
+          className="w-8 h-8 rounded-[7px] flex items-center justify-center shrink-0"
         >
           {isNight ? <SunIcon size={16} /> : <MoonIcon size={16} />}
         </button>

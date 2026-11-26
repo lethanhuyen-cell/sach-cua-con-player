@@ -26,7 +26,7 @@ export const FOYER_HERO_ART = {
 export const LIBRARY_HALLS: LibraryHallDefinition[] = [
   {
     slug: 'khoa-hoc-tu-nhien',
-    title: 'Gian Khoa học & Tự nhiên',
+    title: 'Kệ Khoa học & Tự nhiên',
     shortTitle: 'Khoa học & Tự nhiên',
     epigraph: 'Cây cỏ, muông thú, bầu trời và thế giới tự nhiên.',
     preset: 'moss',
@@ -35,7 +35,7 @@ export const LIBRARY_HALLS: LibraryHallDefinition[] = [
   },
   {
     slug: 'am-thuc-nep-nha',
-    title: 'Gian Ẩm thực & Nếp nhà',
+    title: 'Kệ Ẩm thực & Nếp nhà',
     shortTitle: 'Ẩm thực & Nếp nhà',
     epigraph: 'Chuyện căn bếp, món ngon và đời sống hằng ngày.',
     preset: 'ochre',
@@ -44,7 +44,7 @@ export const LIBRARY_HALLS: LibraryHallDefinition[] = [
   },
   {
     slug: 'van-hoc-dong-thoai',
-    title: 'Gian Văn học',
+    title: 'Kệ Văn học',
     shortTitle: 'Văn học',
     epigraph: 'Truyện đồng thoại, truyện ngắn và tiểu thuyết thiếu nhi.',
     preset: 'rosewood',
@@ -53,7 +53,7 @@ export const LIBRARY_HALLS: LibraryHallDefinition[] = [
   },
   {
     slug: 'lich-su-van-hoa',
-    title: 'Gian Lịch sử & Văn hóa',
+    title: 'Kệ Lịch sử & Văn hóa',
     shortTitle: 'Lịch sử & Văn hóa',
     epigraph: 'Chuyện xưa, con người và những vùng đất.',
     preset: 'ochre',
@@ -62,7 +62,7 @@ export const LIBRARY_HALLS: LibraryHallDefinition[] = [
   },
   {
     slug: 'nghe-thuat-tho-nhac',
-    title: 'Gian Nghệ thuật',
+    title: 'Kệ Nghệ thuật',
     shortTitle: 'Nghệ thuật',
     epigraph: 'Hội họa, âm nhạc và thơ ca.',
     preset: 'lavender',
@@ -71,7 +71,7 @@ export const LIBRARY_HALLS: LibraryHallDefinition[] = [
   },
   {
     slug: 'ky-nang-lon-khon',
-    title: 'Gian Kỹ năng sống',
+    title: 'Kệ Kỹ năng sống',
     shortTitle: 'Kỹ năng sống',
     epigraph: 'Những điều nhỏ giúp mình tự lập và thấu hiểu.',
     preset: 'moss',
@@ -85,12 +85,39 @@ export function getHallBySlug(slug: string): LibraryHallDefinition | undefined {
 }
 
 const LEGACY_HALL_PREFIXES: Record<LibraryHallSlug, string[]> = {
-  'khoa-hoc-tu-nhien': ['khoa học & tự nhiên'],
-  'am-thuc-nep-nha': ['ẩm thực & nếp nhà'],
-  'van-hoc-dong-thoai': ['văn học', 'văn học & đồng thoại'],
-  'lich-su-van-hoa': ['lịch sử & văn hóa'],
-  'nghe-thuat-tho-nhac': ['nghệ thuật', 'nghệ thuật & thơ nhạc'],
-  'ky-nang-lon-khon': ['kỹ năng sống', 'kỹ năng & lớn khôn']
+  'khoa-hoc-tu-nhien': [
+    'khoa học & tự nhiên',
+    'gian khoa học & tự nhiên',
+    'kệ khoa học & tự nhiên'
+  ],
+  'am-thuc-nep-nha': [
+    'ẩm thực & nếp nhà',
+    'gian ẩm thực & nếp nhà',
+    'kệ ẩm thực & nếp nhà'
+  ],
+  'van-hoc-dong-thoai': [
+    'văn học',
+    'văn học & đồng thoại',
+    'gian văn học',
+    'kệ văn học'
+  ],
+  'lich-su-van-hoa': [
+    'lịch sử & văn hóa',
+    'gian lịch sử & văn hóa',
+    'kệ lịch sử & văn hóa'
+  ],
+  'nghe-thuat-tho-nhac': [
+    'nghệ thuật',
+    'nghệ thuật & thơ nhạc',
+    'gian nghệ thuật',
+    'kệ nghệ thuật'
+  ],
+  'ky-nang-lon-khon': [
+    'kỹ năng sống',
+    'kỹ năng & lớn khôn',
+    'gian kỹ năng sống',
+    'kệ kỹ năng sống'
+  ]
 };
 
 function matchHallPrefix(raw: string): LibraryHallDefinition | undefined {

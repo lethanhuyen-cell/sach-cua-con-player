@@ -9,7 +9,7 @@ import React, {
   useRef,
   useState
 } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { isEpisodeReadingOnly } from '@/lib/presets';
 import {
   HydratedAudioTrack,
@@ -69,6 +69,8 @@ interface LibraryPlayerContextValue {
   hasPassedGate: boolean;
   enterLibraryFromGate: () => void;
   returnToGate: () => void;
+  navigateToGate: () => void;
+  navigateToFoyer: () => void;
 
   // Player state
   activeBook: HydratedBook | null;
@@ -180,6 +182,7 @@ export function LibraryPlayerProvider({
   children: React.ReactNode;
 }) {
   const pathname = usePathname() || '/';
+  const router = useRouter();
   const [books, setBooks] = useState<HydratedBook[]>(initialBooks);
   const [isHydrated, setIsHydrated] = useState(false);
   const [isNight, setIsNight] = useState(false);
@@ -217,6 +220,7 @@ export function LibraryPlayerProvider({
   const lastSaveWallMs = useRef<number>(0);
   const sleepDeadlineMs = useRef<number | null>(null);
   const hasManualSleepChoiceRef = useRef<boolean>(false);
+  const isReturningToGateRef = useRef<boolean>(false);
 
   useEffect(() => {
     setBooks(initialBooks);
@@ -356,6 +360,7 @@ export function LibraryPlayerProvider({
   }, []);
 
   const enterLibraryFromGate = useCallback(() => {
+    isReturningToGateRef.current = false;
     setHasPassedGate(true);
     try {
       sessionStorage.setItem(
@@ -374,7 +379,16 @@ export function LibraryPlayerProvider({
 
   // Entering an interior route directly (shared link) counts as being inside the library
   useEffect(() => {
-    if (isHydrated && !hasPassedGate && pathname !== '/' && !pathname.startsWith('/admin')) {
+    if (pathname === '/') {
+      isReturningToGateRef.current = false;
+      return;
+    }
+    if (
+      isHydrated &&
+      !hasPassedGate &&
+      !isReturningToGateRef.current &&
+      !pathname.startsWith('/admin')
+    ) {
       enterLibraryFromGate();
     }
   }, [enterLibraryFromGate, hasPassedGate, isHydrated, pathname]);
@@ -401,6 +415,26 @@ export function LibraryPlayerProvider({
   const closeUtilitySheet = useCallback(() => {
     setUtilitySheetTab(null);
   }, []);
+
+  const navigateToGate = useCallback(() => {
+    isReturningToGateRef.current = true;
+    returnToGate();
+    closeUtilitySheet();
+    setFullPlayerOpen(false);
+    if (pathname !== '/') {
+      router.push('/');
+    }
+  }, [closeUtilitySheet, pathname, returnToGate, router]);
+
+  const navigateToFoyer = useCallback(() => {
+    isReturningToGateRef.current = false;
+    enterLibraryFromGate();
+    closeUtilitySheet();
+    setFullPlayerOpen(false);
+    if (pathname !== '/') {
+      router.push('/');
+    }
+  }, [closeUtilitySheet, enterLibraryFromGate, pathname, router]);
 
   const ensureAudioGainGraph = useCallback((url: string) => {
     if (typeof window === 'undefined') return;
@@ -1125,6 +1159,8 @@ export function LibraryPlayerProvider({
         hasPassedGate,
         enterLibraryFromGate,
         returnToGate,
+        navigateToGate,
+        navigateToFoyer,
         activeBook,
         activeEpisode,
         activeTrack,

@@ -1,23 +1,26 @@
 # NHẬT KÝ & SỔ TAY BÀN GIAO DỰ ÁN THƯ VIỆN ĐỒI MƠ (`PROJECT_JOURNAL.md`)
 
-**Cập nhật lần cuối:** `2026-11-26 19:20 (GMT+7)`  
+**Cập nhật lần cuối:** `2026-11-26 20:55 (GMT+7)`  
 **Định danh chính thức:** **Thư viện Đồi Mơ** (*Sách đọc và nghe trước giờ ngủ · Copyright © Nancy & Liti*)  
-**Ranh giới dự án:** Thư viện chỉ đảm nhận lưu trữ, phân loại, trình bày sách đọc/sách nói gia đình và quản trị xuất bản qua `/admin` — **tách biệt hoàn toàn** với khâu sáng tác nội dung gốc hay vẽ tranh minh họa.
+**Ranh giới dự án:** Thư viện chỉ đảm nhận lưu trữ, phân loại, trình bày sách đọc/sách nói gia đình và quản trị xuất bản qua `/admin` — **tách biệt hoàn toàn** với khâu sáng tác nội dung gốc hay vẽ tranh minh họa bên ngoài.
 
 ---
 
 ## 1. Tóm tắt Kiến trúc & Các Quyết định Cốt lõi Đã Khóa Cứng
 
-### A. Hành trình Không gian 6 Lớp & Truy cập Tự nhiên
+### A. Hành trình Không gian 6 Lớp, Định vị 5 Nấc & Truy cập Tự nhiên
 1. **Truy cập mở không rào cản đăng nhập:** Người thân bấm link là vào thẳng Thư viện; không mã mời, không tài khoản người nghe; gắn `noindex, nofollow, noarchive`; chỉ khóa đăng nhập riêng tại `/admin`.
 2. **Hành trình Không gian 6 Lớp cho bạn đọc nhỏ tuổi:**
    - *Lớp 1 — Cổng Đồi Mơ (`/`, tự chào đón mỗi phiên mới hoặc sau 45 phút nghỉ):* Vòm tranh Ngày/Đêm + đom đóm/đèn lồng nhẹ + nút `Bước vào →`.
    - *Lớp 2 — Sảnh sách (`/` sau khi vào cổng):* Khối `Đang đọc / Đang nghe`, kệ `Mới lên kệ`, nút `[Ra cổng]`, `[Tìm]`, `[Đã lưu]` (mở `SearchAndSavedSheet`), `[Sáng/Đêm]`.
-   - *Lớp 3 — Các gian sách:* 6 Gian phân loại tự nhiên (`Khoa học & Tự nhiên`, `Ẩm thực & Nếp nhà`, `Văn học`, `Lịch sử & Văn hóa`, `Nghệ thuật`, `Kỹ năng sống`).
-   - *Lớp 4 — Gian đọc & Kệ gỗ sồi (`/halls/[slug]`):* Wash màu nước Preset + kệ gỗ sồi nâng đỡ bìa `3:4` sạch.
-   - *Lớp 5 — Bàn mở sách & Mục lục (`/books/[slug]`):* Thanh định vị `← Sảnh sách › Tên gian`, `CHUNK_SIZE = 25`, hai vùng chạm Đọc / Nghe.
-   - *Lớp 6 — Trang đọc văn học & Trình phát ru ngủ (`/episodes/[id]` & `Sleep Player`):* Tuân thủ tuyệt đối Điều 1 `GEMINI.md`, vi điều khiển `[⏸]` `0px` trên thanh `Sticky 42px`, tự lưu vị trí cuộn đọc chữ, hẹn giờ ru ngủ 1 chạm (`Hết tập dừng êm` giảm âm lượng `8s`).
-3. **Kỷ luật Ngôn ngữ Không Khẩu Hiệu:** Toàn bộ câu chữ hiển thị giữ ở mức tối giản, tự nhiên, không đóng kịch hay hô khẩu hiệu.
+   - *Lớp 3 — Các kệ sách:* 6 Kệ phân loại tự nhiên (`Khoa học & Tự nhiên`, `Ẩm thực & Nếp nhà`, `Văn học`, `Lịch sử & Văn hóa`, `Nghệ thuật`, `Kỹ năng sống`).
+   - *Lớp 4 — Không gian Kệ gỗ sồi (`/halls/[slug]`):* Khung tranh Hero Stage 2/3 + Wash màu nước Preset + gờ kệ gỗ sồi nâng đỡ bìa `3:4` sạch.
+   - *Lớp 5 — Bàn mở sách & Mục lục (`/books/[slug]`):* Thanh định vị `Wayfinder`, `CHUNK_SIZE = 25`, hai vùng chạm Đọc chữ / Nghe audio.
+   - *Lớp 6 — Trang đọc văn học & Trình phát ru ngủ (`/episodes/[id]` & `Sleep Player`):* Tuân thủ tuyệt đối Điều 1 `GEMINI.md`, vi điều khiển `[⏸]` `0px` trên thanh `Sticky 42px`, tự lưu vị trí cuộn đọc chữ, hẹn giờ ru ngủ 1 chạm (`Hết tập dừng êm` giảm âm lượng `8s` qua Web Audio `GainNode`).
+3. **Hệ thống Định vị Không gian 5 Nấc (`LibraryWayfinder`):**
+   - 5 nấc liên tục: `Cổng Đồi Mơ` ➔ `Sảnh sách` ➔ `Kệ sách` ➔ `Bộ sách` ➔ `Tập truyện`.
+   - Tích hợp đồng bộ ở thanh dính 42px và bên trong Trình phát ru ngủ toàn màn hình (`FullScreenPlayerDrawer`), hỗ trợ khay chuyển đổi không gian thông minh (`Wayfinder Tray`).
+4. **Kỷ luật Ngôn ngữ Không Khẩu Hiệu:** Chuẩn hóa thuật ngữ "Kệ sách", mộc mạc, tự nhiên, không đóng kịch hay hô khẩu hiệu.
 
 ### B. Thẩm mỹ *Ấn Bản Giấy Cotton* & Công thái học Đêm
 - Hệ màu Phương án A: Ngày `#F8F5EE` (chữ `#222923`, nhấn `#354F3E` & `#9E7B43`), Đêm `#111613` (chữ `#EFE9DC`, nhấn `#89A892` & `#D4AC6E`) — tự động kích hoạt chế độ Đêm trong khung **`19:30 – 05:30`**.
@@ -39,6 +42,7 @@
 | **Chiều muộn 26/11/2026** | **Chặng 7: Khung Tranh 2/3 Màn Hình Đầu Tiên (`StorybookHeroStage`) & Bộ 14 Tranh Nội Thất Đồi Mơ** | Chốt qua `/grill-me` và triển khai `StorybookHeroStage` (`~2/3` chiều cao màn hình đầu tiên, giữ nguyên tỷ lệ `3:4` sạch 100% không đè chữ, chạm mở Lightbox toàn màn hình, `1/3` dưới hiện tiêu đề + nút chính + hé lộ mạch cuộn) trên toàn bộ Sảnh sách, 6 Gian sách, Tủ sách, Trang Bộ sách và các Tập truyện có tranh riêng; sáng tạo đồng bộ bộ `14` tranh màu nước bút sắt Ngày/Đêm cho Sảnh sách (`foyer-day/night.jpg`) và 6 Gian sách (`public/images/halls/*-day/night.jpg`) có các bạn thú rừng sinh hoạt yên bình. |
 | **Tối 26/11/2026** | **Chặng 8: Đồng bộ Bản văn Mới & 7 Track Audio 48kHz Chặng 1 Tiểu Hạt Dẻ** | Cập nhật bản văn đã biên tập khử lỗi AI và gắn đủ `7` file MP3 `48kHz` giọng `Nam · Thiền Tâm Đức` (`01..07_THD_001..007_Thien_Tam_Duc_48kHz.mp3`, tổng `1h 24m 05s`) cho `ep-thd-01` → `ep-thd-07` trong `data/library_db.json`, dọn bỏ 2 file thu nháp cũ lệch bản văn và đẩy lên GitHub/Vercel (`commit 312e642`). |
 | **Tối 26/11/2026** | **Chặng 9: Đồng bộ Trọn Bộ Bìa & 72 Tranh Minh Họa Dọc `3:4` *Miền Dâu Dại* (`v3.0`) Cho *Lim và Vacci*** | Cập nhật bìa đại diện bộ sách `lim-vacci-cover.jpg` (nhà hốc sồi ấm cúng `v3.0`), toàn bộ `11` bìa tập (`00`–`10`) và **`72` tranh minh họa cuộn dọc `3:4`** (`scene_01..08.jpg`, điểm nhìn nhân vật `30–50 cm` đan nét bút sắt màu nước không ám vàng, bỏ giỏ mây & bỏ đom đóm) neo chuẩn theo đoạn văn vào `data/library_db.json` (tự động mở khóa chế độ `[Đọc truyện | Xem tranh]` & Lightbox cho cả 10 tập `01`–`10`, bảo toàn nguyên vẹn 21 tập *Tiểu Hạt Dẻ* và 29 bản thu 48kHz). |
+| **Đêm 26/11/2026** | **Chặng 10: Hoàn thiện Định vị 5 Nấc (`LibraryWayfinder`), Chuẩn hóa Kệ Sách & Đóng Gói Bộ Quy Trình Chuẩn Cuối** | Phát triển và tích hợp toàn diện thành phần `LibraryWayfinder` 5 nấc (`Cổng` ➔ `Sảnh` ➔ `Kệ` ➔ `Bộ` ➔ `Tập`) kèm khay chuyển đổi không gian thông minh trên toàn bộ các trang và bên trong Trình phát ru ngủ; chuẩn hóa thống nhất thuật ngữ "Kệ sách" (`Kệ Khoa học & Tự nhiên`, `Kệ Ẩm thực & Nếp nhà`, v.v.); cập nhật hàm điều hướng mượt mà `navigateToGate` / `navigateToFoyer` không gián đoạn âm thanh; lưu trữ và đóng gói toàn diện Cẩm nang & Quy trình vận hành chuẩn cuối. |
 
 ---
 
@@ -46,9 +50,10 @@
 
 ### Tài liệu Cốt lõi (Đọc theo thứ tự ưu tiên)
 1. [GEMINI.md](./GEMINI.md) — **Hiến pháp bất khả xâm phạm** (Điều 1–3).
-2. [QUY_TRINH_THU_VIEN_DOI_MO.md](./QUY_TRINH_THU_VIEN_DOI_MO.md) — **Quy trình chuẩn** (Hành trình 6 lớp bạn đọc, Quy trình đăng sách `/admin`, Quy trình đặt hàng AI).
-3. [CAM_NANG_THU_VIEN_DOI_MO.md](./CAM_NANG_THU_VIEN_DOI_MO.md) — **Cẩm nang Thực chiến** (Bảng màu, Typography, Quy tắc Không Khẩu Hiệu, 6 Gian sách, Khóa `localStorage`).
-4. [OPTIMAL_UX_DESIGN_BRIEF.md](./OPTIMAL_UX_DESIGN_BRIEF.md) — **Hồ sơ Đặc tả Trải nghiệm & Thiết kế Không gian 6 Lớp**.
+2. [QUY_TRINH_THU_VIEN_DOI_MO.md](./QUY_TRINH_THU_VIEN_DOI_MO.md) — **Bộ Quy trình Vận hành Chuẩn cuối** (4 quy trình cốt lõi).
+3. [CAM_NANG_THU_VIEN_DOI_MO.md](./CAM_NANG_THU_VIEN_DOI_MO.md) — **Cẩm nang Thiết kế & Vận hành Chuẩn cuối** (Bảng màu, Typography, Wayfinder 5 nấc, 6 Kệ sách, Khóa Storage).
+4. [PROJECT_JOURNAL.md](./PROJECT_JOURNAL.md) — **Nhật ký & Sổ tay Bàn giao Toàn diện**.
+5. [OPTIMAL_UX_DESIGN_BRIEF.md](./OPTIMAL_UX_DESIGN_BRIEF.md) — **Hồ sơ Đặc tả Trải nghiệm & Thiết kế Không gian 6 Lớp**.
 
 ### Tài liệu Kiến trúc & Mockup Tham chiếu
 - [ARCHITECTURE.md](./ARCHITECTURE.md) — Kiến trúc hệ thống Next.js + Supabase + Cloudflare R2.
@@ -61,22 +66,22 @@
 
 ## 4. Trạng thái Dự án Hiện tại & Bàn giao Đóng máy (Handover Status)
 
-- **Trạng thái Git:** Sạch 100% (`working tree clean`). Toàn bộ mã nguồn, dữ liệu JSON và tranh ảnh đã commit và đồng bộ lên `origin/main` & `vercel-origin/main` (Commit `312e642`).
-- **Trạng thái Triển khai (Deploy):** Production trên Vercel tự động nhận diện và cập nhật thành công.
+- **Trạng thái Git:** Sạch 100% (`working tree clean`). Toàn bộ mã nguồn, cấu phần Wayfinder, dữ liệu JSON và tài liệu quy trình đã được cập nhật, đồng bộ và ghi nhận đầy đủ.
+- **Trạng thái Triển khai (Deploy):** Hoạt động ổn định trên nền tảng Next.js App Router.
 - **Trạng thái Thư viện:**
-  - *Bộ 1 — Lim và Mẹ Vacci:* 11 tập đầy đủ chữ, tranh minh họa xen kẽ và 3 tùy chọn giọng đọc Studio.
+  - *Bộ 1 — Lim và Mẹ Vacci:* 11 tập đầy đủ chữ, tranh minh họa dọc 3:4 chuẩn phong cách *Miền Dâu Dại* và 3 tùy chọn giọng đọc Studio.
   - *Bộ 2 — Tiểu Hạt Dẻ Thích Ăn Vụng:* 21 tập đọc chữ mượt mà, trong đó 7 tập đầu (`ep-thd-01` → `ep-thd-07`) đã tích hợp audio chuẩn Studio 48kHz giọng `Nam · Thiền Tâm Đức` (tổng thời lượng 1 giờ 24 phút).
-  - *Không gian 6 Lớp:* Đầy đủ 14 tranh Ngày/Đêm bút sắt màu nước cho Sảnh và 6 Gian sách, hoạt động trơn tru với `StorybookHeroStage` (2/3 màn hình đầu tiên, chạm mở Lightbox).
+  - *Không gian 6 Lớp & 5 Nấc Wayfinder:* Đầy đủ 14 tranh Ngày/Đêm bút sắt màu nước cho Sảnh và 6 Kệ sách, điều hướng mượt mà, không giật trang, không khẩu hiệu.
 
 ---
 
 ## 5. Chỉ dẫn Khởi động lại khi Làm tiếp (Resume Guide)
 
-Khi bật máy và tiếp tục dự án, chỉ cần thực hiện:
+Khi tiếp tục dự án, chỉ cần thực hiện:
 
 1. **Kiểm tra trạng thái dự án:**
    ```bash
-   cd "/Users/mac/Desktop/THƯ VIỆN DƯỚI GỐC CÂY SỒI"
+   cd "/Users/mac/Desktop/THƯ VIỆN DƯOỚI GỐC CÂY SỒI"
    git status
    ```
 2. **Khởi chạy Local Dev Server (nếu cần xem trước trên máy):**
@@ -86,4 +91,4 @@ Khi bật máy và tiếp tục dự án, chỉ cần thực hiện:
    ```
 3. **Kế hoạch tiếp theo khi quay lại (Backlog):**
    - **Chặng 2 Tiểu Hạt Dẻ:** Khi có thêm file audio thu âm 48kHz các tập 08 đến 14 (hoặc đến tập 21), copy vào `public/audio/tieu-hat-de/` và cập nhật trường `audioSources` tương ứng trong `data/library_db.json`.
-   - **Rà soát trải nghiệm:** Mở điện thoại kiểm tra PWA trên màn hình thực tế trong phòng ngủ để cảm nhận âm lượng và ánh sáng chế độ Đêm.
+   - **Thẩm định thực tế:** Mở điện thoại kiểm tra PWA trên màn hình thực tế trong phòng ngủ để cảm nhận âm lượng hạ êm và ánh sáng chế độ Đêm.

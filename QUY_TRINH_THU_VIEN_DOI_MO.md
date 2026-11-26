@@ -1,78 +1,138 @@
-# QUY TRÌNH VẬN HÀNH & TRẢI NGHIỆM — THƯ VIỆN ĐỒI MƠ
+# BỘ QUY TRÌNH VẬN HÀNH CHUẨN CUỐI — THƯ VIỆN ĐỒI MƠ
 
-| Thuộc tính | Thông tin |
+| Thuộc tính | Thông tin định chuẩn |
 | :--- | :--- |
 | **Sản phẩm** | **Thư viện Đồi Mơ** (*Sách đọc và nghe trước giờ ngủ · Copyright © Nancy & Liti*) |
 | **Hiến pháp bất biến** | [GEMINI.md](./GEMINI.md) |
-| **Tài liệu song hành** | [CAM_NANG_THU_VIEN_DOI_MO.md](./CAM_NANG_THU_VIEN_DOI_MO.md) · [PROJECT_JOURNAL.md](./PROJECT_JOURNAL.md) · [OPTIMAL_UX_DESIGN_BRIEF.md](./OPTIMAL_UX_DESIGN_BRIEF.md) |
-| **Phạm vi** | Chuẩn hóa 3 quy trình cốt lõi: (1) Trải nghiệm bạn đọc 6 lớp không gian, (2) Đưa sách lên kệ qua `/admin`, (3) Đặt hàng mở rộng với AI Agent |
+| **Tài liệu song hành** | [CAM_NANG_THU_VIEN_DOI_MO.md](./CAM_NANG_THU_VIEN_DOI_MO.md) · [PROJECT_JOURNAL.md](./PROJECT_JOURNAL.md) |
+| **Mục đích** | Đóng gói trọn bộ 4 quy trình chuẩn mực, khép kín từ khâu tiếp nhận bản thảo, quản trị xuất bản `/admin`, điều hướng không gian 5 nấc đến quy chuẩn nâng cấp kỹ thuật cùng AI Agent. |
 
 ---
 
-## QUY TRÌNH 1: HÀNH TRÌNH TRẢI NGHIỆM BẠN ĐỌC QUA 6 LỚP KHÔNG GIAN
+## TỔNG QUAN 4 QUY TRÌNH CỐT LÕI
 
-Được thiết kế cho bạn đọc thiếu nhi, thiếu niên và gia đình vào mỗi tối trước giờ ngủ (hoặc ban ngày cuối tuần): bước vào thư viện một cách từ tốn, tự nhiên, không rào cản đăng nhập và không khẩu hiệu gượng ép.
+1. **QUY TRÌNH 1:** Hành trình trải nghiệm bạn đọc qua 6 lớp không gian & Định vị 5 nấc (`LibraryWayfinder`).
+2. **QUY TRÌNH 2:** Đưa sách mới và âm thanh 48kHz lên Thư viện qua Xưởng sách (`/admin`).
+3. **QUY TRÌNH 3:** Chuẩn hóa media (Ảnh bìa 3:4, Tranh minh họa Brambly Hedge, Bản thu Studio 48kHz).
+4. **QUY TRÌNH 4:** Đặt hàng thiết kế, nâng cấp giao diện & kiểm thử cùng AI Agent.
+
+---
+
+## QUY TRÌNH 1: HÀNH TRÌNH BẠN ĐỌC QUA 6 LỚP KHÔNG GIAN & ĐỊNH VỊ 5 NẤC
+
+Quy trình này định hình toàn bộ trải nghiệm của bạn đọc thiếu nhi và gia đình vào mỗi tối trước giờ ngủ: từ tốn, ấm cúng, không áp lực tài khoản hay thông báo làm phiền.
 
 ```mermaid
 flowchart TD
-    OPEN(["Mở liên kết Thư viện Đồi Mơ (Đêm 1, 2, 3... n)"]) --> CIRCADIAN["Tự động nhận diện Nhịp Sinh học (19:30-05:30 bật Đêm ấm #111613)"]
-    CIRCADIAN --> GATE["Lớp 1: Cổng Đồi Mơ (/)<br/>Vòm tranh Ngày/Đêm • Đèn lồng & đom đóm nhẹ • Nút 'Bước vào →'"]
+    OPEN(["Mở đường dẫn Thư viện Đồi Mơ"]) --> SENSE["Nhận diện Nhịp Sinh học<br/>19:30 - 05:30: Tự bật Đêm ấm #111613"]
+    SENSE --> L1["Lớp 1: Cổng Đồi Mơ (/)<br/>Vòm sồi đại thụ • Đèn lồng ấm • Nút 'Bước vào →'"]
 
-    GATE -->|"1 chạm Bước vào (lướt êm 480ms)"| FOYER["Lớp 2: Sảnh sách (/)<br/>Nút Ra cổng / Tìm / Đã lưu / Sáng-Đêm • Đang đọc / Đang nghe • Mới lên kệ"]
-    FOYER -->|"Chạm mục Đang đọc / Đang nghe"| READER
-    FOYER --> HALLS["Lớp 3: Các gian sách (6 cửa vòm)<br/>Khoa học & Tự nhiên • Ẩm thực & Nếp nhà • Văn học • Lịch sử • Nghệ thuật • Kỹ năng"]
+    L1 -->|"Chạm 'Bước vào →'"| L2["Lớp 2: Sảnh sách (/)<br/>Đang đọc / Đang nghe • Mới lên kệ • 6 Cửa vòm Kệ sách"]
+    L2 -->|"Chạm thẻ Đang đọc/nghe"| L6["Lớp 6: Trang đọc & Trình phát (/episodes/[id])"]
 
-    HALLS -->|"Chọn 1 gian"| HALL_SHELF["Lớp 4: Gian đọc & Kệ gỗ sồi (/halls/slug)<br/>Wash Preset màu nước • Mô tả gọn • Bìa 3:4 đứng trên gờ kệ gỗ sồi"]
-    HALL_SHELF -->|"Chạm cuốn sách trên kệ"| BOOK_TOC["Lớp 5: Bàn mở sách & Mục lục (/books/slug)<br/>Định vị: Sảnh sách › Tên gian • Chọn Giọng đọc • Danh sách 25 tập/chặng"]
+    L2 -->|"Chạm 1 Cửa vòm"| L3_L4["Lớp 3 & 4: Kệ sách gỗ sồi (/halls/[slug])<br/>Wash màu nước dịu • Kệ gỗ sồi nâng đỡ bìa 3:4"]
+    L3_L4 -->|"Chạm bìa sách trên kệ"| L5["Lớp 5: Bàn mở sách & Mục lục (/books/[slug])<br/>Mục lục 25 tập/trang • Chọn Giọng đọc • Nút Đọc/Nghe"]
 
-    BOOK_TOC -->|"Chạm tên tập hoặc nút ▶"| READER["Lớp 6: Trang đọc & Trình phát (/episodes/id)<br/>Sticky 42px (Thoát nhanh + nút ⏸ 0px) • Tranh 3:4 không caption • Sleep Player"]
+    L5 -->|"Chạm đọc chữ hoặc nút ▶"| L6
+
+    subgraph WAYFINDER["HỆ THỐNG ĐỊNH VỊ KHÔNG GIAN 5 NẤC (LIBRARY WAYFINDER)"]
+        direction LR
+        WF1["1. Cổng Đồi Mơ"] --- WF2["2. Sảnh sách"] --- WF3["3. Kệ sách"] --- WF4["4. Bộ sách"] --- WF5["5. Tập truyện"]
+    end
 ```
 
-### Chi tiết vận hành từng lớp trên giao diện thực tế (`src/**`)
+### 1.1. Chi tiết 6 Lớp Không Gian Vận Hành
 
-1. **Lớp 1 — Cổng Đồi Mơ (`/` khi `!hasPassedGate`):**
-   - Mỗi khi mở phiên trình duyệt mới hoặc quay lại sau `≥ 45 phút` nghỉ (`GATE_RESET_IDLE_MS`), bạn đọc luôn bắt gặp **Cổng Đồi Mơ** để có khoảng lặng trước khi vào sách.
-   - Tự đổi ảnh vòm theo giờ (`public/images/home/doi-mo-night.jpg` trong khung `19:30–05:30`; `doi-mo-day.jpg` vào ban ngày) với ánh đèn lồng & đom đóm dịu nhẹ (`0` âm thanh bất ngờ).
-   - Chạm **`Bước vào →`** để lướt êm (`480ms`) vào Sảnh sách. (Bất kỳ lúc nào ở Sảnh cũng có nút `ArchDoorIcon` để quay ra ngắm lại Cổng).
-
-2. **Lớp 2 — Sảnh sách (`/` khi `hasPassedGate`):**
-   - **Thẻ `Đang đọc` / `Đang nghe` / `Tập tiếp theo`:** Hợp nhất cả hai loại sách (sách nói + sách chữ như *Tiểu Hạt Dẻ*) theo thời gian đọc/nghe gần nhất (`updatedAt`), cho phép tiếp tục đúng giây đang nghe hoặc đúng `%` trang đang đọc chỉ với 1 chạm.
-   - **Kệ `Mới lên kệ`:** Hiển thị tối đa `3` tập mới trong `14 ngày` gần nhất; tự động biến mất khỏi danh sách của thiết bị ngay sau khi bạn đọc đã mở đọc hoặc phát nghe tập đó.
-   - **Ngăn trượt Tiện ích (`SearchAndSavedSheet`):** Chạm biểu tượng Kính lúp hoặc Bookmark trên Header để tìm sách/tập toàn thư viện và xem danh sách đã đánh dấu, không chiếm `58px` thanh Tab đáy màn hình.
-
-3. **Lớp 3 & 4 — Các gian sách & Kệ gỗ sồi (`/halls/[slug]`):**
-   - Sảnh bày 6 cửa vòm phân loại rõ ràng (gian có sách thắp chấm đèn ấm kèm số bộ sách/số tập; gian chưa có sách ghi nhẹ *Sắp có sách*).
-   - Bước vào từng gian là không gian tĩnh lặng có sắc màu nước Preset đặc trưng (`Moss`, `Ochre`, `Rosewood`, `Lavender`) và **thanh kệ gỗ sồi** nâng đỡ các bìa sách `3:4` sạch tuyệt đối (`0` tem nhãn đè lên mặt tranh).
-
+1. **Lớp 1 — Cổng Đồi Mơ (`/` khi chưa bước qua cổng):**
+   - Tự động chào đón khi bắt đầu phiên mới hoặc sau `45 phút` không hoạt động.
+   - Tranh vòm Ngày/Đêm (`doi-mo-day.jpg` / `doi-mo-night.jpg`) vòm sồi sum suê, vầng trăng ngoài tán lá, cột biển gỗ có đèn lồng nhỏ, mẹ con nhà cáo ngủ bên sách mở.
+   - Nút **`Bước vào →`** chuyển êm ái sang Sảnh sách (`480ms`). Bất kỳ lúc nào ở bên trong, người đọc luôn có thể chạm biểu tượng Cổng gỗ (`ArchDoorIcon`) trên Wayfinder để quay lại ngắm Cổng.
+2. **Lớp 2 — Sảnh sách (`/` khi đã qua cổng):**
+   - **Thẻ Đang đọc / Đang nghe:** Hiển thị tối đa `2` bộ sách mở dở gần nhất, khôi phục chính xác từng giây âm thanh hoặc đúng vị trí `%` cuộn trang đọc.
+   - **Kệ Mới lên kệ:** Tự động gom tối đa `3` tập mới xuất bản trong `14 ngày`, tự ẩn sau khi bạn đọc đã mở xem.
+   - **Lối rẽ 6 Kệ sách:** 6 cửa vòm phân loại, kệ đã có sách thắp đèn ấm và ghi rõ số bộ/số tập; kệ trống ghi nhẹ *Sắp có sách*.
+3. **Lớp 3 & 4 — Kệ sách gỗ sồi (`/halls/[slug]`):**
+   - Khung tranh `StorybookHeroStage` 2/3 màn hình đầu tiên đặc trưng cho từng Kệ.
+   - Sắc màu nước Preset (`Moss`, `Ochre`, `Rosewood`, `Lavender`) phủ dịu dàng.
+   - Gờ kệ gỗ sồi nâng đỡ bìa sách `3:4` phẳng sạch, không tem mác cơ học.
 4. **Lớp 5 — Bàn mở sách & Mục lục (`/books/[slug]`):**
-   - Thanh định vị đầu trang (`← Sảnh sách › Tên gian`) giúp người đọc luôn biết vị trí cuốn sách đang cầm và dễ dàng lùi lại đúng kệ sách cũ.
-   - Áp dụng *Progressive Disclosure*: sách `≤ 15` tập thu gọn thanh tìm kiếm; sách `≤ 25` tập hiển thị liền một mạch không chia chặng lẻ; trên mỗi hàng tập, chạm tiêu đề/ảnh nhỏ để **Đọc chữ**, chạm nút tròn `▶` bên phải để **Nghe ngay**.
-
-5. **Lớp 6 — Trang đọc văn học & Trình phát ru ngủ (`/episodes/[id]` & `FullScreenPlayerDrawer`):**
-   - **Trang đọc chữ:** Thanh đỉnh dính `42px` luôn giữ lối thoát về sách mẹ & `Sảnh sách`; khi vừa nghe audio vừa cuộn đọc xuống giữa bài dài, nút tròn `[⏸ / ▶]` tự hiện ngay trên thanh `Sticky 42px` mà không tốn `1px` chiều cao thêm; tranh minh họa cuộn dọc gọn trong màn hình (`0` caption, `0` hộp cuối tập); vị trí cuộn trang tự động lưu mỗi `500ms`.
-   - **Trình phát ru ngủ toàn màn hình:** Đầy đủ `Khóa chạm` (giữ `2 giây` để mở khóa), tua `±15 giây`, đổi giọng đọc giữ nguyên tỷ lệ thời gian, và **Thanh Hẹn giờ 1 chạm (`Hết tập dừng êm · 15p · 30p · Liên tiếp`)**. Từ `19:30–05:30`, hệ thống tự mặc định *Hết tập dừng êm* với hiệu ứng giảm dần âm lượng trong `8 giây` cuối tập rồi dừng hẳn để trẻ không bị đánh thức sang tập mới.
-
----
-
-## QUY TRÌNH 2: ĐƯA SÁCH MỚI LÊN THƯ VIỆN QUA XƯỞNG SÁCH (`/admin`)
-
-> **Ranh giới quy trình:** Khâu viết truyện, biên tập văn bản gốc và vẽ tranh minh họa thực hiện ở dự án sáng tác độc lập bên ngoài. Xưởng Sách `/admin` chỉ tiếp nhận thành phẩm đã hoàn chỉnh để xuất bản lên Thư viện.
-
-| Bước | Thực hiện tại | Thao tác chuẩn của Chủ thư viện | Tiêu chí kiểm tra trước khi chuyển bước |
-| :-: | :--- | :--- | :--- |
-| **1** | Ngoài thư viện (Kho thành phẩm) | Gom đủ bộ tài liệu cho 1 Bộ sách / Tập: ảnh bìa `3:4` sạch (không chữ đè góc), file Markdown văn bản chuẩn Unicode NFC, bộ tranh dọc (nếu có), file âm thanh MP3/M4A `48kHz` (nếu là sách nói). | Ảnh `≤ 5MB`, Audio `≤ 60MB`/bản thu; văn bản sạch không chứa hộp ghi chú cuối tập. |
-| **2** | `/admin` → `Giọng đọc` | Tạo hoặc đối chiếu **Hồ sơ Giọng đọc (`VoiceProfile`)** dùng chung toàn thư viện (ví dụ `Nữ · Mỹ Duyên`, `Nam · Thiền Tâm Đức`). | Đảm bảo mỗi giọng đọc có `voiceKey` duy nhất và `displayName` ngắn gọn (tối đa ~20 ký tự để không tràn thanh `38px`). |
-| **3** | `/admin/books/new` (hoặc `/admin/books/[id]`) | Nhập tên sách, tác giả, họa sĩ, độ tuổi; tải bìa `3:4` và chọn **Điểm căn (`Trên/Giữa/Dưới`)**; chọn **Gian sách * (1 trong 6 Gian)** + nhánh chủ đề phụ; chọn Preset màu nước; tick **Xác nhận quyền sở hữu/lưu hành**. | Lưu ở trạng thái `Nháp` nếu chưa có tập nào; chỉ bật `Xuất bản sách` khi đã có ít nhất `1` tập đã xuất bản. |
-| **4** | `/admin/episodes/[id]` | Biên tập Tập qua 4 tab: (1) *Thông tin*, (2) *Audio* (hoặc bật *Chỉ đọc chữ*), (3) *Tranh minh họa*, (4) *Bản chữ Markdown* (tự lưu nháp mỗi 3s). Bấm **Xem trước 390px** để kiểm tra. | Kiểm tra Pre-publish Checklist xanh đủ; đảm bảo không đè mất dấu tiếng Việt (`Ấ, Ề, Ổ, Ứ, ệ, ộ, ợ`). |
-| **5** | `/admin` | Bấm **Xuất bản** tập → kiểm tra hiển thị thực tế trong Gian sách tương ứng. Định kỳ cuối tuần bấm **Sao lưu JSON** tải tệp dự phòng về máy. | Tập mới tự động xuất hiện ở mục `Mới lên kệ` trên Sảnh và nằm gọn trong Gian sách đã chọn. |
+   - Khung tranh bìa `3:4` lớn kèm thông tin tác giả, họa sĩ và bộ chọn giọng đọc.
+   - Danh sách tập hiển thị mạch lạc: chạm tiêu đề để Đọc chữ, chạm nút tròn `▶` để Nghe ngay.
+5. **Lớp 6 — Trang đọc văn học & Trình phát ru ngủ (`/episodes/[id]` & `Sleep Player`):**
+   - **Thanh đỉnh dính `42px`:** Tích hợp trọn vẹn `LibraryWayfinder` 5 nấc, bộ vi điều khiển audio `[⏸ / ▶]` `0px`, nút chỉnh cỡ chữ `A- / A+` và đổi Sáng/Đêm.
+   - **Mạch đọc chữ:** Tranh minh họa cuộn dọc hiển thị gọn trong khung nhìn, không chú thích vụn, không hộp bài học cuối tập.
+   - **Trình phát ru ngủ:** Tính năng *Hết tập dừng êm* hạ dần âm lượng trong `8 giây` cuối qua Web Audio `GainNode`, khóa chạm trẻ em (`Kid Lock` giữ 2s).
 
 ---
 
-## QUY TRÌNH 3: ĐẶT HÀNG NÂNG CẤP GIAO DIỆN & TÍNH NĂNG VỚI AI AGENT
+## QUY TRÌNH 2: ĐƯA SÁCH VÀ ÂM THANH LÊN KỆ QUA XƯỞNG SÁCH (`/admin`)
 
-Khi muốn thiết kế thêm màn hình hoặc mở rộng tính năng trong tương lai, thực hiện theo trình tự 4 cổng kiểm soát:
+> **Ranh giới cốt lõi:** Dự án Thư viện chỉ đảm nhận lưu trữ và trình bày sách. Các khâu sáng tác, biên tập chữ và vẽ tranh minh họa được thực hiện tại các xưởng sáng tác độc lập bên ngoài.
 
-1. **Cổng 1 — Đối soát Hiến pháp & Cẩm nang:** Đọc lại [GEMINI.md](./GEMINI.md) và [CAM_NANG_THU_VIEN_DOI_MO.md](./CAM_NANG_THU_VIEN_DOI_MO.md). Tuyệt đối không đưa thêm Bottom Tab Bar, nút FAB `+`, emoji hệ điều hành, huy hiệu điểm thưởng EdTech hay hộp phụ cuối bài đọc.
-2. **Cổng 2 — Rà soát Ngôn ngữ Tự nhiên:** Loại bỏ mọi từ ngữ khẩu hiệu, số La Mã rườm rà hay câu dẫn giả tạo trước khi viết Prompt hoặc viết code.
-3. **Cổng 3 — Dựng Mockup Kiểm duyệt (nếu thay đổi bố cục lớn):** Dùng Google Stitch MCP (`create_project` → `generate_screen_from_text` với `deviceType: "MOBILE"`, tải file qua `download_file`), kiểm tra bằng mắt để chắc chắn không có URL ảnh vỡ (`aida/ALJJyr...`) hoặc chi tiết SaaS lọt vào.
-4. **Cổng 4 — Thi công Code & Kiểm chứng:** Cập nhật mã nguồn Next.js trong `src/**`, giữ tương thích ngược với cả Supabase và `data/library_db.json`, sau đó chạy kiểm tra `npm run typecheck && npm run build`.
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Admin as Chủ Thư Viện
+    participant Studio as Xưởng Bên Ngoài
+    participant CMS as Xưởng Sách (/admin)
+    participant Cloud as Storage & DB
+    participant Reader as Thư Viện Đồi Mơ
+
+    Studio->>Admin: Bàn giao Bìa 3:4, Markdown sạch, Tranh dọc, Audio 48kHz
+    Admin->>CMS: 1. Tạo/chọn Hồ sơ Giọng đọc (VoiceProfile)
+    Admin->>CMS: 2. Tạo Bộ sách mới, chọn Kệ sách (1 trong 6 Kệ), tải Bìa 3:4
+    Admin->>CMS: 3. Thêm Tập: Dán Markdown, gắn Audio, tải Tranh minh họa
+    Admin->>CMS: 4. Bật chế độ "Xem trước 390px" & Đối soát Checklist
+    CMS->>Cloud: 5. Nhấn Xuất bản (Lưu DB & Đồng bộ Cloudflare R2)
+    Cloud-->>Reader: 6. Sách mới tự động lên đúng Kệ & mục Mới lên kệ tại Sảnh
+```
+
+### Bảng Kiểm Tra Xuất Bản (Pre-Publish Checklist)
+
+| STT | Hạng mục kiểm tra | Tiêu chuẩn bắt buộc | Đạt / Không đạt |
+| :-: | :--- | :--- | :-: |
+| 1 | **Tỷ lệ ảnh bìa** | Chuẩn khổ dọc `3:4`, không có chữ hay nút phát đè góc | [ ] |
+| 2 | **Kệ sách chính** | Chọn đúng 1 trong 6 Kệ (hoặc Kệ giao thoa dạng `A + B`) | [ ] |
+| 3 | **Bản văn Markdown** | Lọc sạch 100% hộp "Kỷ vật túi da", lời chào MC hay bài học | [ ] |
+| 4 | **Dấu tiếng Việt** | Đầy đủ 134/134 ký tự có dấu, không biến dạng dấu mũ | [ ] |
+| 5 | **Tệp âm thanh** | Chuẩn MP3 48kHz, gán đúng Giọng đọc, không rè xước | [ ] |
+| 6 | **Tranh minh họa** | Tranh dọc 3:4 xen kẽ, không chèn chú thích caption dưới ảnh | [ ] |
+
+---
+
+## QUY TRÌNH 3: TIÊU CHUẨN MEDIA & ĐỒNG BỘ DỮ LIỆU
+
+### 3.1. Tiêu Chuẩn Tranh Bìa & Minh Họa
+- **Bìa sách & Bìa tập:** Khổ dọc `3:4` phẳng sạch, bo nhẹ góc `6px–8px` trên giao diện, giữ tinh thần màu nước mộc mạc của *Miền Dâu Dại*. Dung lượng tối ưu `≤ 2MB`.
+- **Tranh minh họa trong bài:** Tỷ lệ dọc `3:4`, phong cách nét bút sắt mảnh (fine cross-hatching), màu nước thực vật ấm áp không ám vàng, góc nhìn ngang tầm mắt nhân vật (`30–50 cm`), không bao giờ lùi góc máy xa làm mất cảm xúc.
+
+### 3.2. Tiêu Chuẩn Âm Thanh 48kHz
+- **Định dạng file:** `MP3` hoặc `M4A` tần số mẫu `48,000 Hz` (48kHz), bitrate `128 kbps – 192 kbps`.
+- **Đặt tên file chuẩn hóa:** `[Số tập]_[Mã bộ]_[Số thứ tự tập]_[Tên giọng đọc]_48kHz.mp3`  
+  *(Ví dụ: `01_THD_001_Thien_Tam_Duc_48kHz.mp3`)*.
+- **Hạ tầng phân phối:** Lưu trữ tại thư mục `public/audio/[slug]/` hoặc Cloudflare R2, đảm bảo hỗ trợ `HTTP 206 Range Requests`.
+
+### 3.3. Cơ Chế Sao Lưu & Đồng Bộ Dữ Liệu
+- Hệ thống hỗ trợ chế độ kép (Dual-Engine):
+  - Khi chạy cục bộ: Đọc/ghi trực tiếp vào file `data/library_db.json`.
+  - Khi triển khai môi trường máy chủ: Tự động kết nối Supabase PostgreSQL và Cloudflare R2.
+- **Quy trình sao lưu định kỳ:** Hàng tuần, Chủ thư viện truy cập `/admin` và bấm **Sao lưu JSON** để tải tệp `library_db_backup_[timestamp].json` về máy tính an toàn.
+
+---
+
+## QUY TRÌNH 4: ĐẶT HÀNG NÂNG CẤP & KIỂM THỬ CÙNG AI AGENT
+
+Khi cần bổ sung tính năng mới hoặc điều chỉnh giao diện, mọi yêu cầu đối với AI Agent phải đi qua 4 Cổng kiểm soát nghiêm ngặt:
+
+1. **Cổng 1 — Đối soát Hiến pháp (`GEMINI.md`):**
+   - Kiểm tra yêu cầu có vi phạm "5 Tuyệt đối không" hay không. Từ chối ngay các đề xuất thêm Bottom Navigation Bar, chấm điểm học tập hay biểu tượng cảm xúc OS.
+2. **Cổng 2 — Kiểm duyệt Ngôn ngữ Tự nhiên:**
+   - Soát lại toàn bộ nhãn nút, tiêu đề: đảm bảo không khẩu hiệu, không văn mẫu sáo rỗng, chuẩn ngôn ngữ mộc mạc đời thường.
+3. **Cổng 3 — Thiết kế Thử nghiệm (nếu có màn hình mới):**
+   - Tạo mockup giao diện điện thoại qua công cụ Google Stitch MCP (`deviceType: "MOBILE"`), kiểm tra trực quan trên màn hình `390px` trước khi viết code.
+4. **Cổng 4 — Lập trình & Đóng gói Kiểm thử:**
+   - Thi công code trong `src/**`, bảo toàn `LibraryWayfinder` 5 nấc và tính tương thích ngược của dữ liệu.
+   - Chạy lệnh kiểm tra tính toàn vẹn bắt buộc trước khi bàn giao:
+     ```bash
+     npm run typecheck && npm run build
+     ```

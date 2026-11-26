@@ -3,7 +3,9 @@
 import React, { useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { BedtimeSleepChoice, useLibraryPlayer } from '@/context/LibraryPlayerContext';
+import { resolveBookHall } from '@/lib/halls';
 import { formatClock } from '@/lib/presets';
+import { LibraryWayfinder } from './LibraryWayfinder';
 import { SearchAndSavedSheet } from './SearchAndSavedSheet';
 import {
   BookmarkIcon,
@@ -204,65 +206,83 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           style={{ backgroundColor: 'var(--bg-canvas)', color: 'var(--text-primary)' }}
           className="fixed inset-0 z-50 flex flex-col justify-between max-w-[480px] mx-auto px-5 pt-3 pb-[max(28px,calc(env(safe-area-inset-bottom)+16px))] overflow-y-auto"
         >
-          {/* Top bar */}
-          <div className="flex items-center justify-between">
-            <button
-              type="button"
-              aria-label="Thu gọn trình phát"
-              disabled={isKidLocked}
-              onClick={() => setFullPlayerOpen(false)}
-              style={{ opacity: isKidLocked ? 0.3 : 1 }}
-              className="w-11 h-11 flex items-center justify-center"
-            >
-              <ChevronDownIcon size={22} />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                if (!isKidLocked) setKidLocked(true);
-              }}
-              style={{
-                backgroundColor: isKidLocked ? 'var(--accent-warm)' : 'transparent',
-                color: isKidLocked ? '#1B140A' : 'var(--text-secondary)',
-                border: '1px solid var(--border-hairline)'
-              }}
-              className="h-10 px-3.5 rounded-[8px] text-xs font-medium inline-flex items-center gap-1.5"
-            >
-              {isKidLocked ? <LockIcon size={14} /> : <UnlockIcon size={14} />}
-              <span>{isKidLocked ? 'Đã khóa chạm' : 'Khóa chạm'}</span>
-            </button>
-
-            <div className="flex items-center gap-1">
+          {/* Top bar + Pinned 5-Step Wayfinder */}
+          <div>
+            <div className="flex items-center justify-between">
               <button
                 type="button"
-                aria-label="Đánh dấu yêu thích"
+                aria-label="Thu gọn trình phát"
                 disabled={isKidLocked}
-                onClick={() => toggleFavorite(activeEpisode.id)}
-                style={{
-                  color: favorites.includes(activeEpisode.id)
-                    ? 'var(--accent-berry)'
-                    : 'var(--text-secondary)',
-                  opacity: isKidLocked ? 0.3 : 1
-                }}
-                className="w-11 h-11 flex items-center justify-center"
-              >
-                <BookmarkIcon size={18} filled={favorites.includes(activeEpisode.id)} />
-              </button>
-              <button
-                type="button"
-                aria-label="Mở trang đọc chữ"
-                disabled={isKidLocked}
-                onClick={() => {
-                  setFullPlayerOpen(false);
-                  router.push(`/episodes/${activeEpisode.id}`);
-                }}
+                onClick={() => setFullPlayerOpen(false)}
                 style={{ opacity: isKidLocked ? 0.3 : 1 }}
                 className="w-11 h-11 flex items-center justify-center"
               >
-                <BookOpenIcon size={19} />
+                <ChevronDownIcon size={22} />
               </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (!isKidLocked) setKidLocked(true);
+                }}
+                style={{
+                  backgroundColor: isKidLocked ? 'var(--accent-warm)' : 'transparent',
+                  color: isKidLocked ? '#1B140A' : 'var(--text-secondary)',
+                  border: '1px solid var(--border-hairline)'
+                }}
+                className="h-10 px-3.5 rounded-[8px] text-xs font-medium inline-flex items-center gap-1.5"
+              >
+                {isKidLocked ? <LockIcon size={14} /> : <UnlockIcon size={14} />}
+                <span>{isKidLocked ? 'Đã khóa chạm' : 'Khóa chạm'}</span>
+              </button>
+
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  aria-label="Đánh dấu yêu thích"
+                  disabled={isKidLocked}
+                  onClick={() => toggleFavorite(activeEpisode.id)}
+                  style={{
+                    color: favorites.includes(activeEpisode.id)
+                      ? 'var(--accent-berry)'
+                      : 'var(--text-secondary)',
+                    opacity: isKidLocked ? 0.3 : 1
+                  }}
+                  className="w-11 h-11 flex items-center justify-center"
+                >
+                  <BookmarkIcon size={18} filled={favorites.includes(activeEpisode.id)} />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Mở trang đọc chữ"
+                  disabled={isKidLocked}
+                  onClick={() => {
+                    setFullPlayerOpen(false);
+                    router.push(`/episodes/${activeEpisode.id}`);
+                  }}
+                  style={{ opacity: isKidLocked ? 0.3 : 1 }}
+                  className="w-11 h-11 flex items-center justify-center"
+                >
+                  <BookOpenIcon size={19} />
+                </button>
+              </div>
             </div>
+
+            {!isKidLocked && (
+              <div
+                style={{ borderBottom: '1px solid var(--border-hairline)' }}
+                className="py-1 mt-1 flex items-center justify-center"
+              >
+                <LibraryWayfinder
+                  currentStep="episode"
+                  currentHall={resolveBookHall(activeBook)}
+                  currentBook={activeBook}
+                  currentEpisode={activeEpisode}
+                  elevateZIndex
+                  onBeforeNavigate={() => setFullPlayerOpen(false)}
+                />
+              </div>
+            )}
           </div>
 
           {/* Center 3:4 Cover & Voice Selector */}

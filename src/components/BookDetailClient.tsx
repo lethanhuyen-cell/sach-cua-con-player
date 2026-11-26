@@ -13,12 +13,11 @@ import {
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { BookCover } from './BookCover';
 import { StorybookHeroStage } from './StorybookHeroStage';
+import { LibraryWayfinder } from './LibraryWayfinder';
 import {
   BookmarkIcon,
   BookOpenIcon,
   ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
   CloseIcon,
   MicIcon,
   MoonIcon,
@@ -279,37 +278,17 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
 
   return (
     <div className="pb-6">
-      {/* Top Sticky 44px Hierarchical Spatial Breadcrumb: Sảnh sách › Tên Gian */}
+      {/* Top Sticky 44px 5-Step Pinned Wayfinder */}
       <header
         style={{
           backgroundColor: 'var(--bg-canvas)',
           borderBottom: '1px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[44px] px-3.5 flex items-center justify-between gap-2"
+        className="sticky top-0 z-20 h-[44px] px-3 flex items-center justify-between gap-1.5"
       >
-        <nav
-          aria-label="Định vị không gian thư viện"
-          className="flex items-center gap-1 min-w-0 text-xs"
-        >
-          <Link
-            href="/"
-            style={{ color: 'var(--text-secondary)' }}
-            className="h-9 inline-flex items-center gap-0.5 font-medium shrink-0 hover:underline"
-          >
-            <ChevronLeftIcon size={15} />
-            <span>Sảnh sách</span>
-          </Link>
-          <ChevronRightIcon size={12} className="shrink-0 opacity-50" />
-          <Link
-            href={`/halls/${hall.slug}`}
-            style={{ color: accentColor }}
-            className="h-9 inline-flex items-center font-semibold truncate hover:underline"
-          >
-            <span className="truncate">{hall.shortTitle}</span>
-          </Link>
-        </nav>
+        <LibraryWayfinder currentStep="book" currentHall={hall} currentBook={book} />
 
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-0.5 shrink-0">
           {book.episodes.length <= 15 && (
             <button
               type="button"
@@ -322,7 +301,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
                 backgroundColor: isSearchOpen ? 'var(--text-primary)' : 'transparent',
                 color: isSearchOpen ? 'var(--bg-canvas)' : 'var(--text-primary)'
               }}
-              className="w-9 h-9 rounded-[7px] flex items-center justify-center"
+              className="w-8 h-8 rounded-[7px] flex items-center justify-center"
             >
               <SearchIcon size={15} />
             </button>
@@ -332,7 +311,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
             onClick={toggleNight}
             aria-label={isNight ? 'Giao diện sáng' : 'Giao diện đêm'}
             style={{ color: 'var(--text-primary)' }}
-            className="w-9 h-9 rounded-[7px] flex items-center justify-center"
+            className="w-8 h-8 rounded-[7px] flex items-center justify-center"
           >
             {isNight ? <SunIcon size={15} /> : <MoonIcon size={15} />}
           </button>

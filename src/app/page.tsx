@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { ContinueSuggestion, useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { BookCover } from '@/components/BookCover';
 import { StorybookHeroStage } from '@/components/StorybookHeroStage';
+import { LibraryWayfinder } from '@/components/LibraryWayfinder';
 import {
-  ArchDoorIcon,
   BookmarkIcon,
   BookOpenIcon,
   ChevronRightIcon,
@@ -76,8 +76,7 @@ export default function HomeLibraryPage() {
     continueItems,
     openUtilitySheet,
     hasPassedGate,
-    enterLibraryFromGate,
-    returnToGate
+    enterLibraryFromGate
   } = useLibraryPlayer();
 
   const [isOpeningGate, setIsOpeningGate] = useState(false);
@@ -230,32 +229,17 @@ export default function HomeLibraryPage() {
           backgroundColor: 'var(--bg-canvas)',
           borderBottom: '1px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[44px] px-3.5 flex items-center justify-between gap-2"
+        className="sticky top-0 z-20 h-[44px] px-3 flex items-center justify-between gap-1.5"
       >
-        <div className="min-w-0 flex items-baseline gap-2">
-          <span className="text-[16px] font-bold tracking-tight font-editorial truncate">
-            Thư viện Đồi Mơ
-          </span>
-        </div>
+        <LibraryWayfinder currentStep="foyer" />
 
-        <div className="flex items-center gap-1 shrink-0">
-          <button
-            type="button"
-            onClick={returnToGate}
-            aria-label="Ra cổng"
-            title="Ra cổng"
-            style={{ color: 'var(--accent-warm)' }}
-            className="w-9 h-9 rounded-[7px] flex items-center justify-center"
-          >
-            <ArchDoorIcon size={16} />
-          </button>
-
+        <div className="flex items-center gap-0.5 shrink-0">
           <button
             type="button"
             onClick={() => openUtilitySheet('search')}
             aria-label="Tìm kiếm"
             style={{ color: 'var(--text-primary)' }}
-            className="w-9 h-9 rounded-[7px] flex items-center justify-center"
+            className="w-8 h-8 rounded-[7px] flex items-center justify-center"
           >
             <SearchIcon size={16} />
           </button>
@@ -267,7 +251,7 @@ export default function HomeLibraryPage() {
             style={{
               color: favorites.length > 0 ? 'var(--accent-berry)' : 'var(--text-primary)'
             }}
-            className="w-9 h-9 rounded-[7px] flex items-center justify-center relative"
+            className="w-8 h-8 rounded-[7px] flex items-center justify-center relative"
           >
             <BookmarkIcon size={16} filled={favorites.length > 0} />
             {favorites.length > 0 && (
@@ -284,7 +268,7 @@ export default function HomeLibraryPage() {
             onClick={toggleNight}
             aria-label={isNight ? 'Giao diện sáng' : 'Giao diện đêm'}
             style={{ color: 'var(--text-primary)' }}
-            className="w-9 h-9 rounded-[7px] flex items-center justify-center"
+            className="w-8 h-8 rounded-[7px] flex items-center justify-center"
           >
             {isNight ? <SunIcon size={16} /> : <MoonIcon size={16} />}
           </button>
@@ -469,10 +453,10 @@ export default function HomeLibraryPage() {
         </section>
       )}
 
-      {/* Các gian sách */}
-      <section aria-label="Các gian sách">
+      {/* Các kệ sách */}
+      <section aria-label="Các kệ sách">
         <div className="mb-3">
-          <h2 className="text-[17px] font-semibold font-editorial">Các gian sách</h2>
+          <h2 className="text-[17px] font-semibold font-editorial">Các kệ sách</h2>
         </div>
 
         <div className="grid grid-cols-2 gap-3">

@@ -4,10 +4,10 @@ import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { BookCover } from '@/components/BookCover';
+import { LibraryWayfinder } from '@/components/LibraryWayfinder';
 import {
   BookmarkIcon,
   BookOpenIcon,
-  ChevronLeftIcon,
   MoonIcon,
   PauseIcon,
   PlayIcon,
@@ -51,39 +51,33 @@ export default function SavedArchivePage() {
   }, [books, favorites]);
 
   return (
-    <div className="px-4 pt-3 pb-6 space-y-5">
-      {/* Header with 1-tap Home return */}
+    <div className="pb-6">
       <header
-        style={{ borderBottom: '1px solid var(--border-hairline)' }}
-        className="pb-3 flex items-center justify-between gap-2"
+        style={{
+          backgroundColor: 'var(--bg-canvas)',
+          borderBottom: '1px solid var(--border-hairline)'
+        }}
+        className="sticky top-0 z-20 h-[44px] px-3 flex items-center justify-between gap-1.5"
       >
-        <div className="min-w-0">
-          <Link
-            href="/"
-            style={{ color: 'var(--accent-primary)' }}
-            className="text-xs font-semibold inline-flex items-center gap-0.5 mb-0.5"
-          >
-            <ChevronLeftIcon size={14} />
-            <span>Trang chủ</span>
-          </Link>
+        <LibraryWayfinder currentStep="shelf" shelfBranch="saved" />
+        <button
+          type="button"
+          onClick={toggleNight}
+          aria-label={isNight ? 'Giao diện sáng' : 'Giao diện đêm'}
+          style={{ color: 'var(--text-primary)' }}
+          className="w-8 h-8 rounded-[7px] flex items-center justify-center shrink-0"
+        >
+          {isNight ? <SunIcon size={16} /> : <MoonIcon size={16} />}
+        </button>
+      </header>
+
+      <div className="px-4 pt-4 space-y-5">
+        <div>
           <h1 className="text-[21px] font-bold font-editorial">Lưu trữ</h1>
           <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
             Tiến độ đọc, nghe và các tập đánh dấu trên thiết bị này
           </p>
         </div>
-        <button
-          type="button"
-          onClick={toggleNight}
-          aria-label={isNight ? 'Giao diện sáng' : 'Giao diện đêm'}
-          style={{
-            backgroundColor: 'var(--bg-surface)',
-            border: '1px solid var(--border-hairline)'
-          }}
-          className="w-11 h-11 rounded-[8px] flex items-center justify-center shrink-0"
-        >
-          {isNight ? <SunIcon size={17} /> : <MoonIcon size={17} />}
-        </button>
-      </header>
 
       {/* Segmented Tabs */}
       <div
@@ -349,6 +343,7 @@ export default function SavedArchivePage() {
         <strong style={{ color: 'var(--text-primary)' }}>Mẹo nhỏ trên iPhone / iPad:</strong>{' '}
         Chọn <em>Chia sẻ &rarr; Thêm vào Màn hình chính</em> để mở Thư viện Đồi Mơ như ứng dụng riêng và giữ lịch sử nghe lâu dài không bị trình duyệt tự dọn sau 7 ngày.
       </aside>
+      </div>
     </div>
   );
 }
