@@ -14,7 +14,14 @@ export interface LibraryHallDefinition {
   shortTitle: string;
   epigraph: string;
   preset: BookPreset;
+  dayHeroUrl: string;
+  nightHeroUrl: string;
 }
+
+export const FOYER_HERO_ART = {
+  day: '/images/home/foyer-day.jpg',
+  night: '/images/home/foyer-night.jpg'
+} as const;
 
 export const LIBRARY_HALLS: LibraryHallDefinition[] = [
   {
@@ -22,42 +29,54 @@ export const LIBRARY_HALLS: LibraryHallDefinition[] = [
     title: 'Gian Khoa học & Tự nhiên',
     shortTitle: 'Khoa học & Tự nhiên',
     epigraph: 'Cây cỏ, muông thú, bầu trời và thế giới tự nhiên.',
-    preset: 'moss'
+    preset: 'moss',
+    dayHeroUrl: '/images/halls/khoa-hoc-tu-nhien-day.jpg',
+    nightHeroUrl: '/images/halls/khoa-hoc-tu-nhien-night.jpg'
   },
   {
     slug: 'am-thuc-nep-nha',
     title: 'Gian Ẩm thực & Nếp nhà',
     shortTitle: 'Ẩm thực & Nếp nhà',
     epigraph: 'Chuyện căn bếp, món ngon và đời sống hằng ngày.',
-    preset: 'ochre'
+    preset: 'ochre',
+    dayHeroUrl: '/images/halls/am-thuc-nep-nha-day.jpg',
+    nightHeroUrl: '/images/halls/am-thuc-nep-nha-night.jpg'
   },
   {
     slug: 'van-hoc-dong-thoai',
     title: 'Gian Văn học',
     shortTitle: 'Văn học',
     epigraph: 'Truyện đồng thoại, truyện ngắn và tiểu thuyết thiếu nhi.',
-    preset: 'rosewood'
+    preset: 'rosewood',
+    dayHeroUrl: '/images/halls/van-hoc-dong-thoai-day.jpg',
+    nightHeroUrl: '/images/halls/van-hoc-dong-thoai-night.jpg'
   },
   {
     slug: 'lich-su-van-hoa',
     title: 'Gian Lịch sử & Văn hóa',
     shortTitle: 'Lịch sử & Văn hóa',
     epigraph: 'Chuyện xưa, con người và những vùng đất.',
-    preset: 'ochre'
+    preset: 'ochre',
+    dayHeroUrl: '/images/halls/lich-su-van-hoa-day.jpg',
+    nightHeroUrl: '/images/halls/lich-su-van-hoa-night.jpg'
   },
   {
     slug: 'nghe-thuat-tho-nhac',
     title: 'Gian Nghệ thuật',
     shortTitle: 'Nghệ thuật',
     epigraph: 'Hội họa, âm nhạc và thơ ca.',
-    preset: 'lavender'
+    preset: 'lavender',
+    dayHeroUrl: '/images/halls/nghe-thuat-tho-nhac-day.jpg',
+    nightHeroUrl: '/images/halls/nghe-thuat-tho-nhac-night.jpg'
   },
   {
     slug: 'ky-nang-lon-khon',
     title: 'Gian Kỹ năng sống',
     shortTitle: 'Kỹ năng sống',
     epigraph: 'Những điều nhỏ giúp mình tự lập và thấu hiểu.',
-    preset: 'moss'
+    preset: 'moss',
+    dayHeroUrl: '/images/halls/ky-nang-lon-khon-day.jpg',
+    nightHeroUrl: '/images/halls/ky-nang-lon-khon-night.jpg'
   }
 ];
 

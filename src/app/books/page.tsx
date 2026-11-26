@@ -4,6 +4,7 @@ import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { BookCover } from '@/components/BookCover';
+import { StorybookHeroStage } from '@/components/StorybookHeroStage';
 import {
   ChevronLeftIcon,
   CloseIcon,
@@ -14,11 +15,13 @@ import {
 } from '@/components/Icons';
 import {
   formatBookDisplayGenre,
+  FOYER_HERO_ART,
   LIBRARY_HALLS,
   LibraryHallSlug,
   resolveBookHalls
 } from '@/lib/halls';
 import {
+  BOOK_PRESETS,
   getEpisodeDurationLabel,
   isEpisodeReadingOnly
 } from '@/lib/presets';
@@ -98,42 +101,53 @@ export default function BooksShelfPage() {
     return matches.slice(0, 8);
   }, [books, normalizedQuery, selectedHallSlug]);
 
+  const washBg = isNight ? BOOK_PRESETS.moss.nightWash : BOOK_PRESETS.moss.dayWash;
+
   return (
-    <div className="px-4 pt-3 pb-6 space-y-5">
-      {/* Header with direct 1-tap Home exit */}
+    <div className="pb-6">
+      {/* Sticky 44px Header with direct 1-tap Home exit */}
       <header
-        style={{ borderBottom: '1px solid var(--border-hairline)' }}
-        className="pb-3 flex items-center justify-between gap-2"
+        style={{
+          backgroundColor: 'var(--bg-canvas)',
+          borderBottom: '1px solid var(--border-hairline)'
+        }}
+        className="sticky top-0 z-20 h-[44px] px-3.5 flex items-center justify-between gap-2"
       >
-        <div className="min-w-0">
-          <Link
-            href="/"
-            style={{ color: 'var(--accent-primary)' }}
-            className="text-xs font-semibold inline-flex items-center gap-0.5 mb-0.5"
-          >
-            <ChevronLeftIcon size={14} />
-            <span>Sảnh sách</span>
-          </Link>
-          <h1 className="text-[21px] font-bold font-editorial">Tủ sách</h1>
-          <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-            {books.length} bộ sách đã xuất bản
-          </p>
-        </div>
+        <Link
+          href="/"
+          style={{ color: 'var(--accent-primary)' }}
+          className="h-9 inline-flex items-center gap-1 text-xs font-semibold"
+        >
+          <ChevronLeftIcon size={16} />
+          <span>Sảnh sách</span>
+        </Link>
         <button
           type="button"
           onClick={toggleNight}
           aria-label={isNight ? 'Giao diện ban ngày' : 'Giao diện ban đêm'}
-          style={{
-            backgroundColor: 'var(--bg-surface)',
-            border: '1px solid var(--border-hairline)'
-          }}
-          className="w-11 h-11 rounded-[8px] flex items-center justify-center shrink-0"
+          style={{ color: 'var(--text-primary)' }}
+          className="w-9 h-9 rounded-[7px] flex items-center justify-center shrink-0"
         >
-          {isNight ? <SunIcon size={17} /> : <MoonIcon size={17} />}
+          {isNight ? <SunIcon size={16} /> : <MoonIcon size={16} />}
         </button>
       </header>
 
-      {/* Search Bar */}
+      <StorybookHeroStage
+        src={isNight ? FOYER_HERO_ART.night : FOYER_HERO_ART.day}
+        alt="Tủ sách Thư viện Đồi Mơ"
+        washBg={washBg}
+        roundedClass="rounded-[12px]"
+      >
+        <div className="flex items-baseline justify-between gap-2 px-0.5">
+          <h1 className="text-[20px] font-bold font-editorial leading-snug">Tủ sách</h1>
+          <span className="text-xs tabular-nums" style={{ color: 'var(--text-secondary)' }}>
+            {books.length} bộ sách đã xuất bản
+          </span>
+        </div>
+      </StorybookHeroStage>
+
+      <div className="px-4 pt-4 space-y-5">
+        {/* Search Bar */}
       <div
         style={{
           backgroundColor: 'var(--bg-elevated)',
@@ -334,6 +348,7 @@ export default function BooksShelfPage() {
           </div>
         </section>
       )}
+      </div>
     </div>
   );
 }

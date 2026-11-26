@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { HydratedBook, HydratedEpisode } from '@/lib/types';
 import { resolveBookHall } from '@/lib/halls';
 import { collectEpisodeIllustrations, parseStoryMarkdown } from '@/lib/markdown';
-import { formatClock, formatDurationShort, isEpisodeReadingOnly } from '@/lib/presets';
+import { BOOK_PRESETS, formatClock, formatDurationShort, isEpisodeReadingOnly } from '@/lib/presets';
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
+import { StorybookHeroStage } from './StorybookHeroStage';
 import {
   ChevronLeftIcon,
   CloseIcon,
@@ -223,6 +224,137 @@ export function EpisodeReaderClient({
   const showStickyMicroControl =
     hasAudio && !isAudioStripVisible && (isThisEpisodeActive || viewMode === 'story');
 
+  const ownCoverUrl = (episode.coverUrl || '').trim();
+  const hasOwnEpisodeCover = Boolean(ownCoverUrl);
+  const preset = BOOK_PRESETS[book.themePreset] || BOOK_PRESETS.moss;
+  const heroWashBg = isNight ? preset.nightWash : preset.dayWash;
+
+  const episodeHeaderContent = (
+    <>
+      <div className="flex items-center justify-between gap-2">
+        <span className="vn-eyebrow truncate" style={{ color: 'var(--text-secondary)' }}>
+          Tập {episode.episodeCode}
+          {episode.categoryTag ? ` · ${episode.categoryTag}` : ''}
+        </span>
+
+        {illustrations.length > 1 && (
+          <div
+            role="tablist"
+            aria-label="Chế độ đọc hoặc xem tranh"
+            style={{
+              backgroundColor: 'var(--bg-surface)',
+              border: '1px solid var(--border-hairline)'
+            }}
+            className="inline-flex rounded-[7px] p-0.5 shrink-0"
+          >
+            <button
+              type="button"
+              role="tab"
+              aria-selected={viewMode === 'story'}
+              onClick={() => setViewMode('story')}
+              style={{
+                backgroundColor:
+                  viewMode === 'story' ? 'var(--bg-elevated)' : 'transparent',
+                color:
+                  viewMode === 'story' ? 'var(--text-primary)' : 'var(--text-secondary)'
+              }}
+              className="px-2.5 h-7 rounded-[5px] text-[11px] font-medium transition"
+            >
+              Đọc truyện
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={viewMode === 'gallery'}
+              onClick={() => setViewMode('gallery')}
+              style={{
+                backgroundColor:
+                  viewMode === 'gallery' ? 'var(--bg-elevated)' : 'transparent',
+                color:
+                  viewMode === 'gallery' ? 'var(--text-primary)' : 'var(--text-secondary)'
+              }}
+              className="px-2.5 h-7 rounded-[5px] text-[11px] font-medium transition"
+            >
+              Xem tranh ({illustrations.length})
+            </button>
+          </div>
+        )}
+      </div>
+
+      <h1 className="text-[21px] font-bold font-editorial mt-1.5 leading-snug">
+        {episode.title}
+      </h1>
+
+      {/* 3. Single-Line Slim 38px Audio & Voice Strip (Hidden completely when isTextOnly) */}
+      {hasAudio && (
+        <div
+          ref={audioStripRef}
+          style={{
+            backgroundColor: 'var(--bg-surface)',
+            border: '1px solid var(--border-hairline)'
+          }}
+          className="mt-3 h-[38px] px-2.5 rounded-[8px] flex items-center justify-between gap-2"
+        >
+          <button
+            type="button"
+            onClick={handlePlayClick}
+            style={{ color: 'var(--accent-primary)' }}
+            className="h-8 px-1.5 inline-flex items-center gap-1.5 text-xs font-semibold tabular-nums shrink-0"
+          >
+            {isThisEpisodePlaying ? <PauseIcon size={14} /> : <PlayIcon size={14} />}
+            <span>
+              {isThisEpisodeActive && duration > 0
+                ? `${formatClock(currentTime)} / ${formatClock(duration)}`
+                : `Nghe · ${formatDurationShort(defaultDuration)}`}
+            </span>
+          </button>
+
+          <div className="flex items-center gap-1.5 min-w-0">
+            {episode.audioTracks.length > 1 ? (
+              <div
+                style={{ color: 'var(--text-primary)' }}
+                className="inline-flex items-center gap-1 text-xs min-w-0"
+              >
+                <MicIcon size={13} className="shrink-0 opacity-75" />
+                <select
+                  aria-label="Chọn giọng đọc"
+                  value={effectiveVoiceKey}
+                  onChange={(e) => handleVoiceChange(e.target.value)}
+                  className="bg-transparent outline-none text-xs font-medium truncate max-w-[140px] cursor-pointer"
+                >
+                  {episode.audioTracks.map((t) => (
+                    <option key={t.id} value={t.voiceProfile.voiceKey}>
+                      {t.voiceProfile.displayName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <span
+                className="text-xs truncate max-w-[130px]"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                {episode.audioTracks[0]?.voiceProfile.displayName}
+              </span>
+            )}
+
+            {isThisEpisodeActive && (
+              <button
+                type="button"
+                aria-label="Mở trình phát lớn"
+                onClick={() => setFullPlayerOpen(true)}
+                style={{ color: 'var(--text-secondary)' }}
+                className="w-7 h-7 flex items-center justify-center shrink-0"
+              >
+                <ExpandIcon size={13} />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* 1. Sticky 42px Exit, 0px Micro-Audio Control & Typography Bar */}
@@ -327,128 +459,20 @@ export function EpisodeReaderClient({
         </div>
       )}
 
-      {/* 2. Compact Story Header + Dual-Mode Toggle [Đọc truyện | Xem tranh] */}
-      <div className="px-4 pt-4 pb-2">
-        <div className="flex items-center justify-between gap-2">
-          <span className="vn-eyebrow truncate" style={{ color: 'var(--text-secondary)' }}>
-            Tập {episode.episodeCode}
-            {episode.categoryTag ? ` · ${episode.categoryTag}` : ''}
-          </span>
-
-          {illustrations.length > 1 && (
-            <div
-              role="tablist"
-              aria-label="Chế độ đọc hoặc xem tranh"
-              style={{
-                backgroundColor: 'var(--bg-surface)',
-                border: '1px solid var(--border-hairline)'
-              }}
-              className="inline-flex rounded-[7px] p-0.5 shrink-0"
-            >
-              <button
-                type="button"
-                role="tab"
-                aria-selected={viewMode === 'story'}
-                onClick={() => setViewMode('story')}
-                style={{
-                  backgroundColor:
-                    viewMode === 'story' ? 'var(--bg-elevated)' : 'transparent',
-                  color:
-                    viewMode === 'story' ? 'var(--text-primary)' : 'var(--text-secondary)'
-                }}
-                className="px-2.5 h-7 rounded-[5px] text-[11px] font-medium transition"
-              >
-                Đọc truyện
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={viewMode === 'gallery'}
-                onClick={() => setViewMode('gallery')}
-                style={{
-                  backgroundColor:
-                    viewMode === 'gallery' ? 'var(--bg-elevated)' : 'transparent',
-                  color:
-                    viewMode === 'gallery' ? 'var(--text-primary)' : 'var(--text-secondary)'
-                }}
-                className="px-2.5 h-7 rounded-[5px] text-[11px] font-medium transition"
-              >
-                Xem tranh ({illustrations.length})
-              </button>
-            </div>
-          )}
-        </div>
-
-        <h1 className="text-[22px] font-bold font-editorial mt-1.5">{episode.title}</h1>
-
-        {/* 3. Single-Line Slim 38px Audio & Voice Strip (Hidden completely when isTextOnly) */}
-        {hasAudio && (
-          <div
-            ref={audioStripRef}
-            style={{
-              backgroundColor: 'var(--bg-surface)',
-              border: '1px solid var(--border-hairline)'
-            }}
-            className="mt-3 h-[38px] px-2.5 rounded-[8px] flex items-center justify-between gap-2"
-          >
-            <button
-              type="button"
-              onClick={handlePlayClick}
-              style={{ color: 'var(--accent-primary)' }}
-              className="h-8 px-1.5 inline-flex items-center gap-1.5 text-xs font-semibold tabular-nums shrink-0"
-            >
-              {isThisEpisodePlaying ? <PauseIcon size={14} /> : <PlayIcon size={14} />}
-              <span>
-                {isThisEpisodeActive && duration > 0
-                  ? `${formatClock(currentTime)} / ${formatClock(duration)}`
-                  : `Nghe · ${formatDurationShort(defaultDuration)}`}
-              </span>
-            </button>
-
-            <div className="flex items-center gap-1.5 min-w-0">
-              {episode.audioTracks.length > 1 ? (
-                <div
-                  style={{ color: 'var(--text-primary)' }}
-                  className="inline-flex items-center gap-1 text-xs min-w-0"
-                >
-                  <MicIcon size={13} className="shrink-0 opacity-75" />
-                  <select
-                    aria-label="Chọn giọng đọc"
-                    value={effectiveVoiceKey}
-                    onChange={(e) => handleVoiceChange(e.target.value)}
-                    className="bg-transparent outline-none text-xs font-medium truncate max-w-[140px] cursor-pointer"
-                  >
-                    {episode.audioTracks.map((t) => (
-                      <option key={t.id} value={t.voiceProfile.voiceKey}>
-                        {t.voiceProfile.displayName}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ) : (
-                <span
-                  className="text-xs truncate max-w-[130px]"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  {episode.audioTracks[0]?.voiceProfile.displayName}
-                </span>
-              )}
-
-              {isThisEpisodeActive && (
-                <button
-                  type="button"
-                  aria-label="Mở trình phát lớn"
-                  onClick={() => setFullPlayerOpen(true)}
-                  style={{ color: 'var(--text-secondary)' }}
-                  className="w-7 h-7 flex items-center justify-center shrink-0"
-                >
-                  <ExpandIcon size={13} />
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
+      {/* 2. 2/3 Episode Cover Stage (Only when episode has its own coverUrl) OR Direct Text-First Header */}
+      {hasOwnEpisodeCover && viewMode === 'story' ? (
+        <StorybookHeroStage
+          src={ownCoverUrl}
+          alt={episode.title}
+          focalPoint={book.coverFocalPoint}
+          washBg={heroWashBg}
+          roundedClass="rounded-[8px]"
+        >
+          <div className="px-0.5">{episodeHeaderContent}</div>
+        </StorybookHeroStage>
+      ) : (
+        <div className="px-4 pt-4 pb-2">{episodeHeaderContent}</div>
+      )}
 
       {/* 4A. Long-Form Story Reader Mode (Uncaptioned 3:4 Portrait Interleaved Illustrations) */}
       {viewMode === 'story' ? (
@@ -481,6 +505,9 @@ export function EpisodeReaderClient({
               );
             }
             if (block.type === 'image') {
+              if (hasOwnEpisodeCover && block.url.trim() === ownCoverUrl) {
+                return null;
+              }
               return (
                 <div key={idx} className="my-5">
                   <button

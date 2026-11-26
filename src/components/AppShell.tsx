@@ -116,9 +116,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col max-w-[480px] mx-auto relative bg-[var(--bg-canvas)] text-[var(--text-primary)]">
+    <div className="min-h-[100dvh] flex flex-col max-w-[480px] mx-auto relative bg-[var(--bg-canvas)] text-[var(--text-primary)]">
       <main
-        className={`flex-1 flex flex-col ${showMiniPlayer ? 'pb-[88px]' : 'pb-4'}`}
+        className={`flex-1 flex flex-col ${
+          showMiniPlayer ? 'pb-[88px]' : isAtClosedGate ? 'pb-0' : 'pb-4'
+        }`}
       >
         <div className="flex-1 flex flex-col">{children}</div>
         {!isAdminRoute && !isEpisodeReaderRoute && !isAtClosedGate && (
@@ -200,7 +202,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           aria-modal="true"
           aria-label="Trình phát sách nói toàn màn hình"
           style={{ backgroundColor: 'var(--bg-canvas)', color: 'var(--text-primary)' }}
-          className="fixed inset-0 z-50 flex flex-col justify-between max-w-[480px] mx-auto px-5 pt-3 pb-7 overflow-y-auto"
+          className="fixed inset-0 z-50 flex flex-col justify-between max-w-[480px] mx-auto px-5 pt-3 pb-[max(28px,calc(env(safe-area-inset-bottom)+16px))] overflow-y-auto"
         >
           {/* Top bar */}
           <div className="flex items-center justify-between">

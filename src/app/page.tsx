@@ -4,6 +4,7 @@ import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ContinueSuggestion, useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { BookCover } from '@/components/BookCover';
+import { StorybookHeroStage } from '@/components/StorybookHeroStage';
 import {
   ArchDoorIcon,
   BookmarkIcon,
@@ -21,7 +22,7 @@ import {
   SearchIcon,
   SunIcon
 } from '@/components/Icons';
-import { LIBRARY_HALLS, LibraryHallSlug, resolveBookHalls } from '@/lib/halls';
+import { FOYER_HERO_ART, LIBRARY_HALLS, LibraryHallSlug, resolveBookHalls } from '@/lib/halls';
 import {
   BOOK_PRESETS,
   formatClock,
@@ -125,39 +126,37 @@ export default function HomeLibraryPage() {
     const gateArtSrc = isNight ? '/images/home/doi-mo-night.jpg' : '/images/home/doi-mo-day.jpg';
     return (
       <div
-        className={`px-5 pt-3 pb-4 flex-1 flex flex-col justify-between transition-all duration-500 ${
+        className={`h-[100dvh] max-h-[100dvh] overflow-hidden px-3.5 pt-3 pb-[max(14px,calc(env(safe-area-inset-bottom)+10px))] flex flex-col items-center justify-between transition-all duration-500 ${
           isOpeningGate ? 'opacity-0 scale-[1.03]' : 'opacity-100 scale-100'
         }`}
       >
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={toggleNight}
-            aria-label={isNight ? 'Giao diện ban ngày' : 'Giao diện ban đêm'}
-            style={{
-              backgroundColor: 'var(--bg-surface)',
-              border: '1px solid var(--border-hairline)',
-              color: isNight ? 'var(--accent-warm)' : 'var(--text-primary)'
-            }}
-            className="w-10 h-10 rounded-[10px] flex items-center justify-center"
-          >
-            {isNight ? <SunIcon size={17} /> : <MoonIcon size={17} />}
-          </button>
-        </div>
-
-        <div className="my-4 flex flex-col items-center text-center">
+        <div className="flex-1 min-h-0 w-full flex items-center justify-center">
           <div
             style={{
               border: '1px solid var(--border-hairline)',
               backgroundColor: 'var(--bg-surface)'
             }}
-            className="w-full max-w-[336px] h-[392px] rounded-t-[168px] rounded-b-[14px] overflow-hidden relative shadow-sm"
+            className="w-[min(100%,calc((100dvh-165px)*0.75))] aspect-[3/4] rounded-[18px] overflow-hidden relative shadow-sm mx-auto"
           >
             <img
               src={gateArtSrc}
               alt="Thư viện Đồi Mơ"
-              className="w-full h-full object-cover object-[50%_62%] block select-none"
+              className="w-full h-full object-cover object-center block select-none"
             />
+
+            <button
+              type="button"
+              onClick={toggleNight}
+              aria-label={isNight ? 'Giao diện ban ngày' : 'Giao diện ban đêm'}
+              style={{
+                backgroundColor: isNight ? 'rgba(25,32,28,0.78)' : 'rgba(248,245,238,0.86)',
+                border: '1px solid var(--border-hairline)',
+                color: isNight ? 'var(--accent-warm)' : 'var(--text-primary)'
+              }}
+              className="w-10 h-10 rounded-full backdrop-blur-sm flex items-center justify-center absolute top-3 right-3 z-10 shadow-sm"
+            >
+              {isNight ? <SunIcon size={17} /> : <MoonIcon size={17} />}
+            </button>
 
             {isNight && (
               <>
@@ -167,7 +166,7 @@ export default function HomeLibraryPage() {
                     background:
                       'radial-gradient(circle, rgba(212,172,110,0.40) 0%, rgba(212,172,110,0) 72%)'
                   }}
-                  className="lantern-aura absolute top-[24%] left-[18%] w-16 h-16 rounded-full"
+                  className="lantern-aura absolute top-[32%] left-[18%] w-16 h-16 rounded-full"
                 />
                 <div
                   aria-hidden="true"
@@ -176,7 +175,7 @@ export default function HomeLibraryPage() {
                       'radial-gradient(circle, rgba(212,172,110,0.34) 0%, rgba(212,172,110,0) 72%)',
                     animationDelay: '1.8s'
                   }}
-                  className="lantern-aura absolute top-[22%] right-[14%] w-14 h-14 rounded-full"
+                  className="lantern-aura absolute top-[30%] right-[14%] w-14 h-14 rounded-full"
                 />
                 <div
                   aria-hidden="true"
@@ -191,16 +190,16 @@ export default function HomeLibraryPage() {
               </>
             )}
           </div>
-
-          <h1 className="text-[27px] font-bold font-editorial mt-6 tracking-tight">
-            Thư viện Đồi Mơ
-          </h1>
-          <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>
-            Sách đọc và nghe trước giờ ngủ
-          </p>
         </div>
 
-        <div className="pt-1 pb-3 flex flex-col items-center">
+        <div className="shrink-0 pt-3 flex flex-col items-center text-center w-full">
+          <h1 className="text-[24px] font-bold font-editorial leading-snug tracking-tight">
+            Thư viện Đồi Mơ
+          </h1>
+          <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+            Sách đọc và nghe trước giờ ngủ
+          </p>
+
           <button
             type="button"
             onClick={handleOpenGate}
@@ -208,7 +207,7 @@ export default function HomeLibraryPage() {
               backgroundColor: 'var(--accent-primary)',
               color: 'var(--accent-primary-fg)'
             }}
-            className="w-[200px] h-11 rounded-[10px] text-sm font-semibold inline-flex items-center justify-center gap-1.5 transition active:scale-[0.98]"
+            className="mt-3 w-full max-w-[236px] h-[46px] rounded-[11px] text-sm font-semibold inline-flex items-center justify-center gap-1.5 transition active:scale-[0.98]"
           >
             <span>Bước vào</span>
             <ChevronRightIcon size={16} />
@@ -219,35 +218,34 @@ export default function HomeLibraryPage() {
   }
 
   // ============================================================================
-  // LỚP 2 & 3: SẢNH SÁCH & CÁC GIAN SÁCH
+  // LỚP 2 & 3: SẢNH SÁCH & CÁC GIAN SÁCH (2/3 Tranh Sảnh trên cùng -> Cuộn xem Sảnh)
   // ============================================================================
+  const foyerWashBg = isNight ? BOOK_PRESETS.moss.nightWash : BOOK_PRESETS.moss.dayWash;
+  const totalPublishedEpisodes = books.reduce((sum, b) => sum + b.episodes.length, 0);
+
   return (
-    <div className="px-4 pt-4 pb-6 space-y-6">
+    <div className="pb-6">
       <header
-        style={{ borderBottom: '1px solid var(--border-hairline)' }}
-        className="pb-3.5 flex items-center justify-between gap-2"
+        style={{
+          backgroundColor: 'var(--bg-canvas)',
+          borderBottom: '1px solid var(--border-hairline)'
+        }}
+        className="sticky top-0 z-20 h-[44px] px-3.5 flex items-center justify-between gap-2"
       >
-        <div className="min-w-0">
-          <h1 className="text-[21px] font-bold tracking-tight font-editorial">
+        <div className="min-w-0 flex items-baseline gap-2">
+          <span className="text-[16px] font-bold tracking-tight font-editorial truncate">
             Thư viện Đồi Mơ
-          </h1>
-          <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--text-secondary)' }}>
-            Sảnh sách
-          </p>
+          </span>
         </div>
 
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-1 shrink-0">
           <button
             type="button"
             onClick={returnToGate}
             aria-label="Ra cổng"
             title="Ra cổng"
-            style={{
-              backgroundColor: 'var(--bg-surface)',
-              border: '1px solid var(--border-hairline)',
-              color: 'var(--accent-warm)'
-            }}
-            className="w-10 h-10 rounded-[8px] flex items-center justify-center"
+            style={{ color: 'var(--accent-warm)' }}
+            className="w-9 h-9 rounded-[7px] flex items-center justify-center"
           >
             <ArchDoorIcon size={16} />
           </button>
@@ -256,12 +254,8 @@ export default function HomeLibraryPage() {
             type="button"
             onClick={() => openUtilitySheet('search')}
             aria-label="Tìm kiếm"
-            style={{
-              backgroundColor: 'var(--bg-surface)',
-              border: '1px solid var(--border-hairline)',
-              color: 'var(--text-primary)'
-            }}
-            className="w-10 h-10 rounded-[8px] flex items-center justify-center"
+            style={{ color: 'var(--text-primary)' }}
+            className="w-9 h-9 rounded-[7px] flex items-center justify-center"
           >
             <SearchIcon size={16} />
           </button>
@@ -271,18 +265,16 @@ export default function HomeLibraryPage() {
             onClick={() => openUtilitySheet('saved')}
             aria-label="Đã lưu"
             style={{
-              backgroundColor: 'var(--bg-surface)',
-              border: '1px solid var(--border-hairline)',
               color: favorites.length > 0 ? 'var(--accent-berry)' : 'var(--text-primary)'
             }}
-            className="w-10 h-10 rounded-[8px] flex items-center justify-center relative"
+            className="w-9 h-9 rounded-[7px] flex items-center justify-center relative"
           >
             <BookmarkIcon size={16} filled={favorites.length > 0} />
             {favorites.length > 0 && (
               <span
                 aria-hidden="true"
                 style={{ backgroundColor: 'var(--accent-warm)' }}
-                className="w-1.5 h-1.5 rounded-full absolute top-2 right-2"
+                className="w-1.5 h-1.5 rounded-full absolute top-1.5 right-1.5"
               />
             )}
           </button>
@@ -291,19 +283,30 @@ export default function HomeLibraryPage() {
             type="button"
             onClick={toggleNight}
             aria-label={isNight ? 'Giao diện sáng' : 'Giao diện đêm'}
-            style={{
-              backgroundColor: 'var(--bg-surface)',
-              border: '1px solid var(--border-hairline)',
-              color: 'var(--text-primary)'
-            }}
-            className="w-10 h-10 rounded-[8px] flex items-center justify-center"
+            style={{ color: 'var(--text-primary)' }}
+            className="w-9 h-9 rounded-[7px] flex items-center justify-center"
           >
             {isNight ? <SunIcon size={16} /> : <MoonIcon size={16} />}
           </button>
         </div>
       </header>
 
-      {/* Đang đọc / Đang nghe (tối đa 2 bộ gần nhất cho 2 bé hoặc đọc song song) */}
+      <StorybookHeroStage
+        src={isNight ? FOYER_HERO_ART.night : FOYER_HERO_ART.day}
+        alt="Sảnh sách Thư viện Đồi Mơ"
+        washBg={foyerWashBg}
+        roundedClass="rounded-[12px]"
+      >
+        <div className="flex items-baseline justify-between gap-2 px-0.5">
+          <h1 className="text-[20px] font-bold font-editorial leading-snug">Sảnh sách</h1>
+          <span className="text-xs tabular-nums" style={{ color: 'var(--text-secondary)' }}>
+            {books.length} bộ sách · {totalPublishedEpisodes} tập
+          </span>
+        </div>
+      </StorybookHeroStage>
+
+      <div className="px-4 pt-4 space-y-6">
+        {/* Đang đọc / Đang nghe (tối đa 2 bộ gần nhất cho 2 bé hoặc đọc song song) */}
       {activeResumes.length > 0 && (
         <section aria-label="Tiếp tục" className="space-y-3.5">
           {activeResumes.map((resumeItem) => {
@@ -639,15 +642,16 @@ export default function HomeLibraryPage() {
         </section>
       )}
 
-      <div className="pt-1 flex justify-center">
-        <Link
-          href="/books"
-          style={{ color: 'var(--text-secondary)' }}
-          className="text-xs inline-flex items-center gap-1 hover:underline py-1"
-        >
-          <span>Tất cả sách ({books.length})</span>
-          <ChevronRightIcon size={13} />
-        </Link>
+        <div className="pt-1 flex justify-center">
+          <Link
+            href="/books"
+            style={{ color: 'var(--text-secondary)' }}
+            className="text-xs inline-flex items-center gap-1 hover:underline py-1"
+          >
+            <span>Tất cả sách ({books.length})</span>
+            <ChevronRightIcon size={13} />
+          </Link>
+        </div>
       </div>
     </div>
   );

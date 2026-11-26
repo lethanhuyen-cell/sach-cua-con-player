@@ -7,6 +7,7 @@ import { LIBRARY_HALLS, LibraryHallDefinition } from '@/lib/halls';
 import { BOOK_PRESETS, isEpisodeReadingOnly } from '@/lib/presets';
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { BookCover } from './BookCover';
+import { StorybookHeroStage } from './StorybookHeroStage';
 import {
   BookmarkIcon,
   ChevronLeftIcon,
@@ -136,23 +137,24 @@ export function HallShelfClient({
         </div>
       </header>
 
-      <section
-        style={{
-          backgroundColor: washBg,
-          borderBottom: '1px solid var(--border-hairline)'
-        }}
-        className="px-4 py-4 space-y-1.5"
+      <StorybookHeroStage
+        src={isNight ? hall.nightHeroUrl : hall.dayHeroUrl}
+        alt={hall.title}
+        washBg={washBg}
+        roundedClass="rounded-[12px]"
       >
-        <div className="flex items-center gap-2">
-          <span style={{ color: isNight ? preset.nightAccent : preset.dayAccent }}>
-            <HallGlyph slug={hall.slug} />
-          </span>
-          <h1 className="text-[21px] font-bold font-editorial leading-snug">{hall.title}</h1>
+        <div className="space-y-1 px-0.5">
+          <div className="flex items-center gap-2">
+            <span style={{ color: isNight ? preset.nightAccent : preset.dayAccent }}>
+              <HallGlyph slug={hall.slug} />
+            </span>
+            <h1 className="text-[20px] font-bold font-editorial leading-snug">{hall.title}</h1>
+          </div>
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            {hall.epigraph}
+          </p>
         </div>
-        <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-          {hall.epigraph}
-        </p>
-      </section>
+      </StorybookHeroStage>
 
       <section aria-label="Kệ sách" className="px-4 pt-6 space-y-7">
         {booksInHall.length === 0 ? (

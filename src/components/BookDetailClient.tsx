@@ -12,6 +12,7 @@ import {
 } from '@/lib/presets';
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { BookCover } from './BookCover';
+import { StorybookHeroStage } from './StorybookHeroStage';
 import {
   BookmarkIcon,
   BookOpenIcon,
@@ -278,204 +279,192 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
 
   return (
     <div className="pb-6">
-      {/* Compact Preset Wash Book Header */}
-      <div
+      {/* Top Sticky 44px Hierarchical Spatial Breadcrumb: Sảnh sách › Tên Gian */}
+      <header
         style={{
-          backgroundColor: washBg,
+          backgroundColor: 'var(--bg-canvas)',
           borderBottom: '1px solid var(--border-hairline)'
         }}
-        className="px-4 pt-2.5 pb-3.5"
+        className="sticky top-0 z-20 h-[44px] px-3.5 flex items-center justify-between gap-2"
       >
-        {/* Top Hierarchical Spatial Breadcrumb: Sảnh sách › Tên Gian */}
-        <div className="flex items-center justify-between gap-2 mb-2.5">
-          <nav
-            aria-label="Định vị không gian thư viện"
-            className="flex items-center gap-1 min-w-0 text-xs"
+        <nav
+          aria-label="Định vị không gian thư viện"
+          className="flex items-center gap-1 min-w-0 text-xs"
+        >
+          <Link
+            href="/"
+            style={{ color: 'var(--text-secondary)' }}
+            className="h-9 inline-flex items-center gap-0.5 font-medium shrink-0 hover:underline"
           >
-            <Link
-              href="/"
-              style={{ color: 'var(--text-secondary)' }}
-              className="h-9 inline-flex items-center gap-0.5 font-medium shrink-0 hover:underline"
-            >
-              <ChevronLeftIcon size={15} />
-              <span>Sảnh sách</span>
-            </Link>
-            <ChevronRightIcon size={12} className="shrink-0 opacity-50" />
-            <Link
-              href={`/halls/${hall.slug}`}
-              style={{ color: accentColor }}
-              className="h-9 inline-flex items-center font-semibold truncate hover:underline"
-            >
-              <span className="truncate">{hall.shortTitle}</span>
-            </Link>
-          </nav>
+            <ChevronLeftIcon size={15} />
+            <span>Sảnh sách</span>
+          </Link>
+          <ChevronRightIcon size={12} className="shrink-0 opacity-50" />
+          <Link
+            href={`/halls/${hall.slug}`}
+            style={{ color: accentColor }}
+            className="h-9 inline-flex items-center font-semibold truncate hover:underline"
+          >
+            <span className="truncate">{hall.shortTitle}</span>
+          </Link>
+        </nav>
 
-          <div className="flex items-center gap-1.5 shrink-0">
-            {book.episodes.length <= 15 && (
-              <button
-                type="button"
-                onClick={() => {
-                  setIsSearchOpen((v) => !v);
-                  if (isSearchOpen) setSearchQuery('');
-                }}
-                aria-label="Tìm tập trong bộ sách"
-                style={{
-                  backgroundColor: isSearchOpen
-                    ? 'var(--text-primary)'
-                    : 'var(--bg-elevated)',
-                  color: isSearchOpen ? 'var(--bg-canvas)' : 'var(--text-primary)',
-                  border: '1px solid var(--border-hairline)'
-                }}
-                className="w-10 h-10 rounded-[8px] flex items-center justify-center"
-              >
-                <SearchIcon size={15} />
-              </button>
-            )}
+        <div className="flex items-center gap-1 shrink-0">
+          {book.episodes.length <= 15 && (
             <button
               type="button"
-              onClick={toggleNight}
-              aria-label={isNight ? 'Giao diện sáng' : 'Giao diện đêm'}
-              style={{
-                backgroundColor: 'var(--bg-elevated)',
-                border: '1px solid var(--border-hairline)',
-                color: 'var(--text-primary)'
+              onClick={() => {
+                setIsSearchOpen((v) => !v);
+                if (isSearchOpen) setSearchQuery('');
               }}
-              className="w-10 h-10 rounded-[8px] flex items-center justify-center"
+              aria-label="Tìm tập trong bộ sách"
+              style={{
+                backgroundColor: isSearchOpen ? 'var(--text-primary)' : 'transparent',
+                color: isSearchOpen ? 'var(--bg-canvas)' : 'var(--text-primary)'
+              }}
+              className="w-9 h-9 rounded-[7px] flex items-center justify-center"
             >
-              {isNight ? <SunIcon size={15} /> : <MoonIcon size={15} />}
+              <SearchIcon size={15} />
             </button>
-          </div>
+          )}
+          <button
+            type="button"
+            onClick={toggleNight}
+            aria-label={isNight ? 'Giao diện sáng' : 'Giao diện đêm'}
+            style={{ color: 'var(--text-primary)' }}
+            className="w-9 h-9 rounded-[7px] flex items-center justify-center"
+          >
+            {isNight ? <SunIcon size={15} /> : <MoonIcon size={15} />}
+          </button>
         </div>
+      </header>
 
-        {/* Compact Identity + Single-line Actions */}
-        <div className="flex items-start gap-3">
-          <div className="w-[62px] shrink-0">
-            <BookCover
-              src={book.coverUrl}
-              alt={book.title}
-              focalPoint={book.coverFocalPoint}
-            />
-          </div>
+      {/* 2/3 Storybook Cover Stage (Clean 3:4 Cover, Zero Overlays) + 1/3 Identity & Primary CTA */}
+      <StorybookHeroStage
+        src={book.coverUrl}
+        alt={book.title}
+        focalPoint={book.coverFocalPoint}
+        washBg={washBg}
+        roundedClass="rounded-[8px]"
+      >
+        <div className="px-0.5">
+          <h1 className="text-[20px] font-bold font-editorial leading-snug line-clamp-2">
+            {book.title}
+          </h1>
+          <p
+            className="text-xs truncate mt-0.5 tabular-nums"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            {book.subtitle || book.author || formatBookDisplayGenre(book)} · {summaryStats}
+          </p>
 
-          <div className="flex-1 min-w-0">
-            <h1 className="text-[18px] font-bold font-editorial leading-snug line-clamp-2">
-              {book.title}
-            </h1>
-            <p
-              className="text-xs truncate mt-0.5 tabular-nums"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              {book.subtitle || book.author || formatBookDisplayGenre(book)} · {summaryStats}
-            </p>
-
-            {/* Primary Play/Read CTA + Voice Selector + Intro Toggle (clean wrapping, never clipped) */}
-            <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-              {primaryAudioTarget ? (
-                <button
-                  type="button"
-                  onClick={() =>
-                    playEpisode(
-                      book,
-                      primaryAudioTarget.episode,
-                      effectiveSelectedVoice || undefined
-                    )
-                  }
+          {/* Primary Play/Read CTA + Voice Selector + Intro Toggle */}
+          <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+            {primaryAudioTarget ? (
+              <button
+                type="button"
+                onClick={() =>
+                  playEpisode(
+                    book,
+                    primaryAudioTarget.episode,
+                    effectiveSelectedVoice || undefined
+                  )
+                }
+                style={{
+                  backgroundColor: accentColor,
+                  color: accentTextOnSolid
+                }}
+                className="h-9 px-3.5 rounded-[8px] text-xs font-semibold inline-flex items-center gap-1.5 tabular-nums whitespace-nowrap shrink-0"
+              >
+                {activeEpisode?.id === primaryAudioTarget.episode.id && isPlaying ? (
+                  <PauseIcon size={12} />
+                ) : (
+                  <PlayIcon size={12} />
+                )}
+                <span>
+                  {activeEpisode?.id === primaryAudioTarget.episode.id && isPlaying
+                    ? 'Đang phát'
+                    : primaryAudioTarget.resume
+                      ? `Tiếp tục Tập ${primaryAudioTarget.episode.episodeCode}`
+                      : `Nghe Tập ${primaryAudioTarget.episode.episodeCode}`}
+                </span>
+              </button>
+            ) : (
+              primaryReadingTarget && (
+                <Link
+                  href={`/episodes/${primaryReadingTarget.episode.id}`}
                   style={{
                     backgroundColor: accentColor,
                     color: accentTextOnSolid
                   }}
                   className="h-9 px-3.5 rounded-[8px] text-xs font-semibold inline-flex items-center gap-1.5 tabular-nums whitespace-nowrap shrink-0"
                 >
-                  {activeEpisode?.id === primaryAudioTarget.episode.id && isPlaying ? (
-                    <PauseIcon size={12} />
-                  ) : (
-                    <PlayIcon size={12} />
-                  )}
+                  <BookOpenIcon size={13} />
                   <span>
-                    {activeEpisode?.id === primaryAudioTarget.episode.id && isPlaying
-                      ? 'Đang phát'
-                      : primaryAudioTarget.resume
-                        ? `Tiếp tục Tập ${primaryAudioTarget.episode.episodeCode}`
-                        : `Nghe Tập ${primaryAudioTarget.episode.episodeCode}`}
+                    {primaryReadingTarget.resume
+                      ? `Đọc tiếp Tập ${primaryReadingTarget.episode.episodeCode} (${primaryReadingTarget.scrollPercent}%)`
+                      : `Đọc Tập ${primaryReadingTarget.episode.episodeCode}`}
                   </span>
-                </button>
-              ) : (
-                primaryReadingTarget && (
-                  <Link
-                    href={`/episodes/${primaryReadingTarget.episode.id}`}
-                    style={{
-                      backgroundColor: accentColor,
-                      color: accentTextOnSolid
-                    }}
-                    className="h-9 px-3.5 rounded-[8px] text-xs font-semibold inline-flex items-center gap-1.5 tabular-nums whitespace-nowrap shrink-0"
-                  >
-                    <BookOpenIcon size={13} />
-                    <span>
-                      {primaryReadingTarget.resume
-                        ? `Đọc tiếp Tập ${primaryReadingTarget.episode.episodeCode} (${primaryReadingTarget.scrollPercent}%)`
-                        : `Đọc Tập ${primaryReadingTarget.episode.episodeCode}`}
-                    </span>
-                  </Link>
-                )
-              )}
+                </Link>
+              )
+            )}
 
-              {availableVoices.length > 1 && (
-                <div
-                  style={{
-                    backgroundColor: 'var(--bg-elevated)',
-                    border: '1px solid var(--border-hairline)',
-                    color: accentColor
-                  }}
-                  className="h-9 px-2.5 rounded-[8px] inline-flex items-center gap-1 text-xs font-medium shrink-0"
+            {availableVoices.length > 1 && (
+              <div
+                style={{
+                  backgroundColor: 'var(--bg-elevated)',
+                  border: '1px solid var(--border-hairline)',
+                  color: accentColor
+                }}
+                className="h-9 px-2.5 rounded-[8px] inline-flex items-center gap-1 text-xs font-medium shrink-0"
+              >
+                <MicIcon size={12} className="shrink-0" />
+                <select
+                  aria-label="Chọn giọng kể"
+                  value={effectiveSelectedVoice}
+                  onChange={(e) => selectVoicePreference(e.target.value)}
+                  className="bg-transparent outline-none cursor-pointer text-xs font-medium max-w-[125px] truncate"
                 >
-                  <MicIcon size={12} className="shrink-0" />
-                  <select
-                    aria-label="Chọn giọng kể"
-                    value={effectiveSelectedVoice}
-                    onChange={(e) => selectVoicePreference(e.target.value)}
-                    className="bg-transparent outline-none cursor-pointer text-xs font-medium max-w-[125px] truncate"
-                  >
-                    {availableVoices.map((vp) => (
-                      <option key={vp.id} value={vp.voiceKey}>
-                        {vp.displayName}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+                  {availableVoices.map((vp) => (
+                    <option key={vp.id} value={vp.voiceKey}>
+                      {vp.displayName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
-              {book.description && (
-                <button
-                  type="button"
-                  onClick={() => setShowIntro((v) => !v)}
-                  style={{ color: 'var(--text-secondary)' }}
-                  className="h-9 px-2 inline-flex items-center gap-0.5 text-xs whitespace-nowrap shrink-0"
-                >
-                  <span>Giới thiệu</span>
-                  <ChevronDownIcon
-                    size={13}
-                    className={`transition-transform ${showIntro ? 'rotate-180' : ''}`}
-                  />
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {showIntro && book.description && (
-          <div
-            style={{ borderTop: '1px solid var(--border-hairline)' }}
-            className="mt-3 pt-2.5 text-xs leading-relaxed space-y-1"
-          >
-            <p>{book.description}</p>
-            {book.author && (
-              <p style={{ color: 'var(--text-secondary)' }}>
-                Tác giả: {book.author} · Độ tuổi: {book.ageRange}
-              </p>
+            {book.description && (
+              <button
+                type="button"
+                onClick={() => setShowIntro((v) => !v)}
+                style={{ color: 'var(--text-secondary)' }}
+                className="h-9 px-2 inline-flex items-center gap-0.5 text-xs whitespace-nowrap shrink-0"
+              >
+                <span>Giới thiệu</span>
+                <ChevronDownIcon
+                  size={13}
+                  className={`transition-transform ${showIntro ? 'rotate-180' : ''}`}
+                />
+              </button>
             )}
           </div>
-        )}
-      </div>
+
+          {showIntro && book.description && (
+            <div
+              style={{ borderTop: '1px solid var(--border-hairline)' }}
+              className="mt-3 pt-2.5 text-xs leading-relaxed space-y-1"
+            >
+              <p>{book.description}</p>
+              {book.author && (
+                <p style={{ color: 'var(--text-secondary)' }}>
+                  Tác giả: {book.author} · Độ tuổi: {book.ageRange}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </StorybookHeroStage>
 
       {/* Progressive Disclosure Table of Contents */}
       <section aria-label="Mục lục tập truyện" className="px-3.5 pt-3 space-y-2.5">
