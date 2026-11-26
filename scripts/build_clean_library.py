@@ -336,41 +336,40 @@ def main():
                 ep_pub_at = "2026-11-25T14:00:00.000Z"
 
             ep_tracks = []
-            if code == "01":
-                if copied_audios.get("01_male"):
-                    u = copied_audios["01_male"]
-                    dur, sz = get_mp3_info(u)
-                    ep_tracks.append(
-                        {
-                            "id": "trk-thd-01-male",
-                            "episodeId": ep_uuid,
-                            "voiceProfileId": "vp-male-tam-duc",
-                            "audioUrl": u,
-                            "durationSeconds": dur,
-                            "fileSizeBytes": sz,
-                            "mimeType": "audio/mpeg",
-                            "isDefault": True,
-                            "sortOrder": 0,
-                            "updatedAt": ep_pub_at,
-                        }
-                    )
-                if copied_audios.get("01_female"):
-                    u = copied_audios["01_female"]
-                    dur, sz = get_mp3_info(u)
-                    ep_tracks.append(
-                        {
-                            "id": "trk-thd-01-female",
-                            "episodeId": ep_uuid,
-                            "voiceProfileId": "vp-female-quynh-anh",
-                            "audioUrl": u,
-                            "durationSeconds": dur,
-                            "fileSizeBytes": sz,
-                            "mimeType": "audio/mpeg",
-                            "isDefault": len(ep_tracks) == 0,
-                            "sortOrder": len(ep_tracks),
-                            "updatedAt": ep_pub_at,
-                        }
-                    )
+            if copied_audios.get(f"{code}_male"):
+                u = copied_audios[f"{code}_male"]
+                dur, sz = get_mp3_info(u)
+                ep_tracks.append(
+                    {
+                        "id": f"trk-thd-{code}-male",
+                        "episodeId": ep_uuid,
+                        "voiceProfileId": "vp-male-tam-duc",
+                        "audioUrl": u,
+                        "durationSeconds": dur,
+                        "fileSizeBytes": sz,
+                        "mimeType": "audio/mpeg",
+                        "isDefault": True,
+                        "sortOrder": 0,
+                        "updatedAt": ep_pub_at,
+                    }
+                )
+            if copied_audios.get(f"{code}_female"):
+                u = copied_audios[f"{code}_female"]
+                dur, sz = get_mp3_info(u)
+                ep_tracks.append(
+                    {
+                        "id": f"trk-thd-{code}-female",
+                        "episodeId": ep_uuid,
+                        "voiceProfileId": "vp-female-quynh-anh",
+                        "audioUrl": u,
+                        "durationSeconds": dur,
+                        "fileSizeBytes": sz,
+                        "mimeType": "audio/mpeg",
+                        "isDefault": len(ep_tracks) == 0,
+                        "sortOrder": len(ep_tracks),
+                        "updatedAt": ep_pub_at,
+                    }
+                )
 
             audio_tracks.extend(ep_tracks)
             episodes.append(

@@ -78,7 +78,7 @@ export function StorybookHeroStage({
               />
             </button>
           ) : (
-            <BookCover src={src} alt={alt} focalPoint={focalPoint} className={roundedClass} />
+            <BookCover src={src || ''} alt={alt} focalPoint={focalPoint} className={roundedClass} />
           )}
         </div>
 
