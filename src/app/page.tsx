@@ -133,15 +133,19 @@ export default function HomeLibraryPage() {
           <div
             style={{
               border: '1px solid var(--border-hairline)',
-              backgroundColor: 'var(--bg-surface)'
+              backgroundColor: 'var(--bg-elevated)'
             }}
-            className="w-[min(100%,calc((100dvh-165px)*0.75))] aspect-[3/4] rounded-[18px] overflow-hidden relative shadow-sm mx-auto"
+            className="w-[min(100%,calc((100dvh-160px)*0.75))] aspect-[3/4] rounded-[20px] p-1.5 relative shadow-sm mx-auto"
           >
-            <img
-              src={gateArtSrc}
-              alt="Thư viện Đồi Mơ"
-              className="w-full h-full object-cover object-center block select-none"
-            />
+            <div
+              style={{ border: '1px solid var(--border-hairline)' }}
+              className="w-full h-full rounded-[14px] overflow-hidden relative"
+            >
+              <img
+                src={gateArtSrc}
+                alt="Thư viện Đồi Mơ"
+                className="w-full h-full object-cover object-center block select-none"
+              />
 
             <button
               type="button"
@@ -188,6 +192,7 @@ export default function HomeLibraryPage() {
                 />
               </>
             )}
+            </div>
           </div>
         </div>
 
@@ -279,9 +284,9 @@ export default function HomeLibraryPage() {
         src={isNight ? FOYER_HERO_ART.night : FOYER_HERO_ART.day}
         alt="Sảnh sách Thư viện Đồi Mơ"
         washBg={foyerWashBg}
-        roundedClass="rounded-[12px]"
+        variant="immersive"
       >
-        <div className="flex items-baseline justify-between gap-2 px-0.5">
+        <div className="flex items-baseline justify-between gap-2">
           <h1 className="text-[20px] font-bold font-editorial leading-snug">Sảnh sách</h1>
           <span className="text-xs tabular-nums" style={{ color: 'var(--text-secondary)' }}>
             {books.length} bộ sách · {totalPublishedEpisodes} tập

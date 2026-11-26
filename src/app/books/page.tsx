@@ -129,9 +129,9 @@ export default function BooksShelfPage() {
         src={isNight ? FOYER_HERO_ART.night : FOYER_HERO_ART.day}
         alt="Tủ sách Thư viện Đồi Mơ"
         washBg={washBg}
-        roundedClass="rounded-[12px]"
+        variant="immersive"
       >
-        <div className="flex items-baseline justify-between gap-2 px-0.5">
+        <div className="flex items-baseline justify-between gap-2">
           <h1 className="text-[20px] font-bold font-editorial leading-snug">Tủ sách</h1>
           <span className="text-xs tabular-nums" style={{ color: 'var(--text-secondary)' }}>
             {books.length} bộ sách đã xuất bản

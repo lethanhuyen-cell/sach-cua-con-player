@@ -134,9 +134,9 @@ export function HallShelfClient({
         src={isNight ? hall.nightHeroUrl : hall.dayHeroUrl}
         alt={hall.title}
         washBg={washBg}
-        roundedClass="rounded-[12px]"
+        variant="immersive"
       >
-        <div className="space-y-1 px-0.5">
+        <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span style={{ color: isNight ? preset.nightAccent : preset.dayAccent }}>
               <HallGlyph slug={hall.slug} />
@@ -149,7 +149,7 @@ export function HallShelfClient({
         </div>
       </StorybookHeroStage>
 
-      <section aria-label="Kệ sách" className="px-4 pt-6 space-y-7">
+      <section aria-label="Kệ sách" className="px-4 pt-5 space-y-7">
         {booksInHall.length === 0 ? (
           <div className="space-y-6">
             <div>

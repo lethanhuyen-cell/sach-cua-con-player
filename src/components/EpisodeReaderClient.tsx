@@ -443,18 +443,18 @@ export function EpisodeReaderClient({
         </div>
       )}
 
-      {/* 2. 2/3 Episode Cover Stage (Only when episode has its own coverUrl) OR Direct Text-First Header */}
+      {/* 2. Gallery Bookplate Stage (Only when episode has its own coverUrl) OR Direct Text-First Header */}
       {hasOwnEpisodeCover && viewMode === 'story' ? (
         <StorybookHeroStage
           src={ownCoverUrl}
           alt={episode.title}
           focalPoint={book.coverFocalPoint}
           washBg={heroWashBg}
-          roundedClass="rounded-[8px]"
-          maxHeightDvh={66}
+          variant="bookplate"
+          roundedClass="rounded-[9px]"
           paddingXClass="px-4"
         >
-          <div className="px-0.5">{episodeHeaderContent}</div>
+          <div>{episodeHeaderContent}</div>
         </StorybookHeroStage>
       ) : (
         <div className="px-4 pt-4 pb-2">{episodeHeaderContent}</div>

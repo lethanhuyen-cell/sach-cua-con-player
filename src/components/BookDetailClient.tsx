@@ -318,15 +318,16 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
         </div>
       </header>
 
-      {/* 2/3 Storybook Cover Stage (Clean 3:4 Cover, Zero Overlays) + 1/3 Identity & Primary CTA */}
+      {/* Gallery Bookplate Stage (Clean 3:4 Cover with Passe-partout Matting + Integrated Plinth) */}
       <StorybookHeroStage
         src={book.coverUrl}
         alt={book.title}
         focalPoint={book.coverFocalPoint}
         washBg={washBg}
-        roundedClass="rounded-[8px]"
+        variant="bookplate"
+        roundedClass="rounded-[9px]"
       >
-        <div className="px-0.5">
+        <div>
           <h1 className="text-[20px] font-bold font-editorial leading-snug line-clamp-2">
             {book.title}
           </h1>
@@ -391,7 +392,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
             {availableVoices.length > 1 && (
               <div
                 style={{
-                  backgroundColor: 'var(--bg-elevated)',
+                  backgroundColor: 'var(--bg-surface)',
                   border: '1px solid var(--border-hairline)',
                   color: accentColor
                 }}
