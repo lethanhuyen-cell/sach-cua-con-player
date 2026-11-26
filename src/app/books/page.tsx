@@ -4,8 +4,24 @@ import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { BookCover } from '@/components/BookCover';
-import { CloseIcon, MoonIcon, PlayIcon, SearchIcon, SunIcon } from '@/components/Icons';
-import { estimateReadingMinutes, formatDurationShort } from '@/lib/presets';
+import {
+  ChevronLeftIcon,
+  CloseIcon,
+  MoonIcon,
+  PlayIcon,
+  SearchIcon,
+  SunIcon
+} from '@/components/Icons';
+import {
+  formatBookDisplayGenre,
+  LIBRARY_HALLS,
+  LibraryHallSlug,
+  resolveBookHalls
+} from '@/lib/halls';
+import {
+  getEpisodeDurationLabel,
+  isEpisodeReadingOnly
+} from '@/lib/presets';
 
 function normalizeSearch(s: string): string {
   return s
@@ -15,24 +31,34 @@ function normalizeSearch(s: string): string {
 }
 
 export default function BooksShelfPage() {
-  const { books, isNight, toggleNight, progressMap, isEpisodeNew, playEpisode } =
-    useLibraryPlayer();
+  const {
+    books,
+    isNight,
+    toggleNight,
+    progressMap,
+    readingProgressMap,
+    isEpisodeNew,
+    playEpisode
+  } = useLibraryPlayer();
   const [query, setQuery] = useState('');
-  const [selectedGenre, setSelectedGenre] = useState<string>('ALL');
+  const [selectedHallSlug, setSelectedHallSlug] = useState<LibraryHallSlug | 'ALL'>('ALL');
 
-  const genres = useMemo(() => {
-    const set = new Set<string>();
-    books.forEach((b) => {
-      if (b.genreTag) set.add(b.genreTag);
-    });
-    return Array.from(set);
-  }, [books]);
+  const activeHalls = useMemo(
+    () =>
+      LIBRARY_HALLS.filter((hall) =>
+        books.some((b) => resolveBookHalls(b).some((bh) => bh.slug === hall.slug))
+      ),
+    [books]
+  );
 
   const normalizedQuery = normalizeSearch(query);
 
   const filteredBooks = useMemo(() => {
     return books.filter((book) => {
-      if (selectedGenre !== 'ALL' && book.genreTag !== selectedGenre) {
+      if (
+        selectedHallSlug !== 'ALL' &&
+        !resolveBookHalls(book).some((h) => h.slug === selectedHallSlug)
+      ) {
         return false;
       }
       if (!normalizedQuery) return true;
@@ -45,7 +71,7 @@ export default function BooksShelfPage() {
       );
       return inBook || inEpisodes;
     });
-  }, [books, normalizedQuery, selectedGenre]);
+  }, [books, normalizedQuery, selectedHallSlug]);
 
   const matchedEpisodes = useMemo(() => {
     if (!normalizedQuery) return [];
@@ -54,7 +80,12 @@ export default function BooksShelfPage() {
       episode: (typeof books)[number]['episodes'][number];
     }[] = [];
     for (const book of books) {
-      if (selectedGenre !== 'ALL' && book.genreTag !== selectedGenre) continue;
+      if (
+        selectedHallSlug !== 'ALL' &&
+        !resolveBookHalls(book).some((h) => h.slug === selectedHallSlug)
+      ) {
+        continue;
+      }
       for (const ep of book.episodes) {
         if (
           normalizeSearch(ep.title).includes(normalizedQuery) ||
@@ -65,16 +96,24 @@ export default function BooksShelfPage() {
       }
     }
     return matches.slice(0, 8);
-  }, [books, normalizedQuery, selectedGenre]);
+  }, [books, normalizedQuery, selectedHallSlug]);
 
   return (
     <div className="px-4 pt-3 pb-6 space-y-5">
-      {/* Header */}
+      {/* Header with direct 1-tap Home exit */}
       <header
         style={{ borderBottom: '1px solid var(--border-hairline)' }}
-        className="pb-3 flex items-center justify-between"
+        className="pb-3 flex items-center justify-between gap-2"
       >
-        <div>
+        <div className="min-w-0">
+          <Link
+            href="/"
+            style={{ color: 'var(--accent-primary)' }}
+            className="text-xs font-semibold inline-flex items-center gap-0.5 mb-0.5"
+          >
+            <ChevronLeftIcon size={14} />
+            <span>Sảnh sách</span>
+          </Link>
           <h1 className="text-[21px] font-bold font-editorial">Tủ sách</h1>
           <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
             {books.length} bộ sách đã xuất bản
@@ -88,7 +127,7 @@ export default function BooksShelfPage() {
             backgroundColor: 'var(--bg-surface)',
             border: '1px solid var(--border-hairline)'
           }}
-          className="w-11 h-11 rounded-[8px] flex items-center justify-center"
+          className="w-11 h-11 rounded-[8px] flex items-center justify-center shrink-0"
         >
           {isNight ? <SunIcon size={17} /> : <MoonIcon size={17} />}
         </button>
@@ -122,30 +161,30 @@ export default function BooksShelfPage() {
         )}
       </div>
 
-      {/* Genre Filter Pills */}
-      {genres.length > 1 && (
+      {/* Hall Filter Pills */}
+      {activeHalls.length > 1 && (
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
           <button
             type="button"
-            onClick={() => setSelectedGenre('ALL')}
+            onClick={() => setSelectedHallSlug('ALL')}
             style={{
               backgroundColor:
-                selectedGenre === 'ALL' ? 'var(--accent-primary)' : 'var(--bg-surface)',
+                selectedHallSlug === 'ALL' ? 'var(--accent-primary)' : 'var(--bg-surface)',
               color:
-                selectedGenre === 'ALL' ? 'var(--accent-primary-fg)' : 'var(--text-secondary)',
+                selectedHallSlug === 'ALL' ? 'var(--accent-primary-fg)' : 'var(--text-secondary)',
               border: '1px solid var(--border-hairline)'
             }}
             className="h-9 px-3.5 rounded-[8px] text-xs font-medium shrink-0"
           >
             Tất cả
           </button>
-          {genres.map((g) => {
-            const active = selectedGenre === g;
+          {activeHalls.map((hall) => {
+            const active = selectedHallSlug === hall.slug;
             return (
               <button
-                key={g}
+                key={hall.slug}
                 type="button"
-                onClick={() => setSelectedGenre(g)}
+                onClick={() => setSelectedHallSlug(hall.slug)}
                 style={{
                   backgroundColor: active ? 'var(--accent-primary)' : 'var(--bg-surface)',
                   color: active ? 'var(--accent-primary-fg)' : 'var(--text-secondary)',
@@ -153,7 +192,7 @@ export default function BooksShelfPage() {
                 }}
                 className="h-9 px-3.5 rounded-[8px] text-xs font-medium shrink-0"
               >
-                {g}
+                {hall.shortTitle}
               </button>
             );
           })}
@@ -177,7 +216,7 @@ export default function BooksShelfPage() {
             type="button"
             onClick={() => {
               setQuery('');
-              setSelectedGenre('ALL');
+              setSelectedHallSlug('ALL');
             }}
             style={{ color: 'var(--accent-primary)' }}
             className="text-xs font-semibold underline"
@@ -188,8 +227,12 @@ export default function BooksShelfPage() {
       ) : (
         <div className="grid grid-cols-2 gap-4">
           {filteredBooks.map((book) => {
-            const completedCount = book.episodes.filter(
+            const isAudioBook = book.episodes.some((ep) => !isEpisodeReadingOnly(ep));
+            const completedAudioCount = book.episodes.filter(
               (ep) => progressMap[ep.id]?.completed
+            ).length;
+            const completedReadCount = book.episodes.filter(
+              (ep) => readingProgressMap[ep.id]?.completed
             ).length;
             const unreadNewEps = book.episodes.filter((ep) => isEpisodeNew(ep));
             const latestNewEp =
@@ -210,7 +253,7 @@ export default function BooksShelfPage() {
                     className="vn-eyebrow block truncate"
                     style={{ color: 'var(--accent-primary)' }}
                   >
-                    {book.genreTag} · {book.ageRange}
+                    {formatBookDisplayGenre(book)} · {book.ageRange}
                   </span>
                   <h2 className="text-[15px] font-semibold font-editorial line-clamp-2 mt-0.5">
                     {book.title}
@@ -219,9 +262,13 @@ export default function BooksShelfPage() {
                     className="text-xs mt-0.5 tabular-nums"
                     style={{ color: 'var(--text-secondary)' }}
                   >
-                    {completedCount > 0
-                      ? `${completedCount} / ${book.episodes.length} tập đã nghe`
-                      : `${book.episodes.length} tập`}
+                    {isAudioBook
+                      ? completedAudioCount > 0
+                        ? `${completedAudioCount} / ${book.episodes.length} tập đã nghe`
+                        : `${book.episodes.length} tập`
+                      : completedReadCount > 0
+                        ? `${completedReadCount} / ${book.episodes.length} tập đã đọc`
+                        : `${book.episodes.length} tập · Đọc chữ`}
                   </p>
                   {latestNewEp && (
                     <p
@@ -264,12 +311,10 @@ export default function BooksShelfPage() {
                   </p>
                   <p className="text-sm font-semibold font-editorial truncate">{episode.title}</p>
                   <p className="text-xs tabular-nums" style={{ color: 'var(--text-secondary)' }}>
-                    {episode.isTextOnly
-                      ? `Chỉ đọc chữ · ${estimateReadingMinutes(episode.wordCount)}`
-                      : formatDurationShort(episode.audioTracks[0]?.durationSeconds || 0)}
+                    {getEpisodeDurationLabel(episode, { prefixTextOnly: true })}
                   </p>
                 </Link>
-                {!episode.isTextOnly && episode.audioTracks.length > 0 && (
+                {!isEpisodeReadingOnly(episode) && (
                   <button
                     type="button"
                     aria-label={`Phát ${episode.title}`}

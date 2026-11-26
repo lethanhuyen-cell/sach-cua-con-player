@@ -87,3 +87,52 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ==========================================================================
+   FAIRYTALE AMBIENT MICRO-ATMOSPHERE (PA 1 Day & PA 2 Night)
+   Gentle GPU-composited opacity/transform; disabled on prefers-reduced-motion
+   ========================================================================== */
+@keyframes lanternBreathe {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 0.78;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes fireflyFloat {
+  0%, 100% {
+    opacity: 0.18;
+    transform: translate3d(0, 0, 0) scale(0.85);
+  }
+  45% {
+    opacity: 0.92;
+    transform: translate3d(3px, -6px, 0) scale(1.12);
+  }
+  75% {
+    opacity: 0.45;
+    transform: translate3d(-2px, -3px, 0) scale(0.95);
+  }
+}
+
+.lantern-aura {
+  animation: lanternBreathe 5.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.firefly-dot {
+  animation: fireflyFloat 5.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lantern-aura,
+  .firefly-dot {
+    animation: none !important;
+    opacity: 0.45 !important;
+    transform: none !important;
+  }
+}

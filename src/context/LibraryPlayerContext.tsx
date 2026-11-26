@@ -9,22 +9,30 @@ import React, {
   useRef,
   useState
 } from 'react';
+import { usePathname } from 'next/navigation';
+import { isEpisodeReadingOnly } from '@/lib/presets';
 import {
   HydratedAudioTrack,
   HydratedBook,
   HydratedEpisode,
-  LocalEpisodeProgress
+  LocalEpisodeProgress,
+  LocalReadingProgress
 } from '@/lib/types';
 
 export type SleepTimerMode = 'off' | '10' | '15' | '30' | '45' | 'end_of_episode';
+export type BedtimeSleepChoice = 'end_of_episode' | '15' | '30' | 'continuous';
 export type PlaybackRateOption = 0.85 | 1.0 | 1.15 | 1.25;
+export type UtilitySheetTab = 'search' | 'saved' | null;
 
-interface ContinueSuggestion {
+export interface ContinueSuggestion {
+  mode: 'audio' | 'reading';
   kind: 'in_progress' | 'next_up';
   book: HydratedBook;
   episode: HydratedEpisode;
   progressSeconds: number;
   durationSeconds: number;
+  scrollPercent: number;
+  updatedAt: number;
 }
 
 interface NewEpisodeItem {
@@ -35,11 +43,15 @@ interface NewEpisodeItem {
 
 interface LibraryPlayerContextValue {
   books: HydratedBook[];
+  isHydrated: boolean;
   isNight: boolean;
   toggleNight: () => void;
   favorites: string[];
   toggleFavorite: (episodeId: string) => void;
   progressMap: Record<string, LocalEpisodeProgress>;
+  readingProgressMap: Record<string, LocalReadingProgress>;
+  saveReadingProgress: (bookId: string, episodeId: string, scrollPercent: number) => void;
+  openedEpisodeIds: string[];
   isEpisodeNew: (episode: HydratedEpisode) => boolean;
   markEpisodeOpened: (episodeId: string) => void;
   newEpisodesAcrossLibrary: NewEpisodeItem[];
@@ -47,6 +59,16 @@ interface LibraryPlayerContextValue {
   selectVoicePreference: (voiceKey: string) => void;
   readerFontSize: number;
   adjustReaderFontSize: (delta: number) => void;
+
+  // Utility Bottom Sheet (Search & Saved)
+  utilitySheetTab: UtilitySheetTab;
+  openUtilitySheet: (tab: Exclude<UtilitySheetTab, null>) => void;
+  closeUtilitySheet: () => void;
+
+  // Spatial Gate Threshold (Night 1, 2, 3... n welcome experience)
+  hasPassedGate: boolean;
+  enterLibraryFromGate: () => void;
+  returnToGate: () => void;
 
   // Player state
   activeBook: HydratedBook | null;
@@ -60,6 +82,7 @@ interface LibraryPlayerContextValue {
   playbackRate: PlaybackRateOption;
   autoNext: boolean;
   sleepTimerMode: SleepTimerMode;
+  activeSleepChoice: BedtimeSleepChoice;
   sleepRemainingSeconds: number | null;
   isFullPlayerOpen: boolean;
   isKidLocked: boolean;
@@ -75,6 +98,7 @@ interface LibraryPlayerContextValue {
   cyclePlaybackRate: () => void;
   toggleAutoNext: () => void;
   setSleepTimer: (mode: SleepTimerMode) => void;
+  selectSleepChoice: (choice: BedtimeSleepChoice) => void;
   setFullPlayerOpen: (open: boolean) => void;
   setKidLocked: (locked: boolean) => void;
   retryPlayback: () => void;
@@ -84,16 +108,69 @@ interface LibraryPlayerContextValue {
 const LibraryPlayerContext = createContext<LibraryPlayerContextValue | null>(null);
 
 const STORAGE_KEYS = {
-  theme: 'litibook_theme_v1',
+  themeWindow: 'litibook_theme_window_v3',
   favorites: 'litibook_favorites_v1',
   progress: 'litibook_progress_v1',
+  readingProgress: 'litibook_reading_progress_v1',
   voice: 'litibook_preferred_voice_v1',
   fontSize: 'litibook_reader_fontsize_v1',
   openedEpisodes: 'litibook_opened_episodes_v1',
-  visitBaseline: 'litibook_visit_baseline_v1'
+  visitBaseline: 'litibook_visit_baseline_v1',
+  gateSession: 'litibook_gate_session_v1'
 };
 
+const GATE_RESET_IDLE_MS = 45 * 60 * 1000; // Re-welcome at the Gate after 45 mins away or new tab session
+
 const NEW_EPISODE_WINDOW_MS = 14 * 24 * 3600 * 1000; // 14 days
+
+/**
+ * Circadian Bedtime Window: 19:30 (1170 mins) -> 05:30 (330 mins)
+ * Must match the inline anti-flash script in src/app/layout.tsx identically.
+ */
+export function isBedtimeHours(d: Date = new Date()): boolean {
+  const mins = d.getHours() * 60 + d.getMinutes();
+  return mins >= 1170 || mins < 330;
+}
+
+function computeThemeWindow(d: Date = new Date()): {
+  autoNight: boolean;
+  windowKey: string;
+} {
+  const mins = d.getHours() * 60 + d.getMinutes();
+  const autoNight = mins >= 1170 || mins < 330;
+  const pivot = mins < 330 ? new Date(d.getTime() - 43200000) : d;
+  const windowKey = `${pivot.getFullYear()}-${pivot.getMonth() + 1}-${pivot.getDate()}-${
+    autoNight ? 'night' : 'day'
+  }`;
+  return { autoNight, windowKey };
+}
+
+function applyDocumentTheme(night: boolean) {
+  if (typeof document === 'undefined') return;
+  document.documentElement.classList.toggle('dark', night);
+  document.documentElement.style.colorScheme = night ? 'dark' : 'light';
+
+  const themeColor = night ? '#111613' : '#F8F5EE';
+  const metas = document.querySelectorAll('meta[name="theme-color"]');
+  if (metas.length > 0) {
+    metas.forEach((m) => m.setAttribute('content', themeColor));
+  } else {
+    const meta = document.createElement('meta');
+    meta.setAttribute('name', 'theme-color');
+    meta.setAttribute('content', themeColor);
+    document.head.appendChild(meta);
+  }
+}
+
+function isSameOriginAudioUrl(url: string): boolean {
+  if (!url || typeof window === 'undefined') return false;
+  if (url.startsWith('/') && !url.startsWith('//')) return true;
+  try {
+    return new URL(url, window.location.origin).origin === window.location.origin;
+  } catch {
+    return false;
+  }
+}
 
 export function LibraryPlayerProvider({
   initialBooks,
@@ -102,14 +179,21 @@ export function LibraryPlayerProvider({
   initialBooks: HydratedBook[];
   children: React.ReactNode;
 }) {
+  const pathname = usePathname() || '/';
   const [books, setBooks] = useState<HydratedBook[]>(initialBooks);
+  const [isHydrated, setIsHydrated] = useState(false);
   const [isNight, setIsNight] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [progressMap, setProgressMap] = useState<Record<string, LocalEpisodeProgress>>({});
+  const [readingProgressMap, setReadingProgressMap] = useState<
+    Record<string, LocalReadingProgress>
+  >({});
   const [openedEpisodeIds, setOpenedEpisodeIds] = useState<string[]>([]);
   const [previousVisitMs, setPreviousVisitMs] = useState<number | null>(null);
   const [preferredVoiceKey, setPreferredVoiceKey] = useState<string>('female_my_duyen');
   const [readerFontSize, setReaderFontSize] = useState<number>(18);
+  const [utilitySheetTab, setUtilitySheetTab] = useState<UtilitySheetTab>(null);
+  const [hasPassedGate, setHasPassedGate] = useState<boolean>(false);
 
   const [activeBookId, setActiveBookId] = useState<string | null>(null);
   const [activeEpisodeId, setActiveEpisodeId] = useState<string | null>(null);
@@ -127,14 +211,18 @@ export function LibraryPlayerProvider({
   const [isKidLocked, setKidLocked] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
+  const mediaSourceConnectedRef = useRef<boolean>(false);
   const lastSaveWallMs = useRef<number>(0);
   const sleepDeadlineMs = useRef<number | null>(null);
+  const hasManualSleepChoiceRef = useRef<boolean>(false);
 
   useEffect(() => {
     setBooks(initialBooks);
   }, [initialBooks]);
 
-  // Hydrate preferences & local progress from localStorage + clear any legacy static Service Worker
+  // Hydrate circadian theme & local progress from localStorage + unregister legacy SW
   useEffect(() => {
     try {
       if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
@@ -144,17 +232,41 @@ export function LibraryPlayerProvider({
           .catch(() => {});
       }
     } catch {}
+
     try {
-      const savedTheme = localStorage.getItem(STORAGE_KEYS.theme);
-      if (savedTheme === 'night') {
-        setIsNight(true);
-        document.documentElement.classList.add('dark');
+      const { autoNight, windowKey } = computeThemeWindow();
+      let resolvedNight = autoNight;
+      const rawWindowTheme = localStorage.getItem(STORAGE_KEYS.themeWindow);
+      if (rawWindowTheme) {
+        const parsedTheme = JSON.parse(rawWindowTheme);
+        if (
+          parsedTheme &&
+          parsedTheme.windowKey === windowKey &&
+          typeof parsedTheme.isNight === 'boolean'
+        ) {
+          resolvedNight = parsedTheme.isNight;
+        }
       }
+      setIsNight(resolvedNight);
+      applyDocumentTheme(resolvedNight);
+
+      // Initialize bedtime sleep defaults before playback starts
+      if (autoNight) {
+        setSleepTimerMode('end_of_episode');
+        setAutoNext(false);
+      } else {
+        setSleepTimerMode('off');
+        setAutoNext(true);
+      }
+
       const savedFavs = localStorage.getItem(STORAGE_KEYS.favorites);
       if (savedFavs) setFavorites(JSON.parse(savedFavs));
 
       const savedProg = localStorage.getItem(STORAGE_KEYS.progress);
       if (savedProg) setProgressMap(JSON.parse(savedProg));
+
+      const savedReading = localStorage.getItem(STORAGE_KEYS.readingProgress);
+      if (savedReading) setReadingProgressMap(JSON.parse(savedReading));
 
       const savedVoice = localStorage.getItem(STORAGE_KEYS.voice);
       if (savedVoice) setPreferredVoiceKey(savedVoice);
@@ -165,11 +277,27 @@ export function LibraryPlayerProvider({
       const savedOpened = localStorage.getItem(STORAGE_KEYS.openedEpisodes);
       if (savedOpened) setOpenedEpisodeIds(JSON.parse(savedOpened));
 
+      // Check active reading session for the Gate threshold (each new session or >45min break starts at the Gate)
+      try {
+        const rawGate = sessionStorage.getItem(STORAGE_KEYS.gateSession);
+        if (rawGate) {
+          const parsedGate = JSON.parse(rawGate);
+          if (
+            parsedGate &&
+            typeof parsedGate.enteredAt === 'number' &&
+            Date.now() - parsedGate.enteredAt < GATE_RESET_IDLE_MS
+          ) {
+            setHasPassedGate(true);
+          } else {
+            sessionStorage.removeItem(STORAGE_KEYS.gateSession);
+          }
+        }
+      } catch {}
+
       const rawBaseline = localStorage.getItem(STORAGE_KEYS.visitBaseline);
       const nowMs = Date.now();
       if (rawBaseline) {
         const parsed = JSON.parse(rawBaseline);
-        // Keep previous visit timestamp across same-day refreshes; roll forward after 12h
         if (parsed.currentSessionMs && nowMs - parsed.currentSessionMs > 12 * 3600 * 1000) {
           setPreviousVisitMs(parsed.currentSessionMs);
           localStorage.setItem(
@@ -189,12 +317,32 @@ export function LibraryPlayerProvider({
         );
       }
     } catch {}
+    setIsHydrated(true);
   }, []);
 
-  // Refresh published library when app returns to foreground (PUB-003)
+  // Refresh published library when app returns to foreground (PUB-003) & re-show Gate only when idle on "/"
   useEffect(() => {
     const handleVisibility = () => {
       if (document.visibilityState === 'visible') {
+        try {
+          const rawGate = sessionStorage.getItem(STORAGE_KEYS.gateSession);
+          if (rawGate) {
+            const parsedGate = JSON.parse(rawGate);
+            const isExpired =
+              !parsedGate ||
+              typeof parsedGate.enteredAt !== 'number' ||
+              Date.now() - parsedGate.enteredAt >= GATE_RESET_IDLE_MS;
+            if (
+              isExpired &&
+              window.location.pathname === '/' &&
+              (!audioRef.current || audioRef.current.paused)
+            ) {
+              sessionStorage.removeItem(STORAGE_KEYS.gateSession);
+              setHasPassedGate(false);
+            }
+          }
+        } catch {}
+
         fetch('/api/library')
           .then((r) => (r.ok ? r.json() : null))
           .then((data) => {
@@ -207,22 +355,103 @@ export function LibraryPlayerProvider({
     return () => document.removeEventListener('visibilitychange', handleVisibility);
   }, []);
 
+  const enterLibraryFromGate = useCallback(() => {
+    setHasPassedGate(true);
+    try {
+      sessionStorage.setItem(
+        STORAGE_KEYS.gateSession,
+        JSON.stringify({ enteredAt: Date.now() })
+      );
+    } catch {}
+  }, []);
+
+  const returnToGate = useCallback(() => {
+    setHasPassedGate(false);
+    try {
+      sessionStorage.removeItem(STORAGE_KEYS.gateSession);
+    } catch {}
+  }, []);
+
+  // Entering an interior route directly (shared link) counts as being inside the library
+  useEffect(() => {
+    if (isHydrated && !hasPassedGate && pathname !== '/' && !pathname.startsWith('/admin')) {
+      enterLibraryFromGate();
+    }
+  }, [enterLibraryFromGate, hasPassedGate, isHydrated, pathname]);
+
   const toggleNight = useCallback(() => {
     setIsNight((prev) => {
       const next = !prev;
-      if (next) {
-        document.documentElement.classList.add('dark');
-        try {
-          localStorage.setItem(STORAGE_KEYS.theme, 'night');
-        } catch {}
-      } else {
-        document.documentElement.classList.remove('dark');
-        try {
-          localStorage.setItem(STORAGE_KEYS.theme, 'day');
-        } catch {}
-      }
+      applyDocumentTheme(next);
+      try {
+        const { windowKey } = computeThemeWindow();
+        localStorage.setItem(
+          STORAGE_KEYS.themeWindow,
+          JSON.stringify({ windowKey, isNight: next })
+        );
+      } catch {}
       return next;
     });
+  }, []);
+
+  const openUtilitySheet = useCallback((tab: Exclude<UtilitySheetTab, null>) => {
+    setUtilitySheetTab(tab);
+  }, []);
+
+  const closeUtilitySheet = useCallback(() => {
+    setUtilitySheetTab(null);
+  }, []);
+
+  const ensureAudioGainGraph = useCallback((url: string) => {
+    if (typeof window === 'undefined') return;
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    try {
+      if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume().catch(() => {});
+      }
+      if (mediaSourceConnectedRef.current || !isSameOriginAudioUrl(url)) {
+        return;
+      }
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext?: typeof AudioContext })
+          .webkitAudioContext;
+      if (!AudioCtx) return;
+
+      const ctx = audioCtxRef.current || new AudioCtx();
+      audioCtxRef.current = ctx;
+      if (ctx.state === 'suspended') {
+        ctx.resume().catch(() => {});
+      }
+      const source = ctx.createMediaElementSource(audio);
+      const gain = ctx.createGain();
+      gain.gain.value = 1;
+      source.connect(gain);
+      gain.connect(ctx.destination);
+      gainNodeRef.current = gain;
+      mediaSourceConnectedRef.current = true;
+    } catch {
+      // Fallback cleanly to native HTMLAudioElement.volume
+    }
+  }, []);
+
+  const setPlaybackGain = useCallback((level: number) => {
+    const clamped = Math.max(0.02, Math.min(1, level));
+    const audio = audioRef.current;
+    if (audio) {
+      try {
+        audio.volume = clamped;
+      } catch {}
+    }
+    const gain = gainNodeRef.current;
+    const ctx = audioCtxRef.current;
+    if (gain && ctx) {
+      try {
+        gain.gain.setTargetAtTime(clamped, ctx.currentTime, 0.08);
+      } catch {}
+    }
   }, []);
 
   const toggleFavorite = useCallback((episodeId: string) => {
@@ -259,12 +488,40 @@ export function LibraryPlayerProvider({
     });
   }, []);
 
+  const saveReadingProgress = useCallback(
+    (bookId: string, episodeId: string, scrollPercent: number) => {
+      if (!bookId || !episodeId) return;
+      const pct = Math.max(0, Math.min(100, Math.round(scrollPercent)));
+      setReadingProgressMap((prev) => {
+        const existing = prev[episodeId];
+        if (!existing && pct < 3) return prev;
+        const completed = pct >= 92 || Boolean(existing?.completed && pct >= 85);
+        const entry: LocalReadingProgress = {
+          episodeId,
+          bookId,
+          scrollPercent: pct,
+          completed,
+          updatedAt: Date.now()
+        };
+        const next = { ...prev, [episodeId]: entry };
+        try {
+          localStorage.setItem(STORAGE_KEYS.readingProgress, JSON.stringify(next));
+        } catch {}
+        return next;
+      });
+      markEpisodeOpened(episodeId);
+    },
+    [markEpisodeOpened]
+  );
+
   const isEpisodeNew = useCallback(
     (ep: HydratedEpisode): boolean => {
       const prog = progressMap[ep.id];
+      const readProg = readingProgressMap[ep.id];
       if (
         openedEpisodeIds.includes(ep.id) ||
-        (prog && (prog.positionSeconds > 0 || prog.completed))
+        (prog && (prog.positionSeconds > 0 || prog.completed)) ||
+        (readProg && (readProg.scrollPercent > 0 || readProg.completed))
       ) {
         return false;
       }
@@ -276,7 +533,7 @@ export function LibraryPlayerProvider({
       const newerThanLastVisit = previousVisitMs !== null && pubMs > previousVisitMs;
       return withinWindow || newerThanLastVisit;
     },
-    [openedEpisodeIds, previousVisitMs, progressMap]
+    [openedEpisodeIds, previousVisitMs, progressMap, readingProgressMap]
   );
 
   const newEpisodesAcrossLibrary = useMemo<NewEpisodeItem[]>(() => {
@@ -345,7 +602,7 @@ export function LibraryPlayerProvider({
 
   const selectBestTrack = useCallback(
     (ep: HydratedEpisode, requestedVoiceKey?: string): HydratedAudioTrack | null => {
-      if (ep.isTextOnly || ep.audioTracks.length === 0) return null;
+      if (isEpisodeReadingOnly(ep)) return null;
       const targetKey = requestedVoiceKey || preferredVoiceKey;
       return (
         ep.audioTracks.find((t) => t.voiceProfile.voiceKey === targetKey) ||
@@ -361,9 +618,12 @@ export function LibraryPlayerProvider({
       const track = selectBestTrack(episode, voiceKey);
       if (!track) return;
 
+      ensureAudioGainGraph(track.audioUrl);
+
       // Toggle if already loaded on this exact track
       if (activeEpisodeId === episode.id && activeTrackId === track.id && audioRef.current) {
         if (audioRef.current.paused) {
+          setPlaybackGain(1);
           audioRef.current.play().catch(() => {});
         } else {
           audioRef.current.pause();
@@ -374,13 +634,28 @@ export function LibraryPlayerProvider({
       setActiveBookId(book.id);
       setActiveEpisodeId(episode.id);
       setActiveTrackId(track.id);
-      setAutoNext(book.defaultAutoNext);
+
+      // Apply Circadian Bedtime Sleep Defaults unless manually chosen in this session
+      if (!hasManualSleepChoiceRef.current) {
+        if (isBedtimeHours()) {
+          setSleepTimerMode('end_of_episode');
+          setAutoNext(false);
+          sleepDeadlineMs.current = null;
+          setSleepRemainingSeconds(null);
+        } else {
+          const wantAuto = book.defaultAutoNext;
+          setAutoNext(wantAuto);
+          setSleepTimerMode(wantAuto ? 'off' : 'end_of_episode');
+          sleepDeadlineMs.current = null;
+          setSleepRemainingSeconds(null);
+        }
+      }
+
       setPlayerError(null);
       markEpisodeOpened(episode.id);
 
       const saved = progressMap[episode.id];
       let startSec = 0;
-      // PUB-003 / AC-11 & PLY-004: Resume safely; reset to 00:00 if completed or replaced track is shorter
       if (saved && !saved.completed) {
         const expectedDur = track.durationSeconds || saved.durationSeconds || 0;
         const durationChangedDrastically =
@@ -390,7 +665,7 @@ export function LibraryPlayerProvider({
             Math.abs(expectedDur - saved.durationSeconds) / Math.max(1, saved.durationSeconds) >
               0.1);
         if (!durationChangedDrastically) {
-          startSec = Math.max(0, saved.positionSeconds - 2.5);
+          startSec = Math.max(0, saved.positionSeconds - 3);
         }
       }
 
@@ -398,7 +673,7 @@ export function LibraryPlayerProvider({
       if (audio) {
         audio.src = track.audioUrl;
         audio.playbackRate = playbackRate;
-        audio.volume = 1;
+        setPlaybackGain(1);
         const onLoaded = () => {
           if (startSec > 0 && startSec < (audio.duration || Infinity)) {
             audio.currentTime = startSec;
@@ -415,29 +690,43 @@ export function LibraryPlayerProvider({
         audio.load();
       }
     },
-    [activeEpisodeId, activeTrackId, markEpisodeOpened, playbackRate, progressMap, selectBestTrack]
+    [
+      activeEpisodeId,
+      activeTrackId,
+      ensureAudioGainGraph,
+      markEpisodeOpened,
+      playbackRate,
+      progressMap,
+      selectBestTrack,
+      setPlaybackGain
+    ]
   );
 
   const togglePlayPause = useCallback(() => {
     const audio = audioRef.current;
     if (!audio || !activeTrack) return;
     if (audio.paused) {
-      audio.volume = 1;
+      ensureAudioGainGraph(activeTrack.audioUrl);
+      setPlaybackGain(1);
       audio.play().catch(() => {});
     } else {
       audio.pause();
     }
-  }, [activeTrack]);
+  }, [activeTrack, ensureAudioGainGraph, setPlaybackGain]);
 
   const seekTo = useCallback(
     (seconds: number) => {
       const audio = audioRef.current;
       if (!audio) return;
-      const clamped = Math.max(0, Math.min(seconds, audio.duration || duration || 0));
+      const dur = audio.duration || duration || 0;
+      const clamped = Math.max(0, Math.min(seconds, dur));
       audio.currentTime = clamped;
       setCurrentTime(clamped);
+      if (dur - clamped > 8) {
+        setPlaybackGain(1);
+      }
     },
-    [duration]
+    [duration, setPlaybackGain]
   );
 
   const seekBy = useCallback(
@@ -449,7 +738,6 @@ export function LibraryPlayerProvider({
     [seekTo]
   );
 
-  // PLY-005 & AC-03: Linear proportional voice switch + save preferred voice_key
   const switchVoice = useCallback(
     (voiceKey: string) => {
       if (!activeBook || !activeEpisode) return;
@@ -472,6 +760,8 @@ export function LibraryPlayerProvider({
 
       setActiveTrackId(newTrack.id);
       setPlayerError(null);
+      ensureAudioGainGraph(newTrack.audioUrl);
+      setPlaybackGain(1);
       audio.src = newTrack.audioUrl;
       audio.playbackRate = playbackRate;
 
@@ -489,7 +779,14 @@ export function LibraryPlayerProvider({
       audio.addEventListener('loadedmetadata', onLoaded);
       audio.load();
     },
-    [activeBook, activeEpisode, activeTrack, playbackRate]
+    [
+      activeBook,
+      activeEpisode,
+      activeTrack,
+      ensureAudioGainGraph,
+      playbackRate,
+      setPlaybackGain
+    ]
   );
 
   const selectVoicePreference = useCallback(
@@ -510,13 +807,10 @@ export function LibraryPlayerProvider({
     [activeBook, activeEpisode, switchVoice]
   );
 
-  // PLY-007 & AC-10: Skip across episodes in book, skipping Text-Only episodes
   const findAdjacentAudioEpisode = useCallback(
     (dir: -1 | 1): HydratedEpisode | null => {
       if (!activeBook || !activeEpisode) return null;
-      const audioEps = activeBook.episodes.filter(
-        (e) => !e.isTextOnly && e.audioTracks.length > 0
-      );
+      const audioEps = activeBook.episodes.filter((e) => !isEpisodeReadingOnly(e));
       const idx = audioEps.findIndex((e) => e.id === activeEpisode.id);
       if (idx === -1) return null;
       return audioEps[idx + dir] || null;
@@ -544,27 +838,75 @@ export function LibraryPlayerProvider({
   }, []);
 
   const toggleAutoNext = useCallback(() => {
-    setAutoNext((prev) => !prev);
-  }, []);
+    hasManualSleepChoiceRef.current = true;
+    setAutoNext((prev) => {
+      const next = !prev;
+      if (next && sleepTimerMode === 'end_of_episode') {
+        setSleepTimerMode('off');
+      }
+      return next;
+    });
+  }, [sleepTimerMode]);
 
-  const setSleepTimer = useCallback((mode: SleepTimerMode) => {
-    setSleepTimerMode(mode);
-    if (audioRef.current) audioRef.current.volume = 1;
-    if (mode === 'off' || mode === 'end_of_episode') {
-      sleepDeadlineMs.current = null;
-      setSleepRemainingSeconds(null);
-      return;
-    }
-    const mins = Number(mode);
-    const totalSec = mins * 60;
-    sleepDeadlineMs.current = Date.now() + totalSec * 1000;
-    setSleepRemainingSeconds(totalSec);
-  }, []);
+  const setSleepTimer = useCallback(
+    (mode: SleepTimerMode) => {
+      hasManualSleepChoiceRef.current = true;
+      setSleepTimerMode(mode);
+      setPlaybackGain(1);
+      if (mode === 'off' || mode === 'end_of_episode') {
+        sleepDeadlineMs.current = null;
+        setSleepRemainingSeconds(null);
+        if (mode === 'end_of_episode') setAutoNext(false);
+        return;
+      }
+      const mins = Number(mode);
+      const totalSec = mins * 60;
+      sleepDeadlineMs.current = Date.now() + totalSec * 1000;
+      setSleepRemainingSeconds(totalSec);
+    },
+    [setPlaybackGain]
+  );
+
+  const selectSleepChoice = useCallback(
+    (choice: BedtimeSleepChoice) => {
+      hasManualSleepChoiceRef.current = true;
+      setPlaybackGain(1);
+      if (choice === 'end_of_episode') {
+        sleepDeadlineMs.current = null;
+        setSleepRemainingSeconds(null);
+        setSleepTimerMode('end_of_episode');
+        setAutoNext(false);
+        return;
+      }
+      if (choice === 'continuous') {
+        sleepDeadlineMs.current = null;
+        setSleepRemainingSeconds(null);
+        setSleepTimerMode('off');
+        setAutoNext(true);
+        return;
+      }
+      const mins = Number(choice);
+      const totalSec = mins * 60;
+      sleepDeadlineMs.current = Date.now() + totalSec * 1000;
+      setSleepRemainingSeconds(totalSec);
+      setSleepTimerMode(choice);
+    },
+    [setPlaybackGain]
+  );
+
+  const activeSleepChoice: BedtimeSleepChoice = useMemo(() => {
+    if (sleepTimerMode === '15') return '15';
+    if (sleepTimerMode === '30') return '30';
+    if (sleepTimerMode === 'end_of_episode' || !autoNext) return 'end_of_episode';
+    return 'continuous';
+  }, [autoNext, sleepTimerMode]);
 
   const retryPlayback = useCallback(() => {
     const audio = audioRef.current;
     if (!audio || !activeTrack) return;
     const savedPos = currentTime;
+    ensureAudioGainGraph(activeTrack.audioUrl);
+    setPlaybackGain(1);
     setPlayerError(null);
     audio.load();
     const onLoaded = () => {
@@ -573,9 +915,9 @@ export function LibraryPlayerProvider({
       audio.removeEventListener('loadedmetadata', onLoaded);
     };
     audio.addEventListener('loadedmetadata', onLoaded);
-  }, [activeTrack, currentTime]);
+  }, [activeTrack, currentTime, ensureAudioGainGraph, setPlaybackGain]);
 
-  // Sleep Timer countdown + 8s gentle fade-out (PLY-006, AC-02)
+  // Minute-based Sleep Timer countdown + 8s gentle fade-out (native volume + iOS GainNode)
   useEffect(() => {
     if (!sleepDeadlineMs.current || sleepTimerMode === 'off' || sleepTimerMode === 'end_of_episode') {
       return;
@@ -589,15 +931,11 @@ export function LibraryPlayerProvider({
       const audio = audioRef.current;
       if (audio && !audio.paused) {
         if (remMs <= 8000 && remMs > 0) {
-          try {
-            audio.volume = Math.max(0.02, remMs / 8000);
-          } catch {}
+          setPlaybackGain(remMs / 8000);
         }
         if (remMs <= 0) {
           audio.pause();
-          try {
-            audio.volume = 1;
-          } catch {}
+          setPlaybackGain(1);
           sleepDeadlineMs.current = null;
           setSleepTimerMode('off');
           setSleepRemainingSeconds(null);
@@ -606,9 +944,9 @@ export function LibraryPlayerProvider({
     }, 500);
 
     return () => clearInterval(timer);
-  }, [sleepTimerMode]);
+  }, [setPlaybackGain, sleepTimerMode]);
 
-  // Media Session API for Lock Screen Controls (PLY-003, AC-02)
+  // Media Session API for Lock Screen Controls
   useEffect(() => {
     if (typeof navigator === 'undefined' || !('mediaSession' in navigator)) return;
     if (!activeBook || !activeEpisode) return;
@@ -636,7 +974,7 @@ export function LibraryPlayerProvider({
     } catch {}
   }, [activeBook, activeEpisode, activeTrack, seekBy, skipNext, skipPrev]);
 
-  // Save progress on pagehide
+  // Save audio progress on pagehide
   useEffect(() => {
     const onHide = () => {
       const audio = audioRef.current;
@@ -655,59 +993,125 @@ export function LibraryPlayerProvider({
     return () => window.removeEventListener('pagehide', onHide);
   }, [activeBook, activeEpisode, activeTrack, persistProgress]);
 
-  // Smart Continue Suggestions (LIS-002, DEC-04, AC-01)
+  // Unified Read & Listen Continue Suggestions (ranked by latest updatedAt across audio & reading)
   const continueItems = useMemo<ContinueSuggestion[]>(() => {
-    const entries = Object.values(progressMap).sort((a, b) => b.updatedAt - a.updatedAt);
-    const results: ContinueSuggestion[] = [];
-    const seenEpisodes = new Set<string>();
+    type Candidate =
+      | { mode: 'audio'; updatedAt: number; audio: LocalEpisodeProgress }
+      | { mode: 'reading'; updatedAt: number; reading: LocalReadingProgress };
 
-    for (const entry of entries) {
-      const book = books.find((b) => b.id === entry.bookId);
+    const candidates: Candidate[] = [
+      ...Object.values(progressMap).map((audio) => ({
+        mode: 'audio' as const,
+        updatedAt: audio.updatedAt || 0,
+        audio
+      })),
+      ...Object.values(readingProgressMap).map((reading) => ({
+        mode: 'reading' as const,
+        updatedAt: reading.updatedAt || 0,
+        reading
+      }))
+    ].sort((a, b) => b.updatedAt - a.updatedAt);
+
+    const results: ContinueSuggestion[] = [];
+    const seenBooks = new Set<string>();
+
+    for (const item of candidates) {
+      const bookId = item.mode === 'audio' ? item.audio.bookId : item.reading.bookId;
+      const episodeId = item.mode === 'audio' ? item.audio.episodeId : item.reading.episodeId;
+      if (seenBooks.has(bookId)) continue;
+
+      const book = books.find((b) => b.id === bookId);
       if (!book) continue;
-      const epIdx = book.episodes.findIndex((e) => e.id === entry.episodeId);
+      const epIdx = book.episodes.findIndex((e) => e.id === episodeId);
       if (epIdx === -1) continue;
       const ep = book.episodes[epIdx];
 
-      if (!entry.completed && !ep.isTextOnly && ep.audioTracks.length > 0) {
-        if (!seenEpisodes.has(ep.id)) {
-          seenEpisodes.add(ep.id);
+      if (item.mode === 'audio') {
+        const entry = item.audio;
+        if (!entry.completed && !isEpisodeReadingOnly(ep)) {
+          seenBooks.add(bookId);
           results.push({
+            mode: 'audio',
             kind: 'in_progress',
             book,
             episode: ep,
             progressSeconds: entry.positionSeconds,
-            durationSeconds: entry.durationSeconds || ep.audioTracks[0]?.durationSeconds || 0
+            durationSeconds:
+              entry.durationSeconds || ep.audioTracks[0]?.durationSeconds || 0,
+            scrollPercent: readingProgressMap[ep.id]?.scrollPercent || 0,
+            updatedAt: entry.updatedAt
           });
+        } else if (entry.completed) {
+          const nextEp = book.episodes
+            .slice(epIdx + 1)
+            .find(
+              (cand) =>
+                !isEpisodeReadingOnly(cand) && !progressMap[cand.id]?.completed
+            );
+          if (nextEp) {
+            seenBooks.add(bookId);
+            results.push({
+              mode: 'audio',
+              kind: 'next_up',
+              book,
+              episode: nextEp,
+              progressSeconds: 0,
+              durationSeconds: nextEp.audioTracks[0]?.durationSeconds || 0,
+              scrollPercent: 0,
+              updatedAt: entry.updatedAt
+            });
+          }
         }
-      } else if (entry.completed) {
-        // Suggest next audio episode in same book (DEC-04, skipping Text-Only)
-        const nextEp = book.episodes
-          .slice(epIdx + 1)
-          .find((cand) => !cand.isTextOnly && cand.audioTracks.length > 0);
-        if (nextEp && !seenEpisodes.has(nextEp.id) && !progressMap[nextEp.id]?.completed) {
-          seenEpisodes.add(nextEp.id);
+      } else {
+        const entry = item.reading;
+        if (!entry.completed) {
+          seenBooks.add(bookId);
           results.push({
-            kind: 'next_up',
+            mode: 'reading',
+            kind: 'in_progress',
             book,
-            episode: nextEp,
+            episode: ep,
             progressSeconds: 0,
-            durationSeconds: nextEp.audioTracks[0]?.durationSeconds || 0
+            durationSeconds: ep.audioTracks[0]?.durationSeconds || 0,
+            scrollPercent: entry.scrollPercent,
+            updatedAt: entry.updatedAt
           });
+        } else {
+          const nextEp = book.episodes
+            .slice(epIdx + 1)
+            .find((cand) => !readingProgressMap[cand.id]?.completed);
+          if (nextEp) {
+            seenBooks.add(bookId);
+            results.push({
+              mode: 'reading',
+              kind: 'next_up',
+              book,
+              episode: nextEp,
+              progressSeconds: 0,
+              durationSeconds: nextEp.audioTracks[0]?.durationSeconds || 0,
+              scrollPercent: 0,
+              updatedAt: entry.updatedAt
+            });
+          }
         }
       }
     }
     return results;
-  }, [books, progressMap]);
+  }, [books, progressMap, readingProgressMap]);
 
   return (
     <LibraryPlayerContext.Provider
       value={{
         books,
+        isHydrated,
         isNight,
         toggleNight,
         favorites,
         toggleFavorite,
         progressMap,
+        readingProgressMap,
+        saveReadingProgress,
+        openedEpisodeIds,
         isEpisodeNew,
         markEpisodeOpened,
         newEpisodesAcrossLibrary,
@@ -715,6 +1119,12 @@ export function LibraryPlayerProvider({
         selectVoicePreference,
         readerFontSize,
         adjustReaderFontSize,
+        utilitySheetTab,
+        openUtilitySheet,
+        closeUtilitySheet,
+        hasPassedGate,
+        enterLibraryFromGate,
+        returnToGate,
         activeBook,
         activeEpisode,
         activeTrack,
@@ -726,6 +1136,7 @@ export function LibraryPlayerProvider({
         playbackRate,
         autoNext,
         sleepTimerMode,
+        activeSleepChoice,
         sleepRemainingSeconds,
         isFullPlayerOpen,
         isKidLocked,
@@ -739,6 +1150,7 @@ export function LibraryPlayerProvider({
         cyclePlaybackRate,
         toggleAutoNext,
         setSleepTimer,
+        selectSleepChoice,
         setFullPlayerOpen,
         setKidLocked,
         retryPlayback,
@@ -779,6 +1191,24 @@ export function LibraryPlayerProvider({
           if (el.duration && Number.isFinite(el.duration)) {
             setDuration(el.duration);
           }
+
+          // Gentle 8-second fade-out when "Hết tập dừng êm" is active (native volume + iOS GainNode)
+          if (
+            sleepTimerMode === 'end_of_episode' &&
+            el.duration &&
+            Number.isFinite(el.duration) &&
+            el.duration > 20 &&
+            !el.paused
+          ) {
+            const rem = el.duration - el.currentTime;
+            const currentGain = gainNodeRef.current ? gainNodeRef.current.gain.value : el.volume;
+            if (rem > 0 && rem <= 8) {
+              setPlaybackGain(rem / 8);
+            } else if (rem > 8 && (el.volume < 0.99 || currentGain < 0.99)) {
+              setPlaybackGain(1);
+            }
+          }
+
           const now = Date.now();
           if (now - lastSaveWallMs.current >= 5000 && activeBook && activeEpisode && activeTrack) {
             lastSaveWallMs.current = now;
@@ -799,6 +1229,7 @@ export function LibraryPlayerProvider({
         }}
         onEnded={() => {
           setIsPlaying(false);
+          setPlaybackGain(1);
           if (activeBook && activeEpisode && activeTrack) {
             const dur = duration || activeTrack.durationSeconds || 1;
             persistProgress(
@@ -810,9 +1241,8 @@ export function LibraryPlayerProvider({
               dur
             );
           }
-          // AC-09: Sleep Timer "end_of_episode" overrides Auto-next
+          // "Hết tập dừng êm" stops playback cleanly without startling the child
           if (sleepTimerMode === 'end_of_episode') {
-            setSleepTimerMode('off');
             setSleepRemainingSeconds(null);
             return;
           }

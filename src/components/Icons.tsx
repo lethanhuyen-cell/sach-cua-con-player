@@ -279,3 +279,81 @@ export function ImageIcon({ size = 16, className }: IconProps) {
     </svg>
   );
 }
+
+export function ArchDoorIcon({ size = 16, className }: IconProps) {
+  return (
+    <svg {...baseProps(size)} className={className}>
+      <path d="M6 21V11a6 6 0 0 1 12 0v10" />
+      <line x1="4" y1="21" x2="20" y2="21" />
+      <circle cx="14.5" cy="14" r="0.8" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function LeafIcon({ size = 16, className }: IconProps) {
+  return (
+    <svg {...baseProps(size)} className={className}>
+      <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z" />
+      <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+    </svg>
+  );
+}
+
+export function HearthCupIcon({ size = 16, className }: IconProps) {
+  return (
+    <svg {...baseProps(size)} className={className}>
+      <path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17" />
+      <path d="M5 10h12v5a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5v-5Z" />
+      <path d="M8.5 4.5c0 1.2 1 1.8 1 3" />
+      <path d="M12.5 4c0 1.2 1 1.8 1 3" />
+    </svg>
+  );
+}
+
+export function FeatherIcon({ size = 16, className }: IconProps) {
+  return (
+    <svg {...baseProps(size)} className={className}>
+      <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z" />
+      <line x1="16" y1="8" x2="2" y2="22" />
+      <line x1="17.5" y1="15" x2="9" y2="15" />
+    </svg>
+  );
+}
+
+export function CompassIcon({ size = 16, className }: IconProps) {
+  return (
+    <svg {...baseProps(size)} className={className}>
+      <circle cx="12" cy="12" r="9" />
+      <polygon points="15.5 8.5 13.5 13.5 8.5 15.5 10.5 10.5 15.5 8.5" />
+    </svg>
+  );
+}
+
+export function MusicSparkIcon({ size = 16, className }: IconProps) {
+  return (
+    <svg {...baseProps(size)} className={className}>
+      <path d="M9 18V5l10-2v11" />
+      <circle cx="6.5" cy="18" r="2.5" />
+      <circle cx="16.5" cy="14" r="2.5" />
+    </svg>
+  );
+}
+
+export function LanternIcon({ size = 16, className }: IconProps) {
+  return (
+    <svg {...baseProps(size)} className={className}>
+      <path d="M12 2v3" />
+      <path d="M8 7h8l1 10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L8 7Z" />
+      <path d="M9.5 7V6a2.5 2.5 0 0 1 5 0v1" />
+      <line x1="12" y1="10.5" x2="12" y2="14.5" />
+    </svg>
+  );
+}
+
+export function ChevronRightIcon({ size = 16, className }: IconProps) {
+  return (
+    <svg {...baseProps(size)} className={className}>
+      <path d="m9 18 6-6-6-6" />
+    </svg>
+  );
+}

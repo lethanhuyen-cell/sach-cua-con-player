@@ -6,12 +6,19 @@ import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { BookCover } from '@/components/BookCover';
 import {
   BookmarkIcon,
+  BookOpenIcon,
+  ChevronLeftIcon,
   MoonIcon,
   PauseIcon,
   PlayIcon,
   SunIcon
 } from '@/components/Icons';
-import { estimateReadingMinutes, formatClock, formatDurationShort } from '@/lib/presets';
+import {
+  estimateReadingMinutes,
+  formatClock,
+  getEpisodeDurationLabel,
+  isEpisodeReadingOnly
+} from '@/lib/presets';
 
 export default function SavedArchivePage() {
   const {
@@ -45,15 +52,23 @@ export default function SavedArchivePage() {
 
   return (
     <div className="px-4 pt-3 pb-6 space-y-5">
-      {/* Header */}
+      {/* Header with 1-tap Home return */}
       <header
         style={{ borderBottom: '1px solid var(--border-hairline)' }}
-        className="pb-3 flex items-center justify-between"
+        className="pb-3 flex items-center justify-between gap-2"
       >
-        <div>
+        <div className="min-w-0">
+          <Link
+            href="/"
+            style={{ color: 'var(--accent-primary)' }}
+            className="text-xs font-semibold inline-flex items-center gap-0.5 mb-0.5"
+          >
+            <ChevronLeftIcon size={14} />
+            <span>Trang chủ</span>
+          </Link>
           <h1 className="text-[21px] font-bold font-editorial">Lưu trữ</h1>
           <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-            Tiến độ nghe và các tập đánh dấu trên thiết bị này
+            Tiến độ đọc, nghe và các tập đánh dấu trên thiết bị này
           </p>
         </div>
         <button
@@ -64,7 +79,7 @@ export default function SavedArchivePage() {
             backgroundColor: 'var(--bg-surface)',
             border: '1px solid var(--border-hairline)'
           }}
-          className="w-11 h-11 rounded-[8px] flex items-center justify-center"
+          className="w-11 h-11 rounded-[8px] flex items-center justify-center shrink-0"
         >
           {isNight ? <SunIcon size={17} /> : <MoonIcon size={17} />}
         </button>
@@ -132,17 +147,22 @@ export default function SavedArchivePage() {
         ) : (
           <div className="space-y-3">
             {continueItems.map((item) => {
-              const playing = activeEpisode?.id === item.episode.id && isPlaying;
+              const playing =
+                item.mode === 'audio' &&
+                activeEpisode?.id === item.episode.id &&
+                isPlaying;
               const pct =
-                item.durationSeconds > 0
-                  ? Math.min(
-                      100,
-                      Math.round((item.progressSeconds / item.durationSeconds) * 100)
-                    )
-                  : 0;
+                item.mode === 'reading'
+                  ? item.scrollPercent
+                  : item.durationSeconds > 0
+                    ? Math.min(
+                        100,
+                        Math.round((item.progressSeconds / item.durationSeconds) * 100)
+                      )
+                    : 0;
               return (
                 <div
-                  key={item.episode.id}
+                  key={`${item.mode}-${item.episode.id}`}
                   style={{
                     backgroundColor: 'var(--bg-elevated)',
                     border: '1px solid var(--border-hairline)'
@@ -161,15 +181,30 @@ export default function SavedArchivePage() {
                       className="vn-eyebrow block truncate"
                       style={{ color: 'var(--accent-primary)' }}
                     >
-                      {item.kind === 'in_progress' ? 'Nghe tiếp' : 'Gợi ý tập kế'} ·{' '}
-                      {item.book.title}
+                      {item.mode === 'reading'
+                        ? item.kind === 'in_progress'
+                          ? 'Đọc tiếp'
+                          : 'Gợi ý đọc kế'
+                        : item.kind === 'in_progress'
+                          ? 'Nghe tiếp'
+                          : 'Gợi ý tập kế'}{' '}
+                      · {item.book.title}
                     </span>
                     <Link href={`/episodes/${item.episode.id}`}>
                       <h2 className="text-sm font-semibold font-editorial truncate mt-0.5">
                         Tập {item.episode.episodeCode}: {item.episode.title}
                       </h2>
                     </Link>
-                    {item.kind === 'in_progress' ? (
+                    {item.mode === 'reading' ? (
+                      <p
+                        className="text-xs mt-1 tabular-nums"
+                        style={{ color: 'var(--text-secondary)' }}
+                      >
+                        {item.kind === 'in_progress'
+                          ? `Đã đọc ${pct}% · ${estimateReadingMinutes(item.episode.wordCount)}`
+                          : estimateReadingMinutes(item.episode.wordCount)}
+                      </p>
+                    ) : item.kind === 'in_progress' ? (
                       <p
                         className="text-xs mt-1 tabular-nums"
                         style={{ color: 'var(--text-secondary)' }}
@@ -182,22 +217,38 @@ export default function SavedArchivePage() {
                         className="text-xs mt-1 tabular-nums"
                         style={{ color: 'var(--text-secondary)' }}
                       >
-                        {formatDurationShort(item.durationSeconds)}
+                        {getEpisodeDurationLabel(item.episode, {
+                          preferredDurationSeconds: item.durationSeconds
+                        })}
                       </p>
                     )}
                   </div>
-                  <button
-                    type="button"
-                    aria-label={playing ? 'Tạm dừng' : 'Phát tiếp'}
-                    onClick={() => playEpisode(item.book, item.episode)}
-                    style={{
-                      backgroundColor: 'var(--accent-primary)',
-                      color: 'var(--accent-primary-fg)'
-                    }}
-                    className="w-11 h-11 rounded-full flex items-center justify-center shrink-0"
-                  >
-                    {playing ? <PauseIcon size={15} /> : <PlayIcon size={15} />}
-                  </button>
+                  {item.mode === 'audio' && !isEpisodeReadingOnly(item.episode) ? (
+                    <button
+                      type="button"
+                      aria-label={playing ? 'Tạm dừng' : 'Phát tiếp'}
+                      onClick={() => playEpisode(item.book, item.episode)}
+                      style={{
+                        backgroundColor: 'var(--accent-primary)',
+                        color: 'var(--accent-primary-fg)'
+                      }}
+                      className="w-11 h-11 rounded-full flex items-center justify-center shrink-0"
+                    >
+                      {playing ? <PauseIcon size={15} /> : <PlayIcon size={15} />}
+                    </button>
+                  ) : (
+                    <Link
+                      href={`/episodes/${item.episode.id}`}
+                      aria-label={`Đọc tiếp ${item.episode.title}`}
+                      style={{
+                        backgroundColor: 'var(--accent-primary)',
+                        color: 'var(--accent-primary-fg)'
+                      }}
+                      className="w-11 h-11 rounded-full flex items-center justify-center shrink-0"
+                    >
+                      <BookOpenIcon size={15} />
+                    </Link>
+                  )}
                 </div>
               );
             })}
@@ -250,14 +301,12 @@ export default function SavedArchivePage() {
                     className="text-xs mt-0.5 tabular-nums"
                     style={{ color: 'var(--text-secondary)' }}
                   >
-                    {episode.isTextOnly
-                      ? `Chỉ đọc chữ · ${estimateReadingMinutes(episode.wordCount)}`
-                      : formatDurationShort(episode.audioTracks[0]?.durationSeconds || 0)}
+                    {getEpisodeDurationLabel(episode, { prefixTextOnly: true })}
                   </p>
                 </Link>
 
                 <div className="flex items-center gap-1 shrink-0">
-                  {!episode.isTextOnly && episode.audioTracks.length > 0 && (
+                  {!isEpisodeReadingOnly(episode) && (
                     <button
                       type="button"
                       aria-label="Phát tập đã lưu"

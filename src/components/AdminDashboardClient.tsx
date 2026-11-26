@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Book, Episode, HydratedBook, VoiceProfile } from '@/lib/types';
+import { isEpisodeReadingOnly } from '@/lib/presets';
 import { BookCover } from './BookCover';
 import {
   DownloadIcon,
@@ -369,7 +370,7 @@ export function AdminDashboardClient({
                               style={{ color: 'var(--text-secondary)' }}
                             >
                               {ep.status === 'published' ? 'Đã xuất bản' : 'Nháp'} ·{' '}
-                              {ep.isTextOnly
+                              {isEpisodeReadingOnly(ep)
                                 ? 'Chỉ đọc chữ'
                                 : `${ep.audioTracks.length} giọng đọc`}{' '}
                               · {ep.wordCount} từ

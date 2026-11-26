@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sảnh Đón — Thư viện Đồi Mơ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background-color: #F8F5EE;
+      color: #222923;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-serif-book {
+      font-family: 'Lora', serif;
+    }
+    .arch-card {
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#F8F5EE] flex justify-center selection:bg-[#354F3E]/10 selection:text-[#354F3E]">
+  <!-- Mobile Container (390px x 844px context) -->
+  <main class="w-full max-w-[390px] min-h-[844px] bg-[#F8F5EE] flex flex-col justify-between border-x border-[#DED7C8]/60 shadow-[0_4px_30px_rgba(0,0,0,0.03)] relative">
+    
+    <!-- 1. Header (54px height, border bottom 1px #DED7C8) -->
+    <header class="h-[64px] px-4 flex items-center justify-between border-b border-[#DED7C8] bg-[#F8F5EE]/95 sticky top-0 z-20 backdrop-blur-xs">
+      <div class="flex flex-col justify-center">
+        <h1 class="font-serif-book text-[20px] font-medium leading-tight text-[#222923] tracking-tight">Sảnh Đồi Mơ</h1>
+        <p class="text-[10.5px] text-[#666D63] font-normal leading-tight mt-0.5">Không gian đọc và nghe trước giờ ngủ</p>
+      </div>
+
+      <!-- 4 nút vuông 40x40px viền #DED7C8 nét mảnh -->
+      <nav class="flex items-center gap-1.5" aria-label="Điều hướng nhanh">
+        <!-- Nút Ra Cổng (Cửa vòm) -->
+        <button class="w-[38px] h-[38px] rounded-lg border border-[#DED7C8] bg-[#FDFBF6] flex items-center justify-center text-[#354F3E] hover:bg-[#F1ECE1] transition-colors" title="Ra Cổng" aria-label="Ra Cổng">
+          <svg class="w-4 h-4 stroke-[1.4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 21V10a8 8 0 0 1 16 0v11"/>
+            <path d="M4 21h16"/>
+            <circle cx="15" cy="14" r="1" fill="currentColor"/>
+          </svg>
+        </button>
+
+        <!-- Nút Kính lúp (Tìm kiếm) -->
+        <button class="w-[38px] h-[38px] rounded-lg border border-[#DED7C8] bg-[#FDFBF6] flex items-center justify-center text-[#222923] hover:bg-[#F1ECE1] transition-colors" title="Tìm sách" aria-label="Tìm kiếm">
+          <svg class="w-4 h-4 stroke-[1.4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
+
+        <!-- Nút Kẹp dấu (Bookmark) -->
+        <button class="w-[38px] h-[38px] rounded-lg border border-[#DED7C8] bg-[#FDFBF6] flex items-center justify-center text-[#222923] hover:bg-[#F1ECE1] transition-colors" title="Kẹp dấu" aria-label="Kẹp dấu">
+          <svg class="w-4 h-4 stroke-[1.4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+          </svg>
+        </button>
+
+        <!-- Nút Mặt trăng (Đêm) -->
+        <button class="w-[38px] h-[38px] rounded-lg border border-[#DED7C8] bg-[#FDFBF6] flex items-center justify-center text-[#9E7B43] hover:bg-[#F1ECE1] transition-colors" title="Chuyển chế độ Đêm" aria-label="Chế độ đêm">
+          <svg class="w-4 h-4 stroke-[1.4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </nav>
+    </header>
+
+    <!-- Body Scrollable Content -->
+    <div class="px-4 pt-4 pb-2 space-y-5 flex-1">
+      
+      <!-- 2. BÀN SÁCH ĐANG KẸP DỞ ĐÊM QUA -->
+      <section class="rounded-[10px] bg-[#FDFBF6] border border-[#DED7C8] p-3 shadow-xs">
+        <div class="flex items-center justify-between mb-2.5">
+          <span class="text-[10px] font-semibold tracking-wider text-[#354F3E] uppercase flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#9E7B43]"></span>
+            BÀN SÁCH KẸP DỞ ĐÊM QUA
+          </span>
+          <span class="text-[10px] text-[#666D63] italic font-serif-book">Trang 18 / 34</span>
+        </div>
+
+        <div class="flex gap-3 items-center">
+          <!-- Bìa sách 3:4 sạch (60x80px) vẽ chim cổ đỏ Brambly Hedge -->
+          <div class="w-[60px] h-[80px] shrink-0 rounded-md overflow-hidden border border-[#DED7C8] bg-[#F1ECE1] shadow-inner relative">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6NWDpk5NbqWXhe2DZzGX5Dg3Uym8dKlQx3IrerjGiqWVIqWxAWyRFR2B405qRvogwJCm9tnyV5qNpd0KcBqVTYDQOdjgZRM_URTt62MCNj0oENO000bh8TIqMRt-XbOZkeNfBpePv8XPGjpLsgnG9mktMOSyDQH29O9RS3nXZWy_w9Ym5H0A-aPMxoMtRH1_B_PMhEF5eSS4FcKXaGyeQpgP-I0rDp1s_rGQXncdMc30AmTIACwA8gsxcqvOhfK8" alt="Bìa sách Lim và Mẹ Vacci" class="w-full h-full object-cover">
+          </div>
+
+          <!-- Thông tin sách & tiến độ -->
+          <div class="flex-1 min-w-0">
+            <h2 class="font-serif-book text-[13.5px] font-medium text-[#222923] leading-snug line-clamp-2">
+              Lim và Mẹ Vacci · Tập 01: Bác chó Barley
+            </h2>
+            <p class="text-[11px] text-[#666D63] mt-0.5 truncate">Giọng đọc ấm · 12 phút còn lại</p>
+
+            <!-- Thanh tiến độ mảnh 2px màu #9E7B43 -->
+            <div class="mt-2.5 mb-2 w-full bg-[#DED7C8]/50 h-[2px] rounded-full overflow-hidden">
+              <div class="bg-[#9E7B43] h-full w-[54%] rounded-full"></div>
+            </div>
+
+            <!-- Nút ▶ Nghe tiếp màu Rêu #354F3E -->
+            <div class="flex items-center justify-between pt-0.5">
+              <span class="text-[10px] text-[#9E7B43] font-medium">54% hoàn thành</span>
+              <button class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#354F3E] text-[#FDFBF6] text-[11px] font-medium hover:bg-[#2a3f31] transition-colors shadow-xs">
+                <span>▶</span>
+                <span>Nghe tiếp</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. SƠ ĐỒ 6 GIAN TRI THỨC -->
+      <section class="space-y-2.5">
+        <div class="flex items-baseline justify-between px-0.5">
+          <h2 class="font-serif-book text-[17px] font-medium text-[#222923]">Các Gian Thư Viện</h2>
+          <span class="text-[11px] text-[#666D63]">Chạm cửa vòm để bước vào gian sách</span>
+        </div>
+
+        <!-- Lưới 2 cột cân đối gồm 6 thẻ hình cửa vòm nhẹ (bo trên 20px, dưới 10px) -->
+        <div class="grid grid-cols-2 gap-2.5">
+          
+          <!-- GIAN I (Sáng đèn — chấm tròn vàng Đồng Cổ #9E7B43) -->
+          <article class="arch-card bg-[#FDFBF6] border border-[#DED7C8] p-3.5 flex flex-col justify-between h-[126px] relative hover:border-[#354F3E]/40 transition-colors shadow-2xs group cursor-pointer">
+            <div class="flex items-start justify-between">
+              <!-- Icon Chiếc lá mảnh -->
+              <div class="w-8 h-8 rounded-full bg-[#F1ECE1]/80 border border-[#DED7C8]/70 flex items-center justify-center text-[#354F3E]">
+                <svg class="w-4 h-4 stroke-[1.4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+                  <path d="M2 21c0-3 1.85-5.36 5.08-6"/>
+                </svg>
+              </div>
+              <!-- Chấm tròn vàng Đồng Cổ #9E7B43 (Sáng đèn) -->
+              <div class="flex items-center gap-1.5" title="Sáng đèn">
+                <span class="w-2 h-2 rounded-full bg-[#9E7B43] shadow-[0_0_6px_#9E7B43]"></span>
+              </div>
+            </div>
+
+            <div>
+              <span class="text-[9.5px] font-semibold text-[#9E7B43] tracking-widest uppercase">GIAN I</span>
+              <h3 class="font-serif-book text-[13.5px] font-medium text-[#222923] leading-snug">Khoa học & Tự nhiên</h3>
+              <p class="text-[10px] text-[#354F3E] font-medium mt-0.5">1 bộ sách · 11 tập</p>
+            </div>
+          </article>
+
+          <!-- GIAN II (Sáng đèn — chấm tròn vàng Đồng Cổ #9E7B43) -->
+          <article class="arch-card bg-[#FDFBF6] border border-[#DED7C8] p-3.5 flex flex-col justify-between h-[126px] relative hover:border-[#354F3E]/40 transition-colors shadow-2xs group cursor-pointer">
+            <div class="flex items-start justify-between">
+              <!-- Icon Tách trà / nồi ấm mảnh -->
+              <div class="w-8 h-8 rounded-full bg-[#F1ECE1]/80 border border-[#DED7C8]/70 flex items-center justify-center text-[#354F3E]">
+                <svg class="w-4 h-4 stroke-[1.4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 8h1a4 4 0 1 1 0 8h-1"/>
+                  <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/>
+                  <line x1="6" y1="2" x2="6" y2="4"/>
+                  <line x1="10" y1="2" x2="10" y2="4"/>
+                  <line x1="14" y1="2" x2="10" y2="4"/>
+                </svg>
+              </div>
+              <!-- Chấm tròn vàng Đồng Cổ #9E7B43 (Sáng đèn) -->
+              <div class="flex items-center gap-1.5" title="Sáng đèn">
+                <span class="w-2 h-2 rounded-full bg-[#9E7B43] shadow-[0_0_6px_#9E7B43]"></span>
+              </div>
+            </div>
+
+            <div>
+              <span class="text-[9.5px] font-semibold text-[#9E7B43] tracking-widest uppercase">GIAN II</span>
+              <h3 class="font-serif-book text-[13.5px] font-medium text-[#222923] leading-snug">Ẩm thực & Nếp nhà</h3>
+              <p class="text-[10px] text-[#354F3E] font-medium mt-0.5">1 bộ sách · 21 tập</p>
+            </div>
+          </article>
+
+          <!-- GIAN III (Đèn dịu mờ hơn) -->
+          <article class="arch-card bg-[#FDFBF6]/80 border border-[#DED7C8] p-3.5 flex flex-col justify-between h-[126px] relative hover:border-[#354F3E]/30 transition-colors shadow-2xs group cursor-pointer opacity-90">
+            <div class="flex items-start justify-between">
+              <!-- Icon Bút lông -->
+              <div class="w-8 h-8 rounded-full bg-[#F1ECE1]/60 border border-[#DED7C8]/70 flex items-center justify-center text-[#666D63]">
+                <svg class="w-4 h-4 stroke-[1.4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+                  <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+                  <path d="M2 2l7.586 7.586"/>
+                  <circle cx="11" cy="11" r="2"/>
+                </svg>
+              </div>
+              <!-- Chấm mờ -->
+              <div class="flex items-center gap-1.5" title="Đèn dịu">
+                <span class="w-2 h-2 rounded-full bg-[#DED7C8]"></span>
+              </div>
+            </div>
+
+            <div>
+              <span class="text-[9.5px] font-semibold text-[#666D63] tracking-widest uppercase">GIAN III</span>
+              <h3 class="font-serif-book text-[13.5px] font-medium text-[#222923] leading-snug">Văn học & Đồng thoại</h3>
+              <p class="text-[10px] text-[#666D63] italic mt-0.5">Đang xếp sách mới...</p>
+            </div>
+          </article>
+
+          <!-- GIAN IV (Đèn dịu mờ hơn) -->
+          <article class="arch-card bg-[#FDFBF6]/80 border border-[#DED7C8] p-3.5 flex flex-col justify-between h-[126px] relative hover:border-[#354F3E]/30 transition-colors shadow-2xs group cursor-pointer opacity-90">
+            <div class="flex items-start justify-between">
+              <!-- Icon La bàn -->
+              <div class="w-8 h-8 rounded-full bg-[#F1ECE1]/60 border border-[#DED7C8]/70 flex items-center justify-center text-[#666D63]">
+                <svg class="w-4 h-4 stroke-[1.4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+                </svg>
+              </div>
+              <!-- Chấm mờ -->
+              <div class="flex items-center gap-1.5" title="Đèn dịu">
+                <span class="w-2 h-2 rounded-full bg-[#DED7C8]"></span>
+              </div>
+            </div>
+
+            <div>
+              <span class="text-[9.5px] font-semibold text-[#666D63] tracking-widest uppercase">GIAN IV</span>
+              <h3 class="font-serif-book text-[13.5px] font-medium text-[#222923] leading-snug">Lịch sử & Văn hóa</h3>
+              <p class="text-[10px] text-[#666D63] italic mt-0.5">Đang xếp sách mới...</p>
+            </div>
+          </article>
+
+          <!-- GIAN V (Đèn dịu mờ hơn) -->
+          <article class="arch-card bg-[#FDFBF6]/80 border border-[#DED7C8] p-3.5 flex flex-col justify-between h-[126px] relative hover:border-[#354F3E]/30 transition-colors shadow-2xs group cursor-pointer opacity-90">
+            <div class="flex items-start justify-between">
+              <!-- Icon Nốt nhạc / cọ vẽ -->
+              <div class="w-8 h-8 rounded-full bg-[#F1ECE1]/60 border border-[#DED7C8]/70 flex items-center justify-center text-[#666D63]">
+                <svg class="w-4 h-4 stroke-[1.4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 18V5l12-2v13"/>
+                  <circle cx="6" cy="18" r="3"/>
+                  <circle cx="18" cy="16" r="3"/>
+                </svg>
+              </div>
+              <!-- Chấm mờ -->
+              <div class="flex items-center gap-1.5" title="Đèn dịu">
+                <span class="w-2 h-2 rounded-full bg-[#DED7C8]"></span>
+              </div>
+            </div>
+
+            <div>
+              <span class="text-[9.5px] font-semibold text-[#666D63] tracking-widest uppercase">GIAN V</span>
+              <h3 class="font-serif-book text-[13.5px] font-medium text-[#222923] leading-snug">Nghệ thuật & Thơ nhạc</h3>
+              <p class="text-[10px] text-[#666D63] italic mt-0.5">Đang xếp sách mới...</p>
+            </div>
+          </article>
+
+          <!-- GIAN VI (Đèn dịu mờ hơn) -->
+          <article class="arch-card bg-[#FDFBF6]/80 border border-[#DED7C8] p-3.5 flex flex-col justify-between h-[126px] relative hover:border-[#354F3E]/30 transition-colors shadow-2xs group cursor-pointer opacity-90">
+            <div class="flex items-start justify-between">
+              <!-- Icon Đèn lồng -->
+              <div class="w-8 h-8 rounded-full bg-[#F1ECE1]/60 border border-[#DED7C8]/70 flex items-center justify-center text-[#666D63]">
+                <svg class="w-4 h-4 stroke-[1.4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M8 2h8v3H8z"/>
+                  <path d="M6 5h12l-2 13H8L6 5z"/>
+                  <path d="M9 18h6v3H9z"/>
+                  <line x1="12" y1="5" x2="12" y2="18"/>
+                </svg>
+              </div>
+              <!-- Chấm mờ -->
+              <div class="flex items-center gap-1.5" title="Đèn dịu">
+                <span class="w-2 h-2 rounded-full bg-[#DED7C8]"></span>
+              </div>
+            </div>
+
+            <div>
+              <span class="text-[9.5px] font-semibold text-[#666D63] tracking-widest uppercase">GIAN VI</span>
+              <h3 class="font-serif-book text-[13.5px] font-medium text-[#222923] leading-snug">Kỹ năng & Lớn khôn</h3>
+              <p class="text-[10px] text-[#666D63] italic mt-0.5">Đang xếp sách mới...</p>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 4. Chân trang tối giản (Không có Bottom Tab Bar) -->
+    <footer class="py-3 text-center border-t border-[#DED7C8]/60 bg-[#F8F5EE]">
+      <p class="text-[11px] text-[#666D63] font-serif-book tracking-wide">
+        Copyright © Nancy & Liti
+      </p>
+    </footer>
+
+  </main>
+</body>
+</html>

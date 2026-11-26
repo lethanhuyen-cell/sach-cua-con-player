@@ -1,23 +1,19 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { SleepTimerMode, useLibraryPlayer } from '@/context/LibraryPlayerContext';
+import { BedtimeSleepChoice, useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { formatClock } from '@/lib/presets';
+import { SearchAndSavedSheet } from './SearchAndSavedSheet';
 import {
   BookmarkIcon,
   BookOpenIcon,
   ChevronDownIcon,
-  ClockIcon,
   Forward15Icon,
-  HomeIcon,
-  LibraryIcon,
   LockIcon,
   MicIcon,
   PauseIcon,
   PlayIcon,
-  RepeatIcon,
   Rewind15Icon,
   SkipNextIcon,
   SkipPrevIcon,
@@ -37,12 +33,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     currentTime,
     duration,
     playbackRate,
-    autoNext,
-    sleepTimerMode,
+    activeSleepChoice,
     sleepRemainingSeconds,
     isFullPlayerOpen,
     isKidLocked,
     favorites,
+    hasPassedGate,
     toggleFavorite,
     togglePlayPause,
     seekTo,
@@ -51,14 +47,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     skipPrev,
     skipNext,
     cyclePlaybackRate,
-    toggleAutoNext,
-    setSleepTimer,
+    selectSleepChoice,
     setFullPlayerOpen,
     setKidLocked,
     retryPlayback
   } = useLibraryPlayer();
 
-  // Genuine 2-second press-and-hold Kid Lock unlock (PLY-010, AC-09)
+  // Genuine 2-second press-and-hold Kid Lock unlock
   const [unlockProgress, setUnlockProgress] = useState(0);
   const holdIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -88,46 +83,46 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const isAdminRoute = pathname.startsWith('/admin');
   const isEpisodeReaderRoute = pathname.startsWith('/episodes/');
+  const isAtClosedGate = pathname === '/' && !hasPassedGate;
   const isReadingActivePlayingEpisode =
     isEpisodeReaderRoute && activeEpisode && pathname === `/episodes/${activeEpisode.id}`;
 
-  const showBottomNav = !isAdminRoute && !isEpisodeReaderRoute;
+  // Zero-Tab Single-Axis Architecture: hide Mini-player & outer footer when standing outside at the Gate
   const showMiniPlayer =
-    !isAdminRoute && Boolean(activeEpisode && activeTrack) && !isReadingActivePlayingEpisode;
+    !isAdminRoute &&
+    !isAtClosedGate &&
+    Boolean(activeEpisode && activeTrack) &&
+    !isReadingActivePlayingEpisode;
 
   const progressPct = duration > 0 ? Math.min(100, (currentTime / duration) * 100) : 0;
 
-  const cycleSleepTimer = () => {
-    const order: SleepTimerMode[] = ['off', '10', '15', '30', '45', 'end_of_episode'];
-    const next = order[(order.indexOf(sleepTimerMode) + 1) % order.length];
-    setSleepTimer(next);
-  };
-
-  const sleepLabel =
-    sleepTimerMode === 'off'
-      ? 'Hẹn giờ'
-      : sleepTimerMode === 'end_of_episode'
-        ? 'Hết tập'
-        : sleepRemainingSeconds !== null
+  const sleepChoices: { key: BedtimeSleepChoice; label: string }[] = [
+    { key: 'end_of_episode', label: 'Hết tập dừng êm' },
+    {
+      key: '15',
+      label:
+        activeSleepChoice === '15' && sleepRemainingSeconds !== null
           ? formatClock(sleepRemainingSeconds)
-          : `${sleepTimerMode}p`;
+          : '15p'
+    },
+    {
+      key: '30',
+      label:
+        activeSleepChoice === '30' && sleepRemainingSeconds !== null
+          ? formatClock(sleepRemainingSeconds)
+          : '30p'
+    },
+    { key: 'continuous', label: 'Liên tiếp' }
+  ];
 
   return (
     <div className="min-h-screen flex flex-col max-w-[480px] mx-auto relative bg-[var(--bg-canvas)] text-[var(--text-primary)]">
       <main
-        className={`flex-1 flex flex-col ${
-          showBottomNav && showMiniPlayer
-            ? 'pb-[132px]'
-            : showBottomNav
-              ? 'pb-[68px]'
-              : showMiniPlayer
-                ? 'pb-[76px]'
-                : ''
-        }`}
+        className={`flex-1 flex flex-col ${showMiniPlayer ? 'pb-[88px]' : 'pb-4'}`}
       >
         <div className="flex-1 flex flex-col">{children}</div>
-        {!isAdminRoute && !isEpisodeReaderRoute && (
-          <footer className="px-4 pt-4 pb-5 text-center">
+        {!isAdminRoute && !isEpisodeReaderRoute && !isAtClosedGate && (
+          <footer className="px-4 pt-3 pb-4 text-center">
             <p className="text-[11px]" style={{ color: 'var(--text-secondary)' }}>
               Copyright &copy; Nancy &amp; Liti
             </p>
@@ -135,13 +130,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         )}
       </main>
 
-      {/* Persistent Mini-Player Bar (Hidden on /admin and when reading the active episode) */}
+      {/* Persistent Mini-Player Bar anchored directly at the bottom (58px freed by removing Bottom Tab Bar) */}
       {showMiniPlayer && activeEpisode && activeBook && (
-        <div
-          className={`fixed left-0 right-0 z-30 max-w-[480px] mx-auto px-4 ${
-            showBottomNav ? 'bottom-[64px]' : 'bottom-3'
-          }`}
-        >
+        <div className="fixed left-0 right-0 bottom-3 z-30 max-w-[480px] mx-auto px-4 pb-[env(safe-area-inset-bottom)]">
           <div
             onClick={() => setFullPlayerOpen(true)}
             style={{
@@ -199,59 +190,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {/* 3-Tab Bottom Navigation Bar (58px, Thumb-zone friendly) */}
-      {showBottomNav && (
-        <nav
-          aria-label="Điều hướng chính"
-          style={{
-            backgroundColor: 'var(--bg-elevated)',
-            borderTop: '1px solid var(--border-hairline)'
-          }}
-          className="fixed bottom-0 left-0 right-0 z-30 max-w-[480px] mx-auto h-[58px] px-3 flex items-center justify-around"
-        >
-          {[
-            { href: '/', label: 'Thư viện', icon: HomeIcon, match: pathname === '/' },
-            {
-              href: '/books',
-              label: 'Tủ sách',
-              icon: LibraryIcon,
-              match: pathname.startsWith('/books')
-            },
-            {
-              href: '/saved',
-              label: 'Lưu trữ',
-              icon: BookmarkIcon,
-              match: pathname.startsWith('/saved')
-            }
-          ].map((tab) => {
-            const IconComp = tab.icon;
-            return (
-              <Link
-                key={tab.href}
-                href={tab.href}
-                style={{
-                  color: tab.match ? 'var(--accent-primary)' : 'var(--text-secondary)'
-                }}
-                className="min-w-[104px] h-[48px] flex flex-col items-center justify-center transition"
-              >
-                <IconComp size={18} filled={tab.match && tab.href === '/saved'} />
-                <span className={`text-[11px] mt-1 ${tab.match ? 'font-semibold' : 'font-normal'}`}>
-                  {tab.label}
-                </span>
-              </Link>
-            );
-          })}
-        </nav>
-      )}
+      {/* Utility Bottom Sheet for Search & Saved Archive */}
+      {!isAdminRoute && <SearchAndSavedSheet />}
 
-      {/* Màn hình 5: Full-screen Audio Player Drawer */}
+      {/* Màn hình 4: Full-screen Sleep Audio Player Drawer */}
       {isFullPlayerOpen && activeEpisode && activeBook && activeTrack && (
         <div
           role="dialog"
           aria-modal="true"
           aria-label="Trình phát sách nói toàn màn hình"
           style={{ backgroundColor: 'var(--bg-canvas)', color: 'var(--text-primary)' }}
-          className="fixed inset-0 z-50 flex flex-col justify-between max-w-[480px] mx-auto px-6 pt-3 pb-7 overflow-y-auto"
+          className="fixed inset-0 z-50 flex flex-col justify-between max-w-[480px] mx-auto px-5 pt-3 pb-7 overflow-y-auto"
         >
           {/* Top bar */}
           <div className="flex items-center justify-between">
@@ -330,7 +279,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               />
             </div>
 
-            <h2 className="text-[19px] font-bold mt-5 font-editorial line-clamp-2">
+            <h2 className="text-[19px] font-bold mt-4 font-editorial line-clamp-2">
               {activeEpisode.title}
             </h2>
             <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>
@@ -401,7 +350,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             )}
           </div>
 
-          {/* Scrubber & Transport Controls */}
+          {/* Scrubber & Bedtime Transport Controls */}
           <div className="space-y-4">
             <div style={{ opacity: isKidLocked ? 0.3 : 1 }}>
               <input
@@ -502,51 +451,59 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   </button>
                 </div>
 
-                <div className="flex items-center justify-between gap-2 pt-1 text-xs">
-                  <button
-                    type="button"
-                    onClick={cycleSleepTimer}
+                {/* One-Tap Bedtime Sleep Timer Bar + Playback Speed */}
+                <div className="flex items-center gap-2 pt-1 text-[11.5px]">
+                  <div
+                    role="group"
+                    aria-label="Hẹn giờ ru ngủ 1 chạm"
                     style={{
                       backgroundColor: 'var(--bg-surface)',
-                      color:
-                        sleepTimerMode !== 'off'
-                          ? 'var(--accent-warm)'
-                          : 'var(--text-secondary)',
                       border: '1px solid var(--border-hairline)'
                     }}
-                    className="flex-1 h-11 rounded-[8px] font-medium inline-flex items-center justify-center gap-1.5 tabular-nums"
+                    className="flex-1 h-11 rounded-[9px] p-1 flex items-center gap-1 min-w-0"
                   >
-                    <ClockIcon size={14} />
-                    <span>{sleepLabel}</span>
-                  </button>
+                    {sleepChoices.map((choice) => {
+                      const active = activeSleepChoice === choice.key;
+                      return (
+                        <button
+                          key={choice.key}
+                          type="button"
+                          onClick={() => selectSleepChoice(choice.key)}
+                          style={{
+                            backgroundColor: active ? 'var(--bg-elevated)' : 'transparent',
+                            color: active
+                              ? choice.key === 'continuous'
+                                ? 'var(--accent-primary)'
+                                : 'var(--accent-warm)'
+                              : 'var(--text-secondary)',
+                            border: active
+                              ? '1px solid var(--border-hairline)'
+                              : '1px solid transparent'
+                          }}
+                          className={`h-9 rounded-[7px] font-medium tabular-nums transition whitespace-nowrap ${
+                            choice.key === 'end_of_episode'
+                              ? 'px-2.5 flex-1 truncate'
+                              : 'px-2 shrink-0'
+                          }`}
+                        >
+                          {choice.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+
                   <button
                     type="button"
                     aria-label="Đổi tốc độ đọc"
                     onClick={cyclePlaybackRate}
                     style={{
                       backgroundColor: 'var(--bg-surface)',
-                      border: '1px solid var(--border-hairline)'
+                      border: '1px solid var(--border-hairline)',
+                      color: 'var(--text-primary)'
                     }}
-                    className="px-3.5 h-11 rounded-[8px] font-medium tabular-nums"
+                    className="px-3 h-11 rounded-[9px] font-medium tabular-nums shrink-0"
                   >
                     {playbackRate}x
-                  </button>
-                  <button
-                    type="button"
-                    onClick={toggleAutoNext}
-                    style={{
-                      backgroundColor: autoNext
-                        ? 'var(--accent-primary)'
-                        : 'var(--bg-surface)',
-                      color: autoNext
-                        ? 'var(--accent-primary-fg)'
-                        : 'var(--text-secondary)',
-                      border: '1px solid var(--border-hairline)'
-                    }}
-                    className="px-3.5 h-11 rounded-[8px] font-medium inline-flex items-center gap-1.5"
-                  >
-                    <RepeatIcon size={14} />
-                    <span>Tự tiếp</span>
                   </button>
                 </div>
               </>

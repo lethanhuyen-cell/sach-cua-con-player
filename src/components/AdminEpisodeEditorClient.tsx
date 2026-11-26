@@ -10,7 +10,7 @@ import {
   VoiceProfile
 } from '@/lib/types';
 import { countWords, parseStoryMarkdown } from '@/lib/markdown';
-import { formatDurationShort } from '@/lib/presets';
+import { formatDurationShort, isEpisodeReadingOnly } from '@/lib/presets';
 import {
   measureAudioFileDuration,
   uploadMediaWithProgress
@@ -87,7 +87,17 @@ export function AdminEpisodeEditorClient({
   const [coverUrl, setCoverUrl] = useState(initialEpisode?.coverUrl || '');
   const [coverUploadPct, setCoverUploadPct] = useState<number | null>(null);
 
-  const [isTextOnly, setIsTextOnly] = useState(initialEpisode?.isTextOnly ?? false);
+  const [isTextOnly, setIsTextOnly] = useState(() => {
+    if (initialEpisode) return initialEpisode.isTextOnly;
+    if (
+      selectedBook &&
+      selectedBook.episodes.length > 0 &&
+      selectedBook.episodes.every((ep) => isEpisodeReadingOnly(ep))
+    ) {
+      return true;
+    }
+    return false;
+  });
   const [tracks, setTracks] = useState<EditableTrack[]>(() =>
     (initialEpisode?.audioTracks || []).map((t) => ({
       localKey: t.id,

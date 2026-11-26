@@ -126,3 +126,11 @@ export interface LocalEpisodeProgress {
   completed: boolean;
   updatedAt: number;
 }
+
+export interface LocalReadingProgress {
+  episodeId: string;
+  bookId: string;
+  scrollPercent: number;
+  completed: boolean;
+  updatedAt: number;
+}

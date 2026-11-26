@@ -68,6 +68,33 @@ export function estimateReadingMinutes(wordCount: number): string {
   return `~${mins} phút đọc`;
 }
 
+export function isEpisodeReadingOnly(ep: {
+  isTextOnly: boolean;
+  audioTracks: unknown[];
+}): boolean {
+  return Boolean(ep.isTextOnly || !ep.audioTracks || ep.audioTracks.length === 0);
+}
+
+export function getEpisodeDurationLabel(
+  ep: {
+    isTextOnly: boolean;
+    wordCount: number;
+    audioTracks: { durationSeconds: number }[];
+  },
+  opts?: { prefixTextOnly?: boolean; preferredDurationSeconds?: number }
+): string {
+  if (isEpisodeReadingOnly(ep)) {
+    const readingText = estimateReadingMinutes(ep.wordCount);
+    return opts?.prefixTextOnly ? `Chỉ đọc chữ · ${readingText}` : readingText;
+  }
+  const sec = opts?.preferredDurationSeconds || ep.audioTracks[0]?.durationSeconds || 0;
+  if (sec > 0) {
+    return formatDurationShort(sec);
+  }
+  const readingText = estimateReadingMinutes(ep.wordCount);
+  return opts?.prefixTextOnly ? `Chỉ đọc chữ · ${readingText}` : readingText;
+}
+
 export function formatRelativePublishDate(isoDate: string | null | undefined): string {
   if (!isoDate) return 'Mới cập nhật';
   const ts = Date.parse(isoDate);

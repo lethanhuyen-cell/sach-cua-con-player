@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Bàn Mở Sách &amp; Mục Lục — Lim và Mẹ Vacci</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<style>
+    :root {
+      --bg-canvas: #F8F5EE;
+      --card-bg: #FDFBF6;
+      --border-color: #DED7C8;
+      --green-forest: #354F3E;
+      --green-soft: #EAEFE8;
+      --green-accent: #486A54;
+      --bronze: #9E7B43;
+      --bronze-light: #C9A96E;
+      --text-main: #242B26;
+      --text-muted: #6B726B;
+      --text-sub: #858D84;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #e5e0d3;
+      font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    .mobile-frame {
+      width: 390px;
+      height: 844px;
+      max-height: 844px;
+      background-color: var(--bg-canvas);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(45, 41, 35, 0.16);
+      border-radius: 36px;
+      border: 8px solid #222624;
+    }
+
+    /* Top Notch / Status indicator */
+    .status-bar {
+      height: 38px;
+      padding: 10px 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-main);
+      z-index: 10;
+      background-color: var(--green-soft);
+    }
+
+    /* HEADER BAN MO SACH */
+    .header-section {
+      background-color: var(--green-soft);
+      border-bottom: 1px solid var(--border-color);
+      padding: 6px 16px 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    /* 1. Breadcrumb navigation */
+    .nav-spatial-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 2px;
+    }
+
+    .spatial-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .spatial-breadcrumb .root-step {
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .spatial-breadcrumb .separator {
+      color: var(--bronze);
+      font-size: 11px;
+    }
+
+    .spatial-breadcrumb .current-step {
+      color: var(--green-forest);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .moon-toggle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--green-forest);
+      cursor: pointer;
+    }
+
+    /* 2. Book Info Row */
+    .book-meta-row {
+      display: flex;
+      gap: 13px;
+      align-items: center;
+    }
+
+    .book-cover-wrap {
+      width: 62px;
+      height: 82px;
+      border-radius: 6px;
+      border: 1px solid rgba(158, 123, 67, 0.4);
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 2px 3px 8px rgba(36, 43, 38, 0.12);
+      background-color: #f3efe6;
+    }
+
+    .book-cover-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .book-details {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    .book-tag-kicker {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--bronze);
+      font-weight: 600;
+    }
+
+    .book-title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 600;
+      color: var(--text-main);
+      letter-spacing: -0.2px;
+    }
+
+    .book-submeta {
+      font-size: 11px;
+      line-height: 1.35;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .book-progress-dot {
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: var(--bronze);
+      margin: 0 4px;
+      vertical-align: middle;
+    }
+
+    /* 3. Button Row */
+    .action-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    .btn-play-continue {
+      background-color: var(--green-forest);
+      color: #F8F5EE;
+      border: none;
+      padding: 0 11px;
+      height: 33px;
+      border-radius: 17px;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 2px 5px rgba(53, 79, 62, 0.2);
+    }
+
+    .btn-play-continue svg {
+      width: 10px;
+      height: 10px;
+      fill: #F8F5EE;
+    }
+
+    .pill-select-voice {
+      height: 33px;
+      padding: 0 9px;
+      border-radius: 17px;
+      border: 1px solid var(--border-color);
+      background-color: var(--card-bg);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .btn-intro-expand {
+      height: 33px;
+      padding: 0 7px;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      margin-left: auto;
+    }
+
+    /* MAIN SCROLLABLE CONTENT */
+    .scroll-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 14px 72px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    /* 2. Filter Pills */
+    .filter-pills-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .filter-pills-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-pill {
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 14px;
+      border: 1px solid var(--border-color);
+      background-color: var(--card-bg);
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+
+    .filter-pill.active {
+      background-color: var(--green-forest);
+      border-color: var(--green-forest);
+      color: #F8F5EE;
+      font-weight: 600;
+    }
+
+    .filter-pill.active .count {
+      color: #D3E0D8;
+    }
+
+    .filter-pill .count {
+      color: var(--text-sub);
+      font-size: 10px;
+    }
+
+    /* 3. Section Title & List Card */
+    .toc-card-container {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(45, 41, 35, 0.04);
+    }
+
+    .toc-list-header {
+      padding: 8px 12px;
+      background-color: rgba(234, 239, 232, 0.45);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .toc-header-title {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--bronze);
+      font-weight: 600;
+    }
+
+    .toc-header-meta {
+      font-size: 10.5px;
+      color: var(--text-sub);
+    }
+
+    /* List Rows (High Density ~56px) */
+    .toc-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 10px;
+      height: 57px;
+      border-bottom: 1px solid #ECE7DC;
+      gap: 10px;
+      position: relative;
+      transition: background-color 0.15s ease;
+      cursor: pointer;
+    }
+
+    .toc-item:last-child {
+      border-bottom: none;
+    }
+
+    .toc-item.current-listening {
+      background-color: rgba(234, 239, 232, 0.55);
+    }
+
+    .toc-item.current-listening::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 3px;
+      background-color: var(--bronze);
+      border-top-right-radius: 2px;
+      border-bottom-right-radius: 2px;
+    }
+
+    .toc-index {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 13px;
+      color: var(--bronze);
+      font-weight: 600;
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .toc-thumb {
+      width: 38px;
+      height: 48px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      flex-shrink: 0;
+      background-color: #EEE9DD;
+    }
+
+    .toc-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .toc-content {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .toc-title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.25;
+    }
+
+    .toc-item.current-listening .toc-title {
+      font-weight: 600;
+      color: var(--green-forest);
+    }
+
+    .toc-meta {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-badge-listened {
+      color: #69786A;
+      font-weight: 500;
+    }
+
+    .status-badge-new {
+      color: var(--bronze);
+      font-weight: 600;
+    }
+
+    .toc-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-bookmark {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-sub);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-bookmark.saved {
+      color: var(--bronze);
+    }
+
+    .btn-round-play {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      background-color: #FAF8F2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--green-forest);
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .btn-round-play.playing {
+      background-color: var(--green-forest);
+      border-color: var(--green-forest);
+      color: #F8F5EE;
+    }
+
+    /* 4. Mini-Player Bottom Bar (62px, No Tab Bar) */
+    .mini-player-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 62px;
+      background-color: #FAF7F0;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 10px;
+      z-index: 20;
+      box-shadow: 0 -3px 12px rgba(45, 41, 35, 0.05);
+    }
+
+    /* Progress bar line on top of player */
+    .player-progress-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2.5px;
+      background-color: #E3DDD0;
+    }
+
+    .player-progress-fill {
+      width: 42%;
+      height: 100%;
+      background-color: var(--bronze);
+    }
+
+    .mini-cover {
+      width: 36px;
+      height: 46px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .mini-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .mini-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .mini-title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mini-subtitle {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mini-controls {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-player-action {
+      background: none;
+      border: none;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .btn-main-playpause {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--green-forest);
+      border: none;
+      color: #F8F5EE;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(53, 79, 62, 0.25);
+    }
+  </style>
+</head>
+<body>
+<div class="mobile-frame">
+<!-- Status Bar (Decor) -->
+<div class="status-bar">
+<span>20:45</span>
+<div style="display:flex; align-items:center; gap:5px;">
+<svg fill="currentColor" height="10" viewbox="0 0 12 10" width="12">
+<path d="M1 7h2v3H1V7zm3-3h2v6H4V4zm3-3h2v9H7V1zm3 5h2v4h-2V6z"></path>
+</svg>
+<span style="font-size: 10px;">Thư viện đêm</span>
+</div>
+</div>
+<!-- 1. ĐẦU TRANG NHUỘM SẮC MÀU NƯỚC RÊU SỒI NHẸ (#EAEFE8) -->
+<header class="header-section">
+<!-- Chuỗi dẫn đường định vị tầng bậc không gian & nút mặt trăng -->
+<div class="nav-spatial-row">
+<a aria-label="Quay lại" class="spatial-breadcrumb" href="#">
+<span class="root-step">
+<svg fill="none" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="12">
+<path d="M15 18l-6-6 6-6"></path>
+</svg>
+            Sảnh Đồi Mơ
+          </span>
+<span class="separator">›</span>
+<span class="current-step">
+<svg fill="none" height="11" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="11">
+<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+<circle cx="12" cy="12" r="3"></circle>
+</svg>
+            Gian Khoa học &amp; Tự nhiên
+          </span>
+</a>
+<button aria-label="Đổi chế độ đêm (Nocturne)" class="moon-toggle">
+<svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="15">
+<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+</svg>
+</button>
+</div>
+<!-- Hàng nhận diện bộ sách -->
+<div class="book-meta-row">
+<div class="book-cover-wrap">
+<img alt="Bìa sách Lim và Mẹ Vacci" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6NWDpk5NbqWXhe2DZzGX5Dg3Uym8dKlQx3IrerjGiqWVIqWxAWyRFR2B405qRvogwJCm9tnyV5qNpd0KcBqVTYDQOdjgZRM_URTt62MCNj0oENO000bh8TIqMRt-XbOZkeNfBpePv8XPGjpLsgnG9mktMOSyDQH29O9RS3nXZWy_w9Ym5H0A-aPMxoMtRH1_B_PMhEF5eSS4FcKXaGyeQpgP-I0rDp1s_rGQXncdMc30AmTIACwA8gsxcqvOhfK8"/>
+</div>
+<div class="book-details">
+<span class="book-tag-kicker">Gian I · Bộ Sách Chọn Lọc</span>
+<h1 class="book-title">Lim và Mẹ Vacci</h1>
+<div class="book-submeta">
+            365 Đêm Khám Phá Thiên Nhiên
+            <span class="book-progress-dot"></span>
+<strong style="color:var(--green-forest); font-weight:600;">4 / 11 đã nghe</strong>
+</div>
+</div>
+</div>
+<!-- Hàng nút ngang gọn (1 dòng không rớt chữ) -->
+<div class="action-row">
+<button class="btn-play-continue">
+<svg viewbox="0 0 24 24">
+<polygon points="5 3 19 12 5 21 5 3"></polygon>
+</svg>
+          ▶ Tiếp tục Tập 02
+        </button>
+<div class="pill-select-voice">
+<svg fill="none" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="color:var(--bronze);" viewbox="0 0 24 24" width="12">
+<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+<path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+<line x1="12" x2="12" y1="19" y2="23"></line>
+</svg>
+<span>Nữ · Mỹ Duyên</span>
+<svg fill="none" height="9" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24" width="9">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</div>
+<button class="btn-intro-expand">
+<span>Giới thiệu</span>
+<svg fill="none" height="9" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="9">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+</div>
+</header>
+<!-- PHẦN CUỘN NỘI DUNG CHÍNH -->
+<main class="scroll-content">
+<!-- 2. Thanh lọc Tuyển tập ngang (3 pill) -->
+<div class="filter-pills-bar">
+<div class="filter-pill active">
+<span>Tất cả</span>
+<span class="count">(11)</span>
+</div>
+<div class="filter-pill">
+<span>Cội nguồn thiên nhiên</span>
+<span class="count">(6)</span>
+</div>
+<div class="filter-pill">
+<span>Thú kỳ diệu</span>
+<span class="count">(5)</span>
+</div>
+</div>
+<!-- 3. Danh sách mục lục mật độ cao trong khung #FDFBF6 viền #DED7C8 bo 10px -->
+<section class="toc-card-container">
+<div class="toc-list-header">
+<span class="toc-header-title">Mục lục các tập nghe</span>
+<span class="toc-header-meta">Tổng 3 giờ 18 phút</span>
+</div>
+<!-- Hàng 01: Đã nghe -->
+<article class="toc-item">
+<div class="toc-index">01</div>
+<div class="toc-thumb">
+<img alt="Tập 01" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDooedc_zSPmN9Tev-Kkt0UNBB8arpP6ahytw07toccySG5nwCdKDh3cwk2xyzPXAwskThmUfH3b-igsdKxel4JZfTW5Ldpl6yTR2rGAnF93BEgdnpz1ai7XQjnKUooTBggB0fwedXD1JlGMC9ODzKPEqNsnrq686xTL3ie1OVlNDDUKVd6EEC3Yg6T-jM3Qy7P1P7y38PXjV1zdD2-v3YyINwWh4eTlEn2omDr6NQD84B25lrhvWyk6QUYogBHJek"/>
+</div>
+<div class="toc-content">
+<h2 class="toc-title">Bác chó Barley và ngày sương mù</h2>
+<div class="toc-meta">
+<span>18 phút</span>
+<span>·</span>
+<span class="status-badge-listened">Đã nghe trọn vẹn</span>
+</div>
+</div>
+<div class="toc-actions">
+<button aria-label="Đã lưu" class="btn-bookmark saved">
+<svg fill="currentColor" height="14" stroke="none" viewbox="0 0 24 24" width="14">
+<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+</svg>
+</button>
+<button aria-label="Nghe lại" class="btn-round-play">
+<svg fill="currentColor" height="10" viewbox="0 0 24 24" width="10">
+<polygon points="6 4 20 12 6 20 6 4"></polygon>
+</svg>
+</button>
+</div>
+</article>
+<!-- Hàng 02: Đang nghe dở -->
+<article class="toc-item current-listening">
+<div class="toc-index" style="color:var(--green-forest);">02</div>
+<div class="toc-thumb">
+<img alt="Tập 02" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6NWDpk5NbqWXhe2DZzGX5Dg3Uym8dKlQx3IrerjGiqWVIqWxAWyRFR2B405qRvogwJCm9tnyV5qNpd0KcBqVTYDQOdjgZRM_URTt62MCNj0oENO000bh8TIqMRt-XbOZkeNfBpePv8XPGjpLsgnG9mktMOSyDQH29O9RS3nXZWy_w9Ym5H0A-aPMxoMtRH1_B_PMhEF5eSS4FcKXaGyeQpgP-I0rDp1s_rGQXncdMc30AmTIACwA8gsxcqvOhfK8"/>
+</div>
+<div class="toc-content">
+<h2 class="toc-title">Ngọn sồi ngàn năm &amp; đàn đom đóm</h2>
+<div class="toc-meta">
+<span style="color:var(--bronze); font-weight:600;">14:20 / 19 phút</span>
+<span>·</span>
+<span style="color:var(--green-forest); font-weight:600;">Đang nghe</span>
+</div>
+</div>
+<div class="toc-actions">
+<button aria-label="Lưu bookmark" class="btn-bookmark">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24" width="14">
+<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+</svg>
+</button>
+<button aria-label="Tiếp tục phát" class="btn-round-play playing">
+<svg fill="currentColor" height="10" viewbox="0 0 24 24" width="10">
+<polygon points="6 4 20 12 6 20 6 4"></polygon>
+</svg>
+</button>
+</div>
+</article>
+<!-- Hàng 03: Đã nghe -->
+<article class="toc-item">
+<div class="toc-index">03</div>
+<div class="toc-thumb">
+<img alt="Tập 03" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_2DnDUz5za-xXiuVAc6ovGY6pIjCit4oj23oq0W_rjGXq0SibVuvHIrwNpAEAQZRymaQWZTR1oD1xX8-VisX_VFxkAhM08O_1JIfqkga9ZYMgnaih4fEDORxM7V8WtlONIvS6DloK4h9TIDm9Q9M4E3RvjARbVFhbAuXuimyErm5wEChzkuANZ2bTY4FWKclY8C382hYPCJxWpMi-lOrG9YISPItEwhzuVaEuibYRD2zLA2-fE3MNsLqrG0gl9FU"/>
+</div>
+<div class="toc-content">
+<h2 class="toc-title">Bí mật vỏ ốc và tiếng thở đại dương</h2>
+<div class="toc-meta">
+<span>16 phút</span>
+<span>·</span>
+<span class="status-badge-listened">Đã nghe</span>
+</div>
+</div>
+<div class="toc-actions">
+<button aria-label="Lưu" class="btn-bookmark">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24" width="14">
+<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+</svg>
+</button>
+<button aria-label="Phát" class="btn-round-play">
+<svg fill="currentColor" height="10" viewbox="0 0 24 24" width="10">
+<polygon points="6 4 20 12 6 20 6 4"></polygon>
+</svg>
+</button>
+</div>
+</article>
+<!-- Hàng 04: Đã nghe -->
+<article class="toc-item">
+<div class="toc-index">04</div>
+<div class="toc-thumb">
+<img alt="Tập 04" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDW3YUfixMisV8qUTni_cDz3_268S101t_HACdLyMmhRsETUFqWzKZwFPS154W9zjZt3jZBPfCNbWOjD--w5Vsu2OwIiGIK6C9adl4RTrP5i2cvVCSGFibuKGqfwYZ_bLUq4-gf5f5ZjCyGvAMxVe91TWW65ni8tNjrdOyFFB3WOOWWV-l0BGkSw_uDxV2YrpXrKlvBsEKLNdMKXfQ1YPcczex0Ltzh5CQvJb0Jr4avzO3QSAA7G7lx9J-HLmhehC8"/>
+</div>
+<div class="toc-content">
+<h2 class="toc-title">Hạt dẻ ngủ vùi dưới lớp tuyết đầu mùa</h2>
+<div class="toc-meta">
+<span>21 phút</span>
+<span>·</span>
+<span class="status-badge-listened">Đã nghe</span>
+</div>
+</div>
+<div class="toc-actions">
+<button aria-label="Đã lưu" class="btn-bookmark saved">
+<svg fill="currentColor" height="14" stroke="none" viewbox="0 0 24 24" width="14">
+<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+</svg>
+</button>
+<button aria-label="Phát" class="btn-round-play">
+<svg fill="currentColor" height="10" viewbox="0 0 24 24" width="10">
+<polygon points="6 4 20 12 6 20 6 4"></polygon>
+</svg>
+</button>
+</div>
+</article>
+<!-- Hàng 05: Mới -->
+<article class="toc-item">
+<div class="toc-index">05</div>
+<div class="toc-thumb">
+<img alt="Tập 05" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDooedc_zSPmN9Tev-Kkt0UNBB8arpP6ahytw07toccySG5nwCdKDh3cwk2xyzPXAwskThmUfH3b-igsdKxel4JZfTW5Ldpl6yTR2rGAnF93BEgdnpz1ai7XQjnKUooTBggB0fwedXD1JlGMC9ODzKPEqNsnrq686xTL3ie1OVlNDDUKVd6EEC3Yg6T-jM3Qy7P1P7y38PXjV1zdD2-v3YyINwWh4eTlEn2omDr6NQD84B25lrhvWyk6QUYogBHJek"/>
+</div>
+<div class="toc-content">
+<h2 class="toc-title">Hương cỏ ướt và hành trình chú kiến con</h2>
+<div class="toc-meta">
+<span>15 phút</span>
+<span>·</span>
+<span class="status-badge-new">Mới lên kệ</span>
+</div>
+</div>
+<div class="toc-actions">
+<button aria-label="Lưu" class="btn-bookmark">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24" width="14">
+<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+</svg>
+</button>
+<button aria-label="Phát" class="btn-round-play">
+<svg fill="currentColor" height="10" viewbox="0 0 24 24" width="10">
+<polygon points="6 4 20 12 6 20 6 4"></polygon>
+</svg>
+</button>
+</div>
+</article>
+<!-- Hàng 06: Mới -->
+<article class="toc-item">
+<div class="toc-index">06</div>
+<div class="toc-thumb">
+<img alt="Tập 06" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_2DnDUz5za-xXiuVAc6ovGY6pIjCit4oj23oq0W_rjGXq0SibVuvHIrwNpAEAQZRymaQWZTR1oD1xX8-VisX_VFxkAhM08O_1JIfqkga9ZYMgnaih4fEDORxM7V8WtlONIvS6DloK4h9TIDm9Q9M4E3RvjARbVFhbAuXuimyErm5wEChzkuANZ2bTY4FWKclY8C382hYPCJxWpMi-lOrG9YISPItEwhzuVaEuibYRD2zLA2-fE3MNsLqrG0gl9FU"/>
+</div>
+<div class="toc-content">
+<h2 class="toc-title">Ngôi sao xanh rụng vào giếng nước cổ</h2>
+<div class="toc-meta">
+<span>17 phút</span>
+<span>·</span>
+<span class="status-badge-new">Mới lên kệ</span>
+</div>
+</div>
+<div class="toc-actions">
+<button aria-label="Lưu" class="btn-bookmark">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24" width="14">
+<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+</svg>
+</button>
+<button aria-label="Phát" class="btn-round-play">
+<svg fill="currentColor" height="10" viewbox="0 0 24 24" width="10">
+<polygon points="6 4 20 12 6 20 6 4"></polygon>
+</svg>
+</button>
+</div>
+</article>
+</section>
+</main>
+<!-- 4. SÁT ĐÁY: MINI-PLAYER 62PX (KHÔNG BOTTOM TAB BAR) -->
+<footer class="mini-player-bar">
+<div class="player-progress-line">
+<div class="player-progress-fill"></div>
+</div>
+<div class="mini-cover">
+<img alt="Đang phát tập 02" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6NWDpk5NbqWXhe2DZzGX5Dg3Uym8dKlQx3IrerjGiqWVIqWxAWyRFR2B405qRvogwJCm9tnyV5qNpd0KcBqVTYDQOdjgZRM_URTt62MCNj0oENO000bh8TIqMRt-XbOZkeNfBpePv8XPGjpLsgnG9mktMOSyDQH29O9RS3nXZWy_w9Ym5H0A-aPMxoMtRH1_B_PMhEF5eSS4FcKXaGyeQpgP-I0rDp1s_rGQXncdMc30AmTIACwA8gsxcqvOhfK8"/>
+</div>
+<div class="mini-info">
+<div class="mini-title">Tập 02: Ngọn sồi ngàn năm...</div>
+<div class="mini-subtitle">Lim và Mẹ Vacci · Còn 4 phút 40 giây</div>
+</div>
+<div class="mini-controls">
+<button aria-label="Tua lại 15 giây" class="btn-player-action">
+<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="18">
+<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+<path d="M3 3v5h5"></path>
+<text fill="currentColor" font-size="7" font-weight="bold" stroke="none" text-anchor="middle" x="12" y="15">15</text>
+</svg>
+</button>
+<button aria-label="Tạm dừng / Phát" class="btn-main-playpause">
+<svg fill="currentColor" height="14" viewbox="0 0 24 24" width="14">
+<rect height="16" rx="1" width="4" x="6" y="4"></rect>
+<rect height="16" rx="1" width="4" x="14" y="4"></rect>
+</svg>
+</button>
+<button aria-label="Hẹn giờ tắt" class="btn-player-action">
+<svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="17">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+</button>
+</div>
+</footer>
+</div>
+</body>
+</html>

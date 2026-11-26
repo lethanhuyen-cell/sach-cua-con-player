@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { HydratedBook, HydratedEpisode } from '@/lib/types';
+import { resolveBookHall } from '@/lib/halls';
 import { collectEpisodeIllustrations, parseStoryMarkdown } from '@/lib/markdown';
-import { formatClock, formatDurationShort } from '@/lib/presets';
+import { formatClock, formatDurationShort, isEpisodeReadingOnly } from '@/lib/presets';
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import {
   ChevronLeftIcon,
@@ -26,12 +27,12 @@ interface EpisodeReaderClientProps {
 }
 
 /**
- * Màn hình 4B: Giao diện Đọc Tập liền mạch (GEMINI.md Điều 1):
+ * Màn hình 3: Giao diện Đọc Tập liền mạch (GEMINI.md Điều 1):
  * 1. Cấm tuyệt đối mọi hộp phụ cuối tập và hộp chú thích dưới tranh.
  * 2. Ưu tiên tối đa màn hình nhiều chữ liền mạch (Text-First Continuity).
  * 3. Cụm Phát & chọn Giọng đọc gom gọn trên 1 thanh ngang mảnh 38px (ẩn hoàn toàn khi Chỉ đọc chữ).
- * 4. Tranh minh họa đi theo dòng cuộn từ trên xuống, tự giới hạn chiều cao gọn trong màn hình + Lightbox toàn màn hình.
- * 5. Thanh thoát nhanh Sticky 42px cố định ở đỉnh: [← Bộ sách] và [Trang chủ].
+ * 4. Vi điều khiển [⏸ 05:30] tốn 0px chiều cao thêm xuất hiện trên thanh Sticky 42px khi cuộn sâu đọc bài dài.
+ * 5. Tự động lưu & khôi phục vị trí cuộn cho cả sách đọc chữ (Tiểu Hạt Dẻ) lẫn sách nói.
  */
 export function EpisodeReaderClient({
   book,
@@ -41,11 +42,14 @@ export function EpisodeReaderClient({
   isPreview = false
 }: EpisodeReaderClientProps) {
   const {
+    isHydrated,
     isNight,
     toggleNight,
     readerFontSize,
     adjustReaderFontSize,
     markEpisodeOpened,
+    readingProgressMap,
+    saveReadingProgress,
     preferredVoiceKey,
     activeEpisode,
     activeTrack,
@@ -70,6 +74,12 @@ export function EpisodeReaderClient({
     );
   });
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [isAudioStripVisible, setIsAudioStripVisible] = useState(true);
+
+  const audioStripRef = useRef<HTMLDivElement | null>(null);
+  const articleRef = useRef<HTMLElement | null>(null);
+  const hasRestoredScrollRef = useRef<string | null>(null);
+  const pendingPctRef = useRef<number | null>(null);
 
   // Opening an episode to read automatically clears its "Mới" badge on this device
   useEffect(() => {
@@ -83,6 +93,7 @@ export function EpisodeReaderClient({
     [episode.contentMarkdown, episode.title]
   );
 
+  const hall = useMemo(() => resolveBookHall(book), [book]);
   const illustrations = useMemo(() => collectEpisodeIllustrations(episode), [episode]);
 
   const isThisEpisodeActive = activeEpisode?.id === episode.id;
@@ -91,8 +102,105 @@ export function EpisodeReaderClient({
     ? activeTrack?.voiceProfile.voiceKey || selectedVoiceKey
     : selectedVoiceKey;
 
-  const hasAudio = !episode.isTextOnly && episode.audioTracks.length > 0;
+  const hasAudio = !isEpisodeReadingOnly(episode);
   const defaultDuration = episode.audioTracks[0]?.durationSeconds || 0;
+
+  // Observe whether the top 38px audio strip is visible in viewport; show 0px micro-control in Sticky 42px when scrolled past
+  useEffect(() => {
+    if (!hasAudio) {
+      setIsAudioStripVisible(true);
+      return;
+    }
+    const el = audioStripRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]) {
+          setIsAudioStripVisible(entries[0].isIntersecting);
+        }
+      },
+      { threshold: 0.05, rootMargin: '-42px 0px 0px 0px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [episode.id, hasAudio, viewMode]);
+
+  // Restore saved reading scroll position once per episode when in story mode
+  useEffect(() => {
+    if (isPreview || !isHydrated || viewMode !== 'story') return;
+    if (hasRestoredScrollRef.current === episode.id) return;
+
+    const saved = readingProgressMap[episode.id];
+    hasRestoredScrollRef.current = episode.id;
+    if (!saved || saved.completed || saved.scrollPercent < 5 || saved.scrollPercent >= 92) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      const scrollable = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      if (scrollable > 120) {
+        const targetY = Math.round((saved.scrollPercent / 100) * scrollable);
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      }
+    }, 180);
+    return () => clearTimeout(timer);
+  }, [episode.id, isHydrated, isPreview, readingProgressMap, viewMode]);
+
+  // Debounced reading progress tracking while scrolling story prose (+ short-article & SPA unmount flush)
+  useEffect(() => {
+    if (isPreview || viewMode !== 'story') return;
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+    let shortTimer: ReturnType<typeof setTimeout> | null = null;
+    pendingPctRef.current = null;
+
+    const measurePct = (): number | null => {
+      const scrollable = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      if (scrollable <= 80 || window.scrollY < 48) return null;
+      return Math.min(100, Math.max(0, Math.round((window.scrollY / scrollable) * 100)));
+    };
+
+    const measureAndSave = () => {
+      const pct = measurePct();
+      pendingPctRef.current = null;
+      if (pct !== null) {
+        saveReadingProgress(book.id, episode.id, pct);
+      }
+    };
+
+    const onScroll = () => {
+      const pct = measurePct();
+      if (pct !== null) {
+        pendingPctRef.current = pct;
+      }
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(measureAndSave, 500);
+    };
+
+    // Auto-complete short chapters/poems that fit in one screen after reader lingers 3.5s
+    const checkShortTimer = setTimeout(() => {
+      const scrollable = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      if (scrollable <= 80) {
+        shortTimer = setTimeout(() => {
+          saveReadingProgress(book.id, episode.id, 100);
+        }, 3500);
+      }
+    }, 400);
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('pagehide', measureAndSave);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('pagehide', measureAndSave);
+      clearTimeout(checkShortTimer);
+      if (shortTimer) clearTimeout(shortTimer);
+      if (debounceTimer) clearTimeout(debounceTimer);
+      if (pendingPctRef.current !== null) {
+        saveReadingProgress(book.id, episode.id, pendingPctRef.current);
+        pendingPctRef.current = null;
+      }
+    };
+  }, [book.id, episode.id, isPreview, saveReadingProgress, viewMode]);
 
   const handlePlayClick = () => {
     playEpisode(book, episode, effectiveVoiceKey || undefined);
@@ -112,21 +220,24 @@ export function EpisodeReaderClient({
     setLightboxIndex(idx >= 0 ? idx : 0);
   };
 
+  const showStickyMicroControl =
+    hasAudio && !isAudioStripVisible && (isThisEpisodeActive || viewMode === 'story');
+
   return (
     <div className="min-h-screen flex flex-col">
-      {/* 1. Sticky 42px Exit & Typography Bar (GEMINI.md Điều 1.5) */}
+      {/* 1. Sticky 42px Exit, 0px Micro-Audio Control & Typography Bar */}
       <header
         style={{
           backgroundColor: 'var(--bg-canvas)',
           borderBottom: '1px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[42px] px-3.5 flex items-center justify-between gap-2"
+        className="sticky top-0 z-20 h-[42px] px-3 flex items-center justify-between gap-1.5"
       >
-        <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center gap-1.5 min-w-0">
           <Link
             href={`/books/${book.slug}`}
             style={{ color: 'var(--accent-primary)' }}
-            className="h-9 inline-flex items-center gap-0.5 text-xs font-semibold max-w-[165px]"
+            className="h-9 inline-flex items-center gap-0.5 text-xs font-semibold max-w-[150px]"
           >
             <ChevronLeftIcon size={16} className="shrink-0" />
             <span className="truncate">{book.title}</span>
@@ -141,11 +252,34 @@ export function EpisodeReaderClient({
             style={{ color: 'var(--text-secondary)' }}
             className="h-9 px-1 inline-flex items-center text-xs font-medium shrink-0"
           >
-            Trang chủ
+            Sảnh sách
           </Link>
         </div>
 
         <div className="flex items-center gap-1 shrink-0">
+          {showStickyMicroControl && (
+            <button
+              type="button"
+              onClick={handlePlayClick}
+              aria-label={isThisEpisodePlaying ? 'Tạm dừng nghe' : 'Phát tiếp'}
+              style={{
+                backgroundColor: isThisEpisodePlaying
+                  ? 'var(--accent-primary)'
+                  : 'var(--bg-surface)',
+                color: isThisEpisodePlaying
+                  ? 'var(--accent-primary-fg)'
+                  : 'var(--accent-primary)',
+                border: '1px solid var(--border-hairline)'
+              }}
+              className="h-7 px-2 rounded-full inline-flex items-center gap-1 text-[11px] font-semibold tabular-nums"
+            >
+              {isThisEpisodePlaying ? <PauseIcon size={11} /> : <PlayIcon size={11} />}
+              {isThisEpisodeActive && duration > 0 && (
+                <span>{formatClock(currentTime)}</span>
+              )}
+            </button>
+          )}
+
           {viewMode === 'story' && (
             <>
               <button
@@ -193,7 +327,7 @@ export function EpisodeReaderClient({
         </div>
       )}
 
-      {/* 2. Compact Story Header + Dual-Mode Toggle [Đọc truyện | Chỉ xem tranh] */}
+      {/* 2. Compact Story Header + Dual-Mode Toggle [Đọc truyện | Xem tranh] */}
       <div className="px-4 pt-4 pb-2">
         <div className="flex items-center justify-between gap-2">
           <span className="vn-eyebrow truncate" style={{ color: 'var(--text-secondary)' }}>
@@ -250,6 +384,7 @@ export function EpisodeReaderClient({
         {/* 3. Single-Line Slim 38px Audio & Voice Strip (Hidden completely when isTextOnly) */}
         {hasAudio && (
           <div
+            ref={audioStripRef}
             style={{
               backgroundColor: 'var(--bg-surface)',
               border: '1px solid var(--border-hairline)'
@@ -318,6 +453,7 @@ export function EpisodeReaderClient({
       {/* 4A. Long-Form Story Reader Mode (Uncaptioned 3:4 Portrait Interleaved Illustrations) */}
       {viewMode === 'story' ? (
         <article
+          ref={articleRef}
           style={{ fontSize: `${readerFontSize}px` }}
           className="px-4 pt-3 pb-8 story-prose space-y-4 flex-1"
         >
@@ -428,16 +564,27 @@ export function EpisodeReaderClient({
           )}
 
           <Link
+            href={`/halls/${hall.slug}`}
+            style={{ color: 'var(--text-secondary)' }}
+            className="h-10 px-2 inline-flex items-center truncate max-w-[140px]"
+          >
+            {hall.shortTitle}
+          </Link>
+
+          <Link
             href="/"
             style={{ color: 'var(--text-secondary)' }}
             className="h-10 px-2 inline-flex items-center"
           >
-            Trang chủ
+            Sảnh sách
           </Link>
 
           {nextEpisode ? (
             <Link
               href={`/episodes/${nextEpisode.id}`}
+              onClick={() => {
+                if (!isPreview) saveReadingProgress(book.id, episode.id, 100);
+              }}
               style={{ color: 'var(--accent-primary)' }}
               className="h-10 inline-flex items-center gap-1 font-semibold"
             >
@@ -446,6 +593,9 @@ export function EpisodeReaderClient({
           ) : (
             <Link
               href={`/books/${book.slug}`}
+              onClick={() => {
+                if (!isPreview) saveReadingProgress(book.id, episode.id, 100);
+              }}
               style={{ color: 'var(--accent-primary)' }}
               className="h-10 inline-flex items-center gap-1 font-semibold"
             >

@@ -1,5 +1,8 @@
 # UX FLOWS & INFORMATION ARCHITECTURE — Litibook (Phase 2)
 
+> [!NOTE]
+> **Cập nhật phiên bản Không gian 6 Lớp (`2026-11-26`):** Luồng trải nghiệm người nghe chính thức đã được nâng cấp sang mô hình *Cổng Đồi Mơ → Sảnh sách → 6 Gian sách → Kệ gỗ sồi → Bàn mở sách → Trang đọc* (không dùng Bottom Tab Bar 3 mục). Xem đặc tả và sơ đồ mới nhất tại [QUY_TRINH_THU_VIEN_DOI_MO.md](./QUY_TRINH_THU_VIEN_DOI_MO.md) và [OPTIMAL_UX_DESIGN_BRIEF.md](./OPTIMAL_UX_DESIGN_BRIEF.md).
+
 | Thuộc tính | Thông tin |
 | :--- | :--- |
 | **Tham chiếu sản phẩm** | [GEMINI.md](./GEMINI.md) · [PRD.md](./PRD.md) (Release 1.0 · Tài liệu v1.3 — Đã phê duyệt chính thức) |

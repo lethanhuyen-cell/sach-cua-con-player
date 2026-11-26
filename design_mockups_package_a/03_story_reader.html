@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-[#F8F5EE]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Đọc Tác Phẩm - Lim và Mẹ Vacci (Tập 02)</title>
+  <!-- Google Fonts: Lora & Be Vietnam Pro -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cotton: '#F8F5EE',
+            'cotton-card': '#F1ECE1',
+            borderline: '#DED7C8',
+            ink: '#222923',
+            'ink-muted': '#666D63',
+            moss: '#354F3E',
+            'moss-hover': '#2a4032',
+          },
+          fontFamily: {
+            serif: ['Lora', 'Georgia', 'serif'],
+            sans: ['"Be Vietnam Pro"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* iOS Safe Area & Crisp Book Aesthetics */
+    body {
+      background-color: #F8F5EE;
+      color: #222923;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .reading-content p {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.82;
+      color: #222923;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
+      text-align: justify;
+      text-justify: inter-word;
+    }
+    .reading-content p:last-child {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col font-sans select-none bg-[#F8F5EE] text-[#222923]">
+
+  <!-- Top Safe Area Spacer for iOS (44px) -->
+  <div class="w-full h-11 bg-[#F8F5EE] shrink-0"></div>
+
+  <!-- Sticky Minimal Reading Header (Exact 42px height, 1px border bottom) -->
+  <header class="sticky top-0 z-40 w-full h-[42px] bg-[#F8F5EE]/95 backdrop-blur-sm border-b border-[#DED7C8] px-4 flex items-center justify-between">
+    <!-- Left: Navigation breadcrumb -->
+    <div class="flex items-center gap-1.5 text-[13px] font-medium tracking-tight">
+      <a href="#" class="text-[#354F3E] hover:underline flex items-center gap-1">
+        <svg class="w-3.5 h-3.5 stroke-[#354F3E]" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Lim và Mẹ Vacci</span>
+      </a>
+      <span class="text-[#DED7C8]">/</span>
+      <a href="#" class="text-[#666D63] hover:text-[#222923] text-xs">Trang chủ</a>
+    </div>
+
+    <!-- Right: Audio micro-pill & Controls (A-, A+, Night Mode) -->
+    <div class="flex items-center gap-2">
+      <!-- Micro Audio Pill (0 extra height overhead) -->
+      <button class="flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-[#DED7C8] bg-[#F1ECE1]/80 hover:bg-[#F1ECE1] transition-colors text-[11px] font-medium text-[#354F3E]">
+        <svg class="w-2.5 h-2.5 fill-[#354F3E]" viewBox="0 0 24 24">
+          <rect x="6" y="4" width="4" height="16" rx="1"></rect>
+          <rect x="14" y="4" width="4" height="16" rx="1"></rect>
+        </svg>
+        <span class="tabular-nums tracking-wide">05:30</span>
+      </button>
+
+      <!-- Font size toggles: A- and A+ -->
+      <div class="flex items-center border border-[#DED7C8] rounded-md bg-[#F8F5EE] divide-x divide-[#DED7C8]">
+        <button title="Giảm cỡ chữ" class="px-1.5 py-0.5 text-[11px] font-medium text-[#666D63] hover:text-[#222923] transition-colors">
+          A-
+        </button>
+        <button title="Tăng cỡ chữ" class="px-1.5 py-0.5 text-[12px] font-medium text-[#666D63] hover:text-[#222923] transition-colors">
+          A+
+        </button>
+      </div>
+
+      <!-- Monochrome Night Mode Icon (1.5px stroke, no OS emoji) -->
+      <button title="Chuyển chế độ đọc tối" class="p-1 text-[#666D63] hover:text-[#354F3E] transition-colors">
+        <svg class="w-4 h-4 stroke-[#666D63] hover:stroke-[#354F3E]" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Reading Progress Subtle Hairline (1px) -->
+  <div class="w-full bg-[#DED7C8]/40 h-[1.5px]">
+    <div class="bg-[#354F3E] h-full w-[38%] transition-all duration-300"></div>
+  </div>
+
+  <!-- Main Continuity Reading Space (> 90% Screen Area, Zero Floating Widgets) -->
+  <main class="flex-1 w-full max-w-[430px] mx-auto px-4 py-6">
+    <!-- Chapter Metadata subtle tag -->
+    <div class="mb-5 text-center">
+      <span class="text-[11px] uppercase tracking-widest text-[#666D63] font-medium">Tập 02 · Mùa Quả Rụng</span>
+      <h1 class="font-serif text-[22px] font-medium text-[#222923] mt-1 leading-snug">Tiếng hạt sồi rơi lúc chạng vạng</h1>
+      <div class="w-6 h-[1px] bg-[#DED7C8] mx-auto mt-3"></div>
+    </div>
+
+    <!-- Continuous Reading Paragraphs (Lora 18px / 1.82 line-height, #222923) -->
+    <article class="reading-content text-left">
+      <p>
+        Khu rừng phía tây đồi Mơ chuyển mình rất khẽ khi mặt trời bắt đầu lặn sau những rặng sồi già. Những tia nắng vàng sẫm cuối cùng lách qua kẽ lá, nhuộm lên mặt cỏ đẫm hơi sương một màu mật ong ngọt lịm. Chú mèo con Lim khẽ vươn vai trên bậc thềm gỗ thông ngai ngái mùi dầu bóng, mũi hếch lên đón luồng không khí thơm mùi nấm và rêu ẩm ướt.
+      </p>
+
+      <p>
+        Bên cạnh chú, bác chó Barley lông vàng óng đã nằm phủ phục ở đó tự bao giờ. Đôi tai mềm màu bánh nướng thỉnh thoảng khẽ vẫy khi nghe tiếng một hạt sồi tách vỏ trên cành cao rồi rơi đánh <em>“tách”</em> một tiếng gọn lỏn xuống thảm lá mục.
+      </p>
+
+      <p>
+        — Mỗi sinh vật đi qua cánh rừng này đều để lại một sợi mùi hương riêng — bác Barley đáp chậm rãi giữa làn gió sớm, đôi mắt màu hạt dẻ hiền từ nhìn về phía vòm cây râm mát. — Con đường vô hình ấy, nếu con không vội vã, con sẽ thấy nó rõ ràng hơn cả những lối mòn bằng đất son ngoài ngõ.
+      </p>
+
+      <p>
+        Lim tròn xoe mắt, nghiêng đầu áp tai sát xuống mặt đất. Chú không nghe thấy bước chân người, chỉ có tiếng xào xạc rất nhẹ của một chú chim sâu đang cần mẫn chuyền cành. Một cảm giác bình yên kỳ lạ bao bọc lấy vạt đồi, tựa như cả không gian đang lắng tai nghe bản hòa âm của đất trời trước giờ chìm vào giấc ngủ đêm.
+      </p>
+
+      <!-- Seamless In-Text Botanical Watercolor Painting (3:4 ratio, 8px radius, 1px border, STRICTLY NO CAPTION BOX) -->
+      <div class="my-6 w-full flex justify-center">
+        <div class="relative w-full rounded-lg border border-[#DED7C8] overflow-hidden shadow-[0_2px_8px_rgba(53,79,62,0.04)] bg-[#F1ECE1]">
+          <img 
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0Q0L14K82-ALzLqPhfmExRqL21kuYzVWEeuX0oBU-VowI17UNZbIfjKNBA98Yi8lAcowGhdWSxWHqbW554EVDtPDDj8_jJko4cjXQwDrzYvn9_Y_HOB0W2N4wTm4vI1xwbSVlHsYolEp00hmpVj-31519CFJaphLga7enmvCeslYq71hFeDoKdehf0IBNX12v6bxKAGrTLvIM-yJL-aeSgUpSC2jt-zHqxMg8tRZeU6X8dltZMvJ2gYYecDgdsCM" 
+            alt="Bác chó Barley và chú chim cổ đỏ trên cành sồi mùa thu" 
+            class="w-full h-auto object-cover block aspect-[3/4]"
+            loading="lazy"
+          >
+        </div>
+      </div>
+
+      <!-- Direct Text Continuation after Illustration (Zero cards, zero interruptions) -->
+      <p>
+        Đúng lúc ấy, từ vòm cây mâm xôi gai gần bờ suối, một chấm đỏ nhỏ nhắn nhẹ nhàng sà xuống mỏm cành rêu. Đó là chú chim cổ đỏ Robin với bộ lông ngực màu cam ấm áp như một đốm lửa sưởi. Chú nghiêng đầu sang trái rồi sang phải, chiếc mỏ bé xíu gõ lách cách vào vỏ cây sồi già, cất lên mấy tiếng hót trong veo như giọt nước rơi vào lòng giếng đá.
+      </p>
+
+      <p>
+        Bác Barley khẽ mỉm cười, cái đuôi phủ lông dầy phẩy nhẹ một nhịp êm ru lên nền cỏ. Chú chim nhỏ dường như chẳng hề sợ hãi người bạn to lớn, nó nhảy lùi lại nửa bước rồi cất tiếng líu lo như đang thuật lại câu chuyện về những quả dâu dại chín mọng cuối cùng ở thung lũng bên kia.
+      </p>
+
+      <p>
+        Lim thở một hơi dài, cảm nhận hơi ấm từ bộ lông của bác Barley lan sang bờ vai nhỏ. Chú biết rằng đêm nay, câu chuyện của khu rừng sẽ lại đưa chú vào những giấc mơ êm đềm nhất, nơi những con đường vô hình nở đầy hoa cỏ may và tiếng suối ru nghìn năm không dứt.
+      </p>
+    </article>
+
+    <!-- Subtle End Separator (Botanical Motif / Line) -->
+    <div class="flex items-center justify-center gap-3 my-10">
+      <span class="h-[1px] w-12 bg-[#DED7C8]"></span>
+      <span class="text-[#354F3E] text-xs font-serif italic">Hết tập 02</span>
+      <span class="h-[1px] w-12 bg-[#DED7C8]"></span>
+    </div>
+
+    <!-- Minimal Chapter Navigation & Footer (Strictly Clean: No boxes, no notes, no souvenirs) -->
+    <footer class="pt-2 pb-6 border-t border-[#DED7C8]/70 text-center font-sans">
+      <nav class="flex items-center justify-center gap-3 text-[13px] font-medium text-[#354F3E] mb-3">
+        <a href="#" class="hover:underline flex items-center gap-1">
+          <svg class="w-3 h-3 stroke-[#354F3E]" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Tập 01
+        </a>
+        <span class="text-[#DED7C8]">·</span>
+        <a href="#" class="text-[#666D63] hover:text-[#222923]">Trang chủ</a>
+        <span class="text-[#DED7C8]">·</span>
+        <a href="#" class="hover:underline flex items-center gap-1">
+          Tập 03
+          <svg class="w-3 h-3 stroke-[#354F3E]" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </a>
+      </nav>
+      <p class="text-[11px] text-[#666D63] tracking-wide">
+        Copyright © Nancy &amp; Liti · Ấn bản Giấy Cotton
+      </p>
+    </footer>
+  </main>
+
+  <!-- iOS Bottom Safe Area Spacer (34px) - ZERO Bottom Nav, ZERO Mini Player -->
+  <div class="w-full h-[34px] bg-[#F8F5EE] shrink-0"></div>
+
+</body>
+</html>

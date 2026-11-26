@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&amp;family=Lora:ital,wght@0,400;0,500;0,600;1,400&amp;family=Playfair+Display:ital,wght@0,500;0,600;1,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary": "#5b2016", "on-tertiary-container": "#fca191", "outline": "#727973", "on-surface-variant": "#424843", "surface-variant": "#dde5db", "on-primary-fixed-variant": "#324c3c", "surface-container-highest": "#dde5db", "primary-container": "#354f3e", "secondary-fixed-dim": "#e9c081", "tertiary-fixed-dim": "#ffb4a6", "on-primary-fixed": "#062012", "surface-dim": "#d5dcd3", "on-tertiary": "#ffffff", "tertiary-container": "#77362a", "inverse-on-surface": "#ebf3e9", "on-error": "#ffffff", "surface-tint": "#4a6452", "error-container": "#ffdad6", "surface-container-lowest": "#ffffff", "on-error-container": "#93000a", "inverse-primary": "#b0ceb8", "surface-container": "#e9f0e6", "secondary-fixed": "#ffdeae", "on-tertiary-fixed-variant": "#743328", "primary-fixed": "#ccead3", "secondary-container": "#fed393", "on-secondary-container": "#795a25", "tertiary-fixed": "#ffdad4", "surface": "#f4fbf2", "on-tertiary-fixed": "#3b0903", "inverse-surface": "#2b322c", "on-primary-container": "#a3c0aa", "on-secondary-fixed": "#281900", "surface-container-low": "#eef6ec", "on-secondary": "#ffffff", "background": "#f4fbf2", "primary-fixed-dim": "#b0ceb8", "outline-variant": "#c2c8c1", "surface-bright": "#f4fbf2", "on-secondary-fixed-variant": "#5e420e", "on-surface": "#161d18", "on-background": "#161d18", "on-primary": "#ffffff", "surface-container-high": "#e3eae1", "primary": "#1f3828", "secondary": "#785924", "error": "#ba1a1a" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "gutter-mobile": "0.75rem", "space-md": "1rem", "space-lg": "1.5rem", "margin": "2.5rem", "space-xl": "2.5rem", "margin-mobile": "1.25rem", "gutter": "1.25rem", "space-sm": "0.5rem", "space-xs": "0.25rem" }, "fontFamily": { "body-md": ["Lora"], "headline-md": ["Playfair Display"], "body-sm": ["Lora"], "display-lg-mobile": ["Playfair Display"], "label-md": ["Be Vietnam Pro"], "label-lg": ["Be Vietnam Pro"], "label-numeric": ["Be Vietnam Pro"], "title-md": ["Lora"], "body-lg": ["Lora"], "headline-lg": ["Playfair Display"], "display-lg": ["Playfair Display"] }, "fontSize": { "body-md": ["16px", { "lineHeight": "28.8px", "fontWeight": "400" }], "headline-md": ["22px", { "lineHeight": "34px", "fontWeight": "500" }], "body-sm": ["14px", { "lineHeight": "24px", "fontWeight": "400" }], "display-lg-mobile": ["30px", { "lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "18px", "letterSpacing": "0.04em", "fontWeight": "500" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }], "label-numeric": ["13px", { "lineHeight": "18px", "fontWeight": "600" }], "title-md": ["19px", { "lineHeight": "30px", "fontWeight": "600" }], "body-lg": ["18px", { "lineHeight": "32.4px", "fontWeight": "400" }], "headline-lg": ["28px", { "lineHeight": "42px", "fontWeight": "500" }], "display-lg": ["40px", { "lineHeight": "58px", "letterSpacing": "-0.01em", "fontWeight": "600" }] } } } };</script><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,34px);}.pt-safe{padding-top:env(safe-area-inset-top,44px);}.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;vertical-align:middle;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head><body class="bg-background font-body-md text-body-md text-on-surface antialiased flex flex-col min-h-screen selection:bg-surface-variant"><main class="flex-1 flex flex-col relative w-full pb-safe px-margin-mobile bg-background pt-safe"><div class="flex flex-col w-full text-on-surface">
+<!-- Đầu trang / Nhận diện bộ sách (Nhuộm sắc rêu sồi mờ dịu, viền chỉ mực) -->
+<section class="bg-surface-container-low/70 pb-space-md border-b border-outline-variant/40">
+<!-- Thanh công cụ phụ: Điều hướng & Chế độ đọc -->
+<div class="flex items-center justify-between py-2.5">
+<button class="inline-flex items-center gap-1.5 h-11 px-2 text-on-surface-variant hover:text-on-surface transition-colors font-label-md text-label-md" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M19 12H5M12 19l-7-7 7-7"></path>
+</svg>
+<span>Trang chủ</span>
+</button>
+<div class="flex items-center gap-1">
+<button aria-label="Tìm kiếm truyện" class="w-11 h-11 inline-flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="7"></circle>
+<path d="m20 20-3.5-3.5"></path>
+</svg>
+</button>
+<button aria-label="Chuyển sang chế độ đêm tĩnh lặng" class="w-11 h-11 inline-flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" viewbox="0 0 24 24">
+<path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.5 5.5 0 0 1-7.54-7.54A8.99 8.99 0 0 0 12 3z"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Nhận diện tác phẩm: Tranh bìa màu nước 3:4 & Thông số -->
+<div class="flex items-start gap-space-md pt-1 pb-space-sm">
+<div class="relative shrink-0 w-[64px] h-[86px] rounded-lg overflow-hidden bg-surface-container shadow-sm border border-outline-variant/60">
+<img alt="Bìa sách Lim và Mẹ Vacci" class="w-full h-full object-cover" data-alt="A delicate classic British storybook watercolor illustration of a charming little tabby kitten sitting by a cozy rustic stone cottage fireplace with warm copper kettles and dried herbs, Brambly Hedge style on textured cream cotton paper" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrhjH1UVuZrE6lZqNnkNtmK-WBqMQP_hvditRwdhHhESbJjkz5rwNsAjOiKNxUE0IEBDhf60ZJZ_YK7Vcx5ttHh3r1OPm333MfkeDfUsHshcpCnxTnis83SyZD2dtopsLT4gTM5VNG4pFbGRI4oQ2P4t2j-lryjg8mjb_XRPRfvh7BtCfLJl4qjU-m9n09fPV5Iviv3Myq2A-CTs2Zizf_jx_dof5glEjacKS-CHEx59gBt7FQ0NHt8zuL9IHM-fk"/>
+</div>
+<div class="flex-1 min-w-0 flex flex-col justify-center">
+<h2 class="font-headline-md text-headline-md font-semibold text-on-surface leading-tight tracking-tight truncate">
+          Lim và Mẹ Vacci
+        </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+          Lê Thanh Uyên
+        </p>
+<div class="flex items-center gap-1.5 mt-1 text-on-surface-variant font-label-md text-label-md tracking-tight">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="truncate">365 Đêm Khám Phá Thiên Nhiên · 4/11 đã nghe</span>
+</div>
+</div>
+</div>
+<!-- Hàng nút hành động chuẩn công thái học -->
+<div class="flex items-center gap-2.5 pt-2"><button class="inline-flex items-center justify-center gap-1.5 h-10 px-3.5 bg-primary text-on-primary rounded-xl font-label-lg text-label-lg whitespace-nowrap shrink-0 transition-transform active:scale-[0.98]" type="button"><svg class="w-4 h-4 fill-current shrink-0" viewbox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg><span class="font-medium whitespace-nowrap">Tiếp tục Tập 02</span></button><button class="inline-flex items-center justify-center gap-1.5 h-10 px-3 bg-surface-container-lowest text-primary border border-outline-variant rounded-full font-label-md text-label-md whitespace-nowrap shrink-0" type="button"><span class="whitespace-nowrap">Nữ · Mỹ Duyên</span><svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button><button class="h-10 px-2.5 inline-flex items-center justify-center gap-1 text-on-surface-variant hover:text-on-surface font-label-md text-label-md whitespace-nowrap shrink-0" type="button"><span class="whitespace-nowrap">Giới thiệu</span><svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button></div>
+</section>
+<!-- Bộ lọc chương hồi (Horizontal Pills) -->
+<section class="py-3">
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+<button class="shrink-0 px-3.5 h-9 inline-flex items-center justify-center bg-primary text-on-primary rounded-lg font-label-md text-label-md" type="button">
+        Tất cả (11)
+      </button>
+<button class="shrink-0 px-3.5 h-9 inline-flex items-center justify-center bg-surface-container-lowest text-on-surface-variant border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-colors" type="button">
+        Cội nguồn thiên nhiên (6)
+      </button>
+<button class="shrink-0 px-3.5 h-9 inline-flex items-center justify-center bg-surface-container-lowest text-on-surface-variant border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-colors" type="button">
+        Thú kỳ diệu (5)
+      </button>
+</div>
+</section>
+<!-- Danh mục truyện mật độ cao đóng khung chỉ mảnh giấy cotton -->
+<section class="mt-1 bg-surface-container-lowest rounded-xl border border-outline-variant/70 overflow-hidden divide-y divide-outline-variant/40">
+<!-- Hàng 1 (Tập 01) -->
+<article class="flex items-center gap-3 p-2.5 hover:bg-surface-container-low/40 transition-colors">
+<span class="w-5 text-center font-label-numeric text-label-numeric text-on-surface-variant">01</span>
+<div class="relative shrink-0 w-[40px] h-[52px] rounded overflow-hidden bg-surface-container border border-outline-variant/40">
+<img alt="Tập 1" class="w-full h-full object-cover" data-alt="Delicate vintage watercolor of a friendly golden retriever dog resting along a misty woodland mossy pathway with oak leaves and berries" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDooedc_zSPmN9Tev-Kkt0UNBB8arpP6ahytw07toccySG5nwCdKDh3cwk2xyzPXAwskThmUfH3b-igsdKxel4JZfTW5Ldpl6yTR2rGAnF93BEgdnpz1ai7XQjnKUooTBggB0fwedXD1JlGMC9ODzKPEqNsnrq686xTL3ie1OVlNDDUKVd6EEC3Yg6T-jM3Qy7P1P7y38PXjV1zdD2-v3YyINwWh4eTlEn2omDr6NQD84B25lrhvWyk6QUYogBHJek"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-body-md text-body-sm font-medium text-on-surface truncate">Bác chó Barley và con đường vô hình</h3>
+<p class="font-label-md text-label-md text-on-surface-variant mt-0.5">16 phút · Đã nghe</p>
+</div>
+<div class="flex items-center gap-1 shrink-0">
+<button aria-label="Lưu đánh dấu" class="w-11 h-11 inline-flex items-center justify-center text-on-surface-variant hover:text-on-surface" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.3" viewbox="0 0 24 24">
+<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>
+</svg>
+</button>
+<button aria-label="Phát tập 01" class="w-9 h-9 inline-flex items-center justify-center rounded-full bg-surface-container text-on-surface border border-outline-variant/80 hover:bg-surface-variant transition-colors" type="button">
+<svg class="w-3.5 h-3.5 fill-current ml-0.5" viewbox="0 0 24 24">
+<polygon points="6 3 20 12 6 21 6 3"></polygon>
+</svg>
+</button>
+</div>
+</article>
+<!-- Hàng 2 (Tập 02 - Đang nghe dở) -->
+<article class="flex items-center gap-3 p-2.5 bg-surface-container-low/60">
+<span class="w-5 text-center font-label-numeric text-label-numeric text-primary font-bold">02</span>
+<div class="relative shrink-0 w-[40px] h-[52px] rounded overflow-hidden bg-surface-container border border-primary/30">
+<img alt="Tập 2" class="w-full h-full object-cover" data-alt="Intricate botanical watercolor illustration of a charming little European robin bird perched on an oak branch among acorns and woodland flora" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_2DnDUz5za-xXiuVAc6ovGY6pIjCit4oj23oq0W_rjGXq0SibVuvHIrwNpAEAQZRymaQWZTR1oD1xX8-VisX_VFxkAhM08O_1JIfqkga9ZYMgnaih4fEDORxM7V8WtlONIvS6DloK4h9TIDm9Q9M4E3RvjARbVFhbAuXuimyErm5wEChzkuANZ2bTY4FWKclY8C382hYPCJxWpMi-lOrG9YISPItEwhzuVaEuibYRD2zLA2-fE3MNsLqrG0gl9FU"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-1.5">
+<h3 class="font-body-md text-body-sm font-semibold text-primary truncate">Tiếng hạt sồi rơi lúc chập tối</h3>
+<span class="inline-flex items-center gap-0.5 text-primary">
+<span class="w-1 h-3 bg-primary rounded-full animate-pulse"></span>
+<span class="w-1 h-2 bg-primary rounded-full"></span>
+</span>
+</div>
+<div class="flex items-center gap-2 mt-1">
+<div class="flex-1 max-w-[90px] h-1 rounded-full bg-surface-variant overflow-hidden">
+<div class="w-[36%] h-full bg-primary rounded-full"></div>
+</div>
+<p class="font-label-md text-label-md text-primary font-medium">05:30 / 15:00</p>
+</div>
+</div>
+<div class="flex items-center gap-1 shrink-0">
+<button aria-label="Đã lưu đánh dấu" class="w-11 h-11 inline-flex items-center justify-center text-primary" type="button">
+<svg class="w-4 h-4 fill-primary stroke-primary" stroke-width="1.3" viewbox="0 0 24 24">
+<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>
+</svg>
+</button>
+<button aria-label="Tạm dừng tập 02" class="w-9 h-9 inline-flex items-center justify-center rounded-full bg-primary text-on-primary hover:bg-primary/90 transition-colors shadow-sm" type="button">
+<svg class="w-3.5 h-3.5 fill-current" viewbox="0 0 24 24">
+<rect height="16" width="4" x="6" y="4"></rect>
+<rect height="16" width="4" x="14" y="4"></rect>
+</svg>
+</button>
+</div>
+</article>
+<!-- Hàng 3 (Tập 03) -->
+<article class="flex items-center gap-3 p-2.5 hover:bg-surface-container-low/40 transition-colors">
+<span class="w-5 text-center font-label-numeric text-label-numeric text-on-surface-variant">03</span>
+<div class="relative shrink-0 w-[40px] h-[52px] rounded overflow-hidden bg-surface-container border border-outline-variant/40">
+<img alt="Tập 3" class="w-full h-full object-cover" data-alt="Delicate vintage watercolor illustration of golden autumn maple leaves whispering in soft twilight breeze, cozy vintage children book style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDW3YUfixMisV8qUTni_cDz3_268S101t_HACdLyMmhRsETUFqWzKZwFPS154W9zjZt3jZBPfCNbWOjD--w5Vsu2OwIiGIK6C9adl4RTrP5i2cvVCSGFibuKGqfwYZ_bLUq4-gf5f5ZjCyGvAMxVe91TWW65ni8tNjrdOyFFB3WOOWWV-l0BGkSw_uDxV2YrpXrKlvBsEKLNdMKXfQ1YPcczex0Ltzh5CQvJb0Jr4avzO3QSAA7G7lx9J-HLmhehC8"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-body-md text-body-sm font-medium text-on-surface truncate">Vòm lá phong và ngọn gió phương nam</h3>
+<p class="font-label-md text-label-md text-on-surface-variant mt-0.5">
+          18 phút · <span class="text-secondary font-medium">Mới</span>
+</p>
+</div>
+<div class="flex items-center gap-1 shrink-0">
+<button aria-label="Lưu đánh dấu" class="w-11 h-11 inline-flex items-center justify-center text-on-surface-variant hover:text-on-surface" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.3" viewbox="0 0 24 24">
+<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>
+</svg>
+</button>
+<button aria-label="Phát tập 03" class="w-9 h-9 inline-flex items-center justify-center rounded-full bg-surface-container text-on-surface border border-outline-variant/80 hover:bg-surface-variant transition-colors" type="button">
+<svg class="w-3.5 h-3.5 fill-current ml-0.5" viewbox="0 0 24 24">
+<polygon points="6 3 20 12 6 21 6 3"></polygon>
+</svg>
+</button>
+</div>
+</article>
+<!-- Hàng 4 (Tập 04) -->
+<article class="flex items-center gap-3 p-2.5 hover:bg-surface-container-low/40 transition-colors">
+<span class="w-5 text-center font-label-numeric text-label-numeric text-on-surface-variant">04</span>
+<div class="relative shrink-0 w-[40px] h-[52px] rounded overflow-hidden bg-surface-container border border-outline-variant/40">
+<img alt="Tập 4" class="w-full h-full object-cover" data-alt="Serene storybook watercolor drawing of a mossy secret stream pebble bank with tiny wild forget-me-nots and calm forest reflection" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnJtnGm6TW8L-DOhxZjj0dhFWXbsJ6OyLC5alEIqd33eUCVyd1uVliISClgP8SV6bdElM8LCs36x0MM1yHn1f5wPThbbMvkBlLB-bYs91mgWUN7Twv8SSTClnnZaJiQNxf_jbC04YYR33oZggSx-OROcIPD9BjhJC3saulp5cXy-T2z7Vxg6UXLe9NgTO1_tFZ12Is2arLgUjV7SUHyFxNmaIXqJcPueYwieHDq8l_oq6BHvBRosTbEIaDz53bSP0"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-body-md text-body-sm font-medium text-on-surface truncate">Bí mật dưới lớp rêu bên suối vắng</h3>
+<p class="font-label-md text-label-md text-on-surface-variant mt-0.5">14 phút · Chưa nghe</p>
+</div>
+<div class="flex items-center gap-1 shrink-0">
+<button aria-label="Lưu đánh dấu" class="w-11 h-11 inline-flex items-center justify-center text-on-surface-variant hover:text-on-surface" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.3" viewbox="0 0 24 24">
+<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>
+</svg>
+</button>
+<button aria-label="Phát tập 04" class="w-9 h-9 inline-flex items-center justify-center rounded-full bg-surface-container text-on-surface border border-outline-variant/80 hover:bg-surface-variant transition-colors" type="button">
+<svg class="w-3.5 h-3.5 fill-current ml-0.5" viewbox="0 0 24 24">
+<polygon points="6 3 20 12 6 21 6 3"></polygon>
+</svg>
+</button>
+</div>
+</article>
+<!-- Hàng 5 (Tập 05) -->
+<article class="flex items-center gap-3 p-2.5 hover:bg-surface-container-low/40 transition-colors">
+<span class="w-5 text-center font-label-numeric text-label-numeric text-on-surface-variant">05</span>
+<div class="relative shrink-0 w-[40px] h-[52px] rounded overflow-hidden bg-surface-container border border-outline-variant/40">
+<img alt="Tập 5" class="w-full h-full object-cover" data-alt="Quiet vintage storybook watercolor of an ancient hollow oak log house where a tiny woodland brown squirrel peeks out with hazelnut" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT2XTXWYreS61qBkofx_qZAETFJ_V08m3cU8AjlX4PKD79E1yJkbH9cGj2YHIDT5-A1uLA9x05qJua5NY-nEAzP6fbx8FqE9qXUGDeN4HDbb9FY8TFA8q6RoSBvcsmzUwdcZnZX0NGMiGv_lQodw4OIT_QPCzEx2tmD-xFHz0lvDCubjnghbynT3lave5ONAZ0V9kfZFpzkft4kOf1rioL-tW3JJ7boxObHO9_XV902Rc4gBl0NFjWtNNSkNJKWbc"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-body-md text-body-sm font-medium text-on-surface truncate">Ngôi nhà gỗ mục và chú sóc nâu</h3>
+<p class="font-label-md text-label-md text-on-surface-variant mt-0.5">17 phút · Chưa nghe</p>
+</div>
+<div class="flex items-center gap-1 shrink-0">
+<button aria-label="Lưu đánh dấu" class="w-11 h-11 inline-flex items-center justify-center text-on-surface-variant hover:text-on-surface" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.3" viewbox="0 0 24 24">
+<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>
+</svg>
+</button>
+<button aria-label="Phát tập 05" class="w-9 h-9 inline-flex items-center justify-center rounded-full bg-surface-container text-on-surface border border-outline-variant/80 hover:bg-surface-variant transition-colors" type="button">
+<svg class="w-3.5 h-3.5 fill-current ml-0.5" viewbox="0 0 24 24">
+<polygon points="6 3 20 12 6 21 6 3"></polygon>
+</svg>
+</button>
+</div>
+</article>
+<!-- Hàng 6 (Tập 06) -->
+<article class="flex items-center gap-3 p-2.5 hover:bg-surface-container-low/40 transition-colors">
+<span class="w-5 text-center font-label-numeric text-label-numeric text-on-surface-variant">06</span>
+<div class="relative shrink-0 w-[40px] h-[52px] rounded overflow-hidden bg-surface-container border border-outline-variant/40">
+<img alt="Tập 6" class="w-full h-full object-cover" data-alt="Dreamy vintage watercolor painting of twilight dusk in an orchard with soft crickets, glowworms, and delicate bedtime forest atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQgAV550KSb2-pAC4BnlfAa4q1ftZBqVMu4PaLwZ79PINdplSSBrZo4ZvHCougoHxufwg6TEuSAIa0OuhS3pTDc4OfXC-tAbXhsuK6Zw5VFdx4OPWGWsqZhg7oFvTq2oiCNZehVCrB8_JTjomfirURJ5V7DAJLtRUt06cRbpv1pmC1ZAjvxFTQu0KRBfZDXHi_1cS15nzwA6nEC2VIX0Yh6S_7y3z4nIY-Mu9M98BGg2miWUqrjEE_y-ZGDerOSko"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-body-md text-body-sm font-medium text-on-surface truncate">Bản hòa tấu của đêm đầu thu</h3>
+<p class="font-label-md text-label-md text-on-surface-variant mt-0.5">15 phút · Chưa nghe</p>
+</div>
+<div class="flex items-center gap-1 shrink-0">
+<button aria-label="Lưu đánh dấu" class="w-11 h-11 inline-flex items-center justify-center text-on-surface-variant hover:text-on-surface" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.3" viewbox="0 0 24 24">
+<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>
+</svg>
+</button>
+<button aria-label="Phát tập 06" class="w-9 h-9 inline-flex items-center justify-center rounded-full bg-surface-container text-on-surface border border-outline-variant/80 hover:bg-surface-variant transition-colors" type="button">
+<svg class="w-3.5 h-3.5 fill-current ml-0.5" viewbox="0 0 24 24">
+<polygon points="6 3 20 12 6 21 6 3"></polygon>
+</svg>
+</button>
+</div>
+</article>
+</section>
+<!-- Họa tiết thực vật chia đoạn trang nhã -->
+<div class="flex items-center justify-center gap-3 py-6 text-secondary/70">
+<div class="h-[1px] w-12 bg-outline-variant/60"></div>
+<svg class="w-4 h-4 stroke-current" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" viewbox="0 0 24 24">
+<path d="M12 2L9 8h6l-3-6z"></path>
+<path d="M12 8v14"></path>
+<path d="M9 14c2-2 3-5 3-5s1 3 3 5"></path>
+</svg>
+<div class="h-[1px] w-12 bg-outline-variant/60"></div>
+</div>
+<!-- Chú thích bản quyền nhẹ nhàng -->
+<footer class="text-center pb-20">
+<p class="font-body-sm text-[12px] text-on-surface-variant/80">
+      Copyright © Nancy &amp; Liti · Ấn bản Giấy Cotton
+    </p>
+</footer>
+<!-- Mini-player thanh lịch cố định phía trên vạch điều hướng iOS (Cao 62px) -->
+<div class="fixed bottom-0 inset-x-0 z-40 bg-surface-container/95 backdrop-blur-md border-t border-outline-variant/60 shadow-[0_-4px_16px_rgba(34,41,35,0.06)] pb-safe">
+<div class="h-[62px] px-margin-mobile flex items-center justify-between gap-3">
+<!-- Thumbnail & Tiêu đề đang phát -->
+<div class="flex items-center gap-2.5 min-w-0 flex-1">
+<div class="shrink-0 w-10 h-10 rounded overflow-hidden bg-surface border border-outline-variant/50">
+<img alt="Đang phát: Tập 02" class="w-full h-full object-cover" data-alt="Intricate botanical watercolor of a small robin bird sitting on a twig, classic vintage children book illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJ58WV11Gzh77Sj7GPzTOfNCspSDdKkEF0T76NpWqtHvxdP6IvPZFo9KFCBYr-FCoyNZfCVLszmEVFQQ-YnDkceN6csj59dF4EOy8aZwjf1IP7boiUGElQXHRA3AVKKaTRFkNxXPPeWg_e2YBH02NhSmCpI7mbLA7zlHm9e4XP6BRrClmItD6HOziiEzMW3vEbOTgkFQtpBR-XidusmJIDQrEffxWvSWcOZgtGwsBVOHOCtV0hmFzfNE61fEPyhNI"/>
+</div>
+<div class="min-w-0 flex-1">
+<p class="font-body-md text-body-sm font-semibold text-on-surface truncate">
+            Tiếng hạt sồi rơi lúc chập tối
+          </p>
+<p class="font-label-md text-[11px] text-on-surface-variant">
+            Tập 02 · 05:30 / 15:00
+          </p>
+</div>
+</div>
+<!-- Cụm nút điều khiển âm thanh 44x44px touch targets -->
+<div class="flex items-center gap-0.5 shrink-0">
+<!-- Nút Tua 15s -->
+<button aria-label="Lùi lại 15 giây" class="w-11 h-11 inline-flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" viewbox="0 0 24 24">
+<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+<path d="M3 3v5h5"></path>
+<text class="font-label-numeric font-bold" fill="currentColor" font-size="6" stroke="none" text-anchor="middle" x="12" y="15">15</text>
+</svg>
+</button>
+<!-- Nút Phát/Dừng chính -->
+<button aria-label="Tạm dừng hoặc phát tiếp" class="w-11 h-11 inline-flex items-center justify-center text-primary hover:scale-105 transition-transform" type="button">
+<span class="w-9 h-9 rounded-full border border-primary/50 flex items-center justify-center bg-primary text-on-primary">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<rect height="14" rx="0.5" width="3.5" x="6" y="5"></rect>
+<rect height="14" rx="0.5" width="3.5" x="14.5" y="5"></rect>
+</svg>
+</span>
+</button>
+<!-- Nút Mở danh sách phát -->
+<button aria-label="Mở danh sách phát" class="w-11 h-11 inline-flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" viewbox="0 0 24 24">
+<line x1="8" x2="21" y1="6" y2="6"></line>
+<line x1="8" x2="21" y1="12" y2="12"></line>
+<line x1="8" x2="21" y1="18" y2="18"></line>
+<line x1="3" x2="3.01" y1="6" y2="6"></line>
+<line x1="3" x2="3.01" y1="12" y2="12"></line>
+<line x1="3" x2="3.01" y1="18" y2="18"></line>
+</svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const playButtons = document.querySelectorAll('button[aria-label*="Phát"], button[aria-label*="Tạm dừng"]');
+    playButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    });
+  })();
+</script></main></body></html>

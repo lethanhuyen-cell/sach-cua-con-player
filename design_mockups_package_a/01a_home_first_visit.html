@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Thư viện Đồi Mơ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            paper: '#F8F5EE',
+            'paper-sub': '#F1ECE1',
+            'card-bg': '#FDFBF6',
+            line: '#DED7C8',
+            primary: '#222923',
+            secondary: '#666D63',
+            moss: '#354F3E',
+            brass: '#9E7B43',
+            ochre: '#9A5144',
+          },
+          fontFamily: {
+            serif: ['Lora', 'serif'],
+            sans: ['"Be Vietnam Pro"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Texture and fine typography settings */
+    body {
+      background-color: #F8F5EE;
+      color: #222923;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      margin: 0;
+      padding: 0;
+    }
+    .font-serif-title {
+      font-family: 'Lora', serif;
+      line-height: 1.45;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+    /* Touch target minimum 44x44px */
+    .touch-btn {
+      min-width: 44px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body class="bg-paper text-primary antialiased min-h-screen flex justify-center">
+
+  <!-- Mobile Wrapper: 390px, iOS Safe Area (44px top, 34px bottom), No Bottom Tab Bar -->
+  <main class="w-full max-w-[390px] min-h-[844px] bg-paper flex flex-col justify-between relative shadow-sm border-x border-line">
+    
+    <div>
+      <!-- iOS Status Bar Spacer (44px Safe Area) -->
+      <div class="h-[44px] w-full flex items-center justify-between px-6 text-[13px] font-medium text-secondary tabular-nums select-none pt-2">
+        <span>09:41</span>
+        <div class="flex items-center space-x-1.5">
+          <!-- Signal icon -->
+          <svg class="w-3.5 h-3.5 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 20h.01M7 20v-4M12 20v-8M17 20V4M22 20v-12"/>
+          </svg>
+          <!-- Wifi icon -->
+          <svg class="w-3.5 h-3.5 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/>
+          </svg>
+          <!-- Battery icon -->
+          <svg class="w-4 h-4 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="16" height="10" rx="2" ry="2"/>
+            <line x1="22" y1="11" x2="22" y2="13"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 1. Header (54px) -->
+      <header class="h-[54px] px-5 flex items-center justify-between border-b border-line">
+        <!-- Left: Brand Title & Subtitle -->
+        <div class="flex flex-col justify-center">
+          <h1 class="font-serif-title font-medium text-[20px] text-primary leading-tight tracking-tight">Thư viện Đồi Mơ</h1>
+          <p class="text-[11.5px] text-secondary tracking-normal mt-0.5 font-light">Sách đọc và nghe trước giờ ngủ</p>
+        </div>
+
+        <!-- Right: 3 square buttons (44x44px, border-radius 8px, bg #F1ECE1, border #DED7C8) -->
+        <div class="flex items-center space-x-1.5">
+          <!-- Button 1: Search (Kính lúp) -->
+          <button type="button" aria-label="Tìm kiếm" class="touch-btn w-[38px] h-[38px] rounded-[8px] bg-paper-sub border border-line text-primary hover:bg-[#eae4d7] transition-colors focus:outline-none">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </button>
+          <!-- Button 2: Bookmark (Đã lưu) -->
+          <button type="button" aria-label="Đã lưu" class="touch-btn w-[38px] h-[38px] rounded-[8px] bg-paper-sub border border-line text-primary hover:bg-[#eae4d7] transition-colors focus:outline-none">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+            </svg>
+          </button>
+          <!-- Button 3: Theme Toggle (Mặt trăng Đổi Sáng/Đêm) -->
+          <button type="button" aria-label="Đổi sáng tối" class="touch-btn w-[38px] h-[38px] rounded-[8px] bg-paper-sub border border-line text-primary hover:bg-[#eae4d7] transition-colors focus:outline-none">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="px-5 pt-4 pb-6 space-y-5">
+
+        <!-- 2. Adaptive Masthead (Cao ~180px, bo góc 8px, viền mảnh 1px #DED7C8, sạch hoàn toàn không chữ hay nhãn đè) -->
+        <section aria-label="Bức tranh biểu trưng" class="w-full">
+          <div class="relative w-full h-[180px] rounded-[8px] overflow-hidden border border-line bg-paper-sub">
+            <img 
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFMHlpU-xwk8iknyqFPVX6MuApJ1p1BNVV8zb3lI9_1dCizfJNhzowbi3Hq6pbfVp6G_PmeUNIMOx4rRcrMg_zYjobVnI-TwwU1MlxqcP4j7IWOoTbyuzoQZ_D_PtwgoVAbDQFwKzteCMpyNWbvzSG87N-DEOIV18nYr-7uS4QW-r-tChbWPij1RfY-3Kv5rV9F9pWUrCU2xnqh_aLgfKj9f0wpquJ6rL_MxA-QccWIjssLQUQjIt0-1nY3-4x2ZM" 
+              alt="Mẹ Cáo và Cáo Con cuộn tròn đọc sách trên đồi hoa dưới gốc cây sồi có lồng đèn" 
+              class="w-full h-full object-cover object-center select-none"
+              loading="eager"
+            />
+          </div>
+        </section>
+
+        <!-- 3. VÙNG "TỦ SÁCH" (Lộ rõ trong màn hình nhìn đầu tiên) -->
+        <section aria-labelledby="bookshelf-heading" class="pt-0.5">
+          <!-- Section Title -->
+          <div class="flex items-baseline justify-between mb-3 pb-1 border-b border-line/60">
+            <h2 id="bookshelf-heading" class="font-serif-title text-[17px] font-medium text-primary tracking-tight">Tủ sách</h2>
+            <span class="text-[12px] text-secondary font-light">Tất cả (2)</span>
+          </div>
+
+          <!-- Lưới 2 cột cân đối (gap 16px) -->
+          <div class="grid grid-cols-2 gap-4">
+            
+            <!-- Cột 1: Lim và Mẹ Vacci -->
+            <article class="flex flex-col group cursor-pointer">
+              <!-- Bìa tranh 3:4 sạch hoàn toàn không có badge hay tem (165x220px, bo 6px, viền 1px #DED7C8) -->
+              <div class="w-full aspect-[3/4] rounded-[6px] overflow-hidden border border-line bg-paper-sub transition-transform duration-200 group-hover:scale-[1.01]">
+                <img 
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrhjH1UVuZrE6lZqNnkNtmK-WBqMQP_hvditRwdhHhESbJjkz5rwNsAjOiKNxUE0IEBDhf60ZJZ_YK7Vcx5ttHh3r1OPm333MfkeDfUsHshcpCnxTnis83SyZD2dtopsLT4gTM5VNG4pFbGRI4oQ2P4t2j-lryjg8mjb_XRPRfvh7BtCfLJl4qjU-m9n09fPV5Iviv3Myq2A-CTs2Zizf_jx_dof5glEjacKS-CHEx59gBt7FQ0NHt8zuL9IHM-fk" 
+                  alt="Tranh màu nước chú chim cổ đỏ nhỏ trong vườn sồi" 
+                  class="w-full h-full object-cover select-none"
+                  loading="lazy"
+                />
+              </div>
+              <!-- Thông tin sách dưới bìa -->
+              <div class="mt-2.5 flex flex-col space-y-1">
+                <h3 class="font-serif-title text-[15px] font-medium text-primary leading-snug group-hover:text-moss transition-colors">
+                  Lim và Mẹ Vacci
+                </h3>
+                <p class="text-[12px] text-secondary font-normal">
+                  Lê Thanh Uyên
+                </p>
+                <div class="pt-0.5 flex items-center text-[11px] text-secondary tabular-nums">
+                  <span class="inline-block w-1.5 h-1.5 rounded-full bg-moss/70 mr-1.5"></span>
+                  11 tập
+                </div>
+              </div>
+            </article>
+
+            <!-- Cột 2: Tiểu Hạt Dẻ Thích Ăn Vụng -->
+            <article class="flex flex-col group cursor-pointer">
+              <!-- Bìa tranh 3:4 sạch hoàn toàn không có badge hay tem (165x220px, bo 6px, viền 1px #DED7C8) -->
+              <div class="w-full aspect-[3/4] rounded-[6px] overflow-hidden border border-line bg-paper-sub transition-transform duration-200 group-hover:scale-[1.01]">
+                <img 
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLpKt9F-ygZOxh2u3hQpAj1L-lFo1QT3NNc8Yc0fYAgKnEa1ilQ22alJ4dbfTbkXBqOBdRtmCNclVU0Rp0DsPpJgOjasSs8l7H96DNkoRqHV1B0rLeAGFLVVeH1Amyp31LIENNhQOl4kjSgUK8mnDY5kxDchktcp7C8a0Pre3oOazJimlzNJRRZQsQpvI3iTlAeA3v985lBqt7EykPLbaULl8gmoLF9hLLYcPg2ziHmE8QYMuefQcQ1iinHgG_9Ns" 
+                  alt="Tranh màu nước chú mèo con lông xù bên bếp lửa ấm" 
+                  class="w-full h-full object-cover select-none"
+                  loading="lazy"
+                />
+              </div>
+              <!-- Thông tin sách dưới bìa -->
+              <div class="mt-2.5 flex flex-col space-y-1">
+                <h3 class="font-serif-title text-[15px] font-medium text-primary leading-snug group-hover:text-moss transition-colors">
+                  Tiểu Hạt Dẻ Thích Ăn Vụng
+                </h3>
+                <p class="text-[12px] text-secondary font-normal">
+                  Lê Thanh Uyên
+                </p>
+                <div class="pt-0.5 flex items-center text-[11px] text-secondary tabular-nums">
+                  <span class="inline-block w-1.5 h-1.5 rounded-full bg-moss/70 mr-1.5"></span>
+                  21 tập · Đọc chữ
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- 4. Chân trang tối giản (KHÔNG CÓ Bottom Navigation Bar) -->
+    <footer class="mt-auto px-5 pt-4 pb-[34px] border-t border-line/60 text-center">
+      <p class="text-[11.5px] text-secondary font-light tracking-wide">
+        Copyright © Nancy &amp; Liti
+      </p>
+      <div class="mt-1 flex items-center justify-center space-x-2 text-[10.5px] text-secondary/70">
+        <span>Ấn bản Giấy Cotton</span>
+        <span>·</span>
+        <span>Ban ngày</span>
+      </div>
+    </footer>
+
+  </main>
+
+</body>
+</html>

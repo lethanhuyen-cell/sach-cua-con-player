@@ -11,6 +11,12 @@ import {
   TocMode
 } from '@/lib/types';
 import { BOOK_PRESETS } from '@/lib/presets';
+import {
+  formatAdminHallGenre,
+  LIBRARY_HALLS,
+  LibraryHallSlug,
+  parseAdminHallGenre
+} from '@/lib/halls';
 import { uploadMediaWithProgress } from '@/lib/uploadClient';
 import { BookCover } from './BookCover';
 import { ChevronLeftIcon, PlusIcon, TrashIcon, UploadIcon } from './Icons';
@@ -29,7 +35,19 @@ export function AdminBookEditorClient({
   const [author, setAuthor] = useState(initialBook?.author || '');
   const [illustrator, setIllustrator] = useState(initialBook?.illustrator || '');
   const [ageRange, setAgeRange] = useState(initialBook?.ageRange || '3–9 tuổi');
-  const [genreTag, setGenreTag] = useState(initialBook?.genreTag || 'Thiên nhiên');
+  const initialHallInfo = parseAdminHallGenre(initialBook?.genreTag || '');
+  const [selectedHallSlug, setSelectedHallSlug] = useState<LibraryHallSlug>(
+    initialHallInfo.hallSlug
+  );
+  const [secondaryHallSlug, setSecondaryHallSlug] = useState<LibraryHallSlug | ''>(
+    initialHallInfo.secondaryHallSlug || ''
+  );
+  const [subTopic, setSubTopic] = useState(initialHallInfo.subTag);
+  const genreTag = formatAdminHallGenre(
+    selectedHallSlug,
+    subTopic,
+    secondaryHallSlug || null
+  );
   const [description, setDescription] = useState(initialBook?.description || '');
   const [coverUrl, setCoverUrl] = useState(initialBook?.coverUrl || '');
   const [coverFocalPoint, setCoverFocalPoint] = useState<CoverFocalPoint>(
@@ -378,7 +396,7 @@ export function AdminBookEditorClient({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-3">
           <div>
             <label className="block font-medium mb-1">Độ tuổi phù hợp</label>
             <input
@@ -393,19 +411,104 @@ export function AdminBookEditorClient({
               className="w-full h-10 px-3 rounded-[7px] outline-none"
             />
           </div>
+
           <div>
-            <label className="block font-medium mb-1">Chủ đề kệ sách</label>
+            <label className="block font-medium mb-1.5">
+              Gian sách *
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {LIBRARY_HALLS.map((hall) => {
+                const active = selectedHallSlug === hall.slug;
+                return (
+                  <button
+                    key={hall.slug}
+                    type="button"
+                    onClick={() => {
+                      setSelectedHallSlug(hall.slug);
+                      if (secondaryHallSlug === hall.slug) {
+                        setSecondaryHallSlug('');
+                      }
+                    }}
+                    style={{
+                      backgroundColor: active ? 'var(--accent-primary)' : 'var(--bg-canvas)',
+                      color: active ? 'var(--accent-primary-fg)' : 'var(--text-primary)',
+                      border: '1px solid var(--border-hairline)'
+                    }}
+                    className="px-3 py-2.5 rounded-[8px] text-left transition"
+                  >
+                    <span className="block text-xs font-semibold truncate">
+                      {hall.shortTitle}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-medium mb-1.5">
+              Gian giao thoa (tùy chọn)
+            </label>
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                type="button"
+                onClick={() => setSecondaryHallSlug('')}
+                style={{
+                  backgroundColor:
+                    secondaryHallSlug === '' ? 'var(--accent-warm)' : 'var(--bg-canvas)',
+                  color:
+                    secondaryHallSlug === ''
+                      ? 'var(--accent-primary-fg)'
+                      : 'var(--text-secondary)',
+                  border: '1px solid var(--border-hairline)'
+                }}
+                className="h-8 px-2.5 rounded-[7px] text-[11px] font-medium"
+              >
+                Không gắn thêm
+              </button>
+              {LIBRARY_HALLS.filter((h) => h.slug !== selectedHallSlug).map((hall) => {
+                const active = secondaryHallSlug === hall.slug;
+                return (
+                  <button
+                    key={hall.slug}
+                    type="button"
+                    onClick={() => setSecondaryHallSlug(active ? '' : hall.slug)}
+                    style={{
+                      backgroundColor: active
+                        ? 'var(--accent-warm)'
+                        : 'var(--bg-canvas)',
+                      color: active
+                        ? 'var(--accent-primary-fg)'
+                        : 'var(--text-primary)',
+                      border: '1px solid var(--border-hairline)'
+                    }}
+                    className="h-8 px-2.5 rounded-[7px] text-[11px] font-medium"
+                  >
+                    {hall.shortTitle}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-medium mb-1">
+              Nhánh chủ đề phụ (tùy chọn)
+            </label>
             <input
               type="text"
-              value={genreTag}
-              onChange={(e) => setGenreTag(e.target.value)}
-              placeholder="Đồng thoại khoa học"
+              value={subTopic}
+              onChange={(e) => setSubTopic(e.target.value)}
+              placeholder="vd: Muông thú, Thiên văn, Bánh mùa thu..."
               style={{
                 backgroundColor: 'var(--bg-canvas)',
                 border: '1px solid var(--border-hairline)'
               }}
               className="w-full h-10 px-3 rounded-[7px] outline-none"
             />
+            <p className="text-[11px] mt-1" style={{ color: 'var(--text-secondary)' }}>
+              Nhãn hiển thị lưu trữ: <strong>{genreTag}</strong>
+            </p>
           </div>
         </div>
 

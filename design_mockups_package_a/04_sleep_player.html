@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>Trình phát ru ngủ - Bác chó Barley và con đường vô hình</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Google Fonts: Lora (Serif) & Be Vietnam Pro (Sans) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&amp;family=Lora:ital,wght@0,400;0,500;0,600;1,400&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            night: '#111613',
+            surface: '#19201C',
+            card: '#212A24',
+            borderNight: '#2D3831',
+            cream: '#EFE9DC',
+            subText: '#9EA69A',
+            mossAccent: '#89A892',
+            warmCopper: '#D4AC6E'
+          },
+          fontFamily: {
+            serif: ['Lora', 'serif'],
+            sans: ['"Be Vietnam Pro"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #111613;
+      color: #EFE9DC;
+      font-family: 'Lora', serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .tabular {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+    /* Subtle warm ambient glow behind artwork */
+    .ambient-glow {
+      position: absolute;
+      width: 240px;
+      height: 300px;
+      top: 130px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse at center, rgba(212, 172, 110, 0.08) 0%, rgba(137, 168, 146, 0.04) 50%, transparent 75%);
+      filter: blur(28px);
+      pointer-events: none;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body class="h-full flex items-center justify-center p-0 m-0 bg-black">
+<!-- Mobile Container: 390px x 844px -->
+<main class="relative w-[390px] h-[844px] bg-night overflow-hidden flex flex-col justify-between border border-borderNight/40 shadow-2xl rounded-[40px]">
+<!-- Ambient Light Effect -->
+<div class="ambient-glow"></div>
+<!-- iOS Status Bar Simulation (44px) -->
+<header class="w-full h-11 px-7 flex items-center justify-between z-20 text-[13px] text-subText tabular font-medium select-none pt-1">
+<span>21:45</span>
+<div class="flex items-center gap-1.5 opacity-80">
+<!-- Cellular Signal Icon -->
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M2 20h.01"></path><path d="M7 20v-4"></path><path d="M12 20v-8"></path><path d="M17 20V4"></path>
+</svg>
+<!-- Wifi Icon -->
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 20h.01"></path><path d="M2 8.82a15 15 0 0 1 20 0"></path><path d="M5 12.859a10 10 0 0 1 14 0"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path>
+</svg>
+<!-- Battery Icon -->
+<div class="w-5 h-2.5 border border-subText/80 rounded-[3px] p-[1px] flex items-center">
+<div class="h-full w-3.5 bg-subText/90 rounded-[1px]"></div>
+</div>
+</div>
+</header>
+<!-- 1. Thanh đỉnh (Top App Bar - 48px) -->
+<section aria-label="Thanh điều hướng đỉnh" class="w-full h-12 px-5 flex items-center justify-between z-20">
+<!-- Nút thu gọn / trở về -->
+<button aria-label="Thu gọn" class="w-10 h-10 flex items-center justify-center rounded-full text-subText hover:text-cream hover:bg-surface transition-colors" title="Thu gọn trình phát">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+<!-- Nút pill khóa chạm -->
+<button class="px-3.5 py-1.5 rounded-full border border-borderNight bg-surface/80 flex items-center gap-1.5 text-xs text-subText hover:text-cream hover:border-mossAccent/50 transition-colors tabular" title="Khóa màn hình cảm ứng để tránh chạm nhầm lúc ngủ">
+<svg class="w-3.5 h-3.5 text-mossAccent" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24">
+<rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect>
+<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg>
+<span class="tracking-wide">Khóa chạm</span>
+</button>
+<!-- Cụm bên phải: Bookmark & Đọc sách chữ -->
+<div class="flex items-center gap-1">
+<button aria-label="Đánh dấu" class="w-10 h-10 flex items-center justify-center rounded-full text-subText hover:text-cream hover:bg-surface transition-colors" title="Đánh dấu đoạn nghe">
+<svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+</svg>
+</button>
+<button aria-label="Mở trang đọc chữ" class="w-10 h-10 flex items-center justify-center rounded-full text-subText hover:text-cream hover:bg-surface transition-colors" title="Mở bản đọc chữ">
+<svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+</svg>
+</button>
+</div>
+</section>
+<!-- 2. Trung tâm: Bìa sách màu nước cổ điển & Thông tin tác phẩm -->
+<section class="flex-1 flex flex-col items-center justify-center px-6 z-10 -mt-2">
+<!-- Khung tranh tỷ lệ 3:4 kích thước chính xác 224x298px, viền 1px #2D3831, bo 8px, hoàn toàn sạch sẽ không tem đè -->
+<div class="relative w-[224px] h-[298px] rounded-[8px] border border-borderNight bg-surface overflow-hidden shadow-[0_12px_32px_rgba(0,0,0,0.5)] flex-shrink-0 group">
+<img alt="Bìa sách tranh Bác chó Barley và con đường vô hình" class="w-full h-full object-cover object-center select-none" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0Q0L14K82-ALzLqPhfmExRqL21kuYzVWEeuX0oBU-VowI17UNZbIfjKNBA98Yi8lAcowGhdWSxWHqbW554EVDtPDDj8_jJko4cjXQwDrzYvn9_Y_HOB0W2N4wTm4vI1xwbSVlHsYolEp00hmpVj-31519CFJaphLga7enmvCeslYq71hFeDoKdehf0IBNX12v6bxKAGrTLvIM-yJL-aeSgUpSC2jt-zHqxMg8tRZeU6X8dltZMvJ2gYYecDgdsCM"/>
+<!-- Inner shadow border vignette for paper feel -->
+<div class="absolute inset-0 rounded-[8px] pointer-events-none border border-black/20 shadow-inner"></div>
+</div>
+<!-- Tên tác phẩm & Phụ đề -->
+<div class="text-center mt-5 w-full max-w-[320px]">
+<h1 class="text-[19px] leading-snug font-normal text-cream tracking-normal font-serif">
+          Bác chó Barley và con đường vô hình
+        </h1>
+<p class="text-[13px] text-subText mt-1.5 font-sans tracking-wide">
+          Lim và Mẹ Vacci · Tập 01
+        </p>
+<!-- Nút pill chọn giọng đọc ru ngủ -->
+<div class="mt-3 flex justify-center">
+<button class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-card border border-borderNight/80 text-[12px] text-subText hover:text-cream hover:border-mossAccent/40 transition-colors font-sans">
+<!-- Icon Microphone đơn sắc -->
+<svg class="w-3.5 h-3.5 text-mossAccent" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24">
+<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+<path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+<line x1="12" x2="12" y1="19" y2="23"></line>
+<line x1="8" x2="16" y1="23" y2="23"></line>
+</svg>
+<span>Giọng Nữ · Mỹ Duyên</span>
+<!-- Icon chevron down -->
+<svg class="w-3 h-3 text-subText" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</button>
+</div>
+</div>
+</section>
+<!-- 3. Cụm điều khiển ru ngủ nửa dưới màn hình (Thumb-zone) -->
+<footer class="w-full px-7 pb-8 pt-2 flex flex-col gap-4 z-20">
+<!-- 3.1. Thanh tua thời gian 2px màu Đồng Sáng Ấm #D4AC6E -->
+<div class="w-full flex flex-col gap-1.5">
+<div class="relative w-full h-5 flex items-center cursor-pointer group" title="Thanh tiến độ nghe">
+<!-- Background track -->
+<div class="w-full h-[2px] bg-borderNight rounded-full overflow-hidden">
+<!-- Progress Fill: 05:30 / 16:00 is approx 34.4% -->
+<div class="h-full bg-warmCopper rounded-full" style="width: 34.4%;"></div>
+</div>
+<!-- Scrub handle thumb -->
+<div class="absolute w-2.5 h-2.5 bg-warmCopper rounded-full shadow-[0_0_8px_rgba(212,172,110,0.6)] transform -translate-x-1/2 left-[34.4%] group-hover:scale-125 transition-transform"></div>
+</div>
+<div class="flex justify-between items-center text-[12px] text-subText tabular -mt-1 font-medium">
+<span class="text-cream/90">05:30</span>
+<span>16:00</span>
+</div>
+</div>
+<!-- 3.2. Hàng 5 nút điều khiển chính: Tập trước · Lùi 15s · Phát/Tạm dừng (60x60px) · Tới 15s · Tập tiếp -->
+<div class="w-full flex items-center justify-between px-2 pt-1 pb-1">
+<!-- Tập trước (44px) -->
+<button aria-label="Tập trước" class="w-11 h-11 flex items-center justify-center rounded-full text-subText hover:text-cream hover:bg-surface active:scale-95 transition-all" title="Tập trước">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24">
+<polygon points="19 20 9 12 19 4 19 20"></polygon>
+<line x1="5" x2="5" y1="19" y2="5"></line>
+</svg>
+</button>
+<!-- Tua lùi 15s (48px) -->
+<button aria-label="Lùi 15 giây" class="w-12 h-12 flex flex-col items-center justify-center rounded-full text-subText hover:text-cream hover:bg-surface active:scale-95 transition-all relative" title="Tua lùi 15 giây">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" viewbox="0 0 24 24">
+<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+<path d="M3 3v5h5"></path>
+</svg>
+<span class="absolute text-[8.5px] tabular font-medium text-subText top-[17px]">15</span>
+</button>
+<!-- Nút Phát/Tạm dừng tròn lớn 60x60px nền #89A892 icon #111613 -->
+<button aria-label="Tạm dừng phát" class="w-[60px] h-[60px] rounded-full bg-mossAccent hover:bg-[#97b5a0] active:scale-95 text-night flex items-center justify-center shadow-[0_4px_20px_rgba(137,168,146,0.3)] transition-all" title="Tạm dừng">
+<!-- Hiển thị icon tạm dừng 2 vạch thanh nhã cho chế độ đang phát -->
+<svg class="w-6 h-6 fill-night" viewbox="0 0 24 24">
+<rect height="14" rx="1.5" width="4" x="6" y="5"></rect>
+<rect height="14" rx="1.5" width="4" x="14" y="5"></rect>
+</svg>
+</button>
+<!-- Tua tới 15s (48px) -->
+<button aria-label="Tới 15 giây" class="w-12 h-12 flex flex-col items-center justify-center rounded-full text-subText hover:text-cream hover:bg-surface active:scale-95 transition-all relative" title="Tua tới 15 giây">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" viewbox="0 0 24 24">
+<path d="M21 12a9 9 0 1 1-9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+<path d="M21 3v5h-5"></path>
+</svg>
+<span class="absolute text-[8.5px] tabular font-medium text-subText top-[17px]">15</span>
+</button>
+<!-- Tập tiếp (44px) -->
+<button aria-label="Tập tiếp" class="w-11 h-11 flex items-center justify-center rounded-full text-subText hover:text-cream hover:bg-surface active:scale-95 transition-all" title="Tập tiếp theo">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24">
+<polygon points="5 4 15 12 5 20 5 4"></polygon>
+<line x1="19" x2="19" y1="5" y2="19"></line>
+</svg>
+</button>
+</div>
+<!-- 3.3. Hàng Hẹn giờ Ru ngủ 1 chạm cao 44px: Phân đoạn nền #19201C viền #2D3831 + Tốc độ 1.0x -->
+<div class="w-full h-11 flex items-center gap-2 mt-0.5">
+<!-- Cụm phân đoạn hẹn giờ tắt -->
+<div class="flex-1 h-full bg-surface border border-borderNight rounded-full p-1 flex items-center justify-between font-sans">
+<!-- Lựa chọn: Hết tập dừng êm (Đang được chọn với màu Đồng Ấm #D4AC6E) -->
+<button class="flex-1 h-full rounded-full bg-card border border-warmCopper/30 text-warmCopper text-[11px] font-medium flex items-center justify-center px-2 transition-all shadow-sm">
+<span class="whitespace-nowrap">Hết tập dừng êm</span>
+</button>
+<!-- Lựa chọn: 15p -->
+<button class="flex-none px-2.5 h-full rounded-full text-subText hover:text-cream text-[11px] tabular transition-colors flex items-center justify-center">
+            15p
+          </button>
+<!-- Lựa chọn: 30p -->
+<button class="flex-none px-2.5 h-full rounded-full text-subText hover:text-cream text-[11px] tabular transition-colors flex items-center justify-center">
+            30p
+          </button>
+<!-- Lựa chọn: Liên tiếp -->
+<button class="flex-1 h-full rounded-full text-subText hover:text-cream text-[11px] transition-colors flex items-center justify-center px-1">
+<span class="whitespace-nowrap">Liên tiếp</span>
+</button>
+</div>
+<!-- Nút nhỏ đổi tốc độ "1.0x" -->
+<button class="h-full px-3 bg-surface border border-borderNight rounded-full text-xs text-subText hover:text-cream hover:border-mossAccent/50 tabular font-medium flex items-center justify-center transition-colors font-sans" title="Tốc độ phát">
+          1.0x
+        </button>
+</div>
+</footer>
+<!-- iOS Home Indicator Simulation (34px Safe Area) -->
+<div class="w-full h-[34px] flex items-center justify-center pointer-events-none z-20 pb-2">
+<div class="w-32 h-[4px] bg-subText/30 rounded-full"></div>
+</div>
+</main>
+</body>
+</html>

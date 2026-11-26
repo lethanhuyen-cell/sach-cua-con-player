@@ -1,253 +1,568 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
+import { ContinueSuggestion, useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { BookCover } from '@/components/BookCover';
 import {
+  ArchDoorIcon,
   BookmarkIcon,
   BookOpenIcon,
+  ChevronRightIcon,
+  CompassIcon,
+  FeatherIcon,
+  HearthCupIcon,
+  LanternIcon,
+  LeafIcon,
   MoonIcon,
+  MusicSparkIcon,
   PauseIcon,
   PlayIcon,
   SearchIcon,
   SunIcon
 } from '@/components/Icons';
+import { LIBRARY_HALLS, LibraryHallSlug, resolveBookHalls } from '@/lib/halls';
 import {
-  estimateReadingMinutes,
+  BOOK_PRESETS,
   formatClock,
-  formatDurationShort,
-  formatRelativePublishDate
+  formatRelativePublishDate,
+  getEpisodeDurationLabel,
+  isEpisodeReadingOnly
 } from '@/lib/presets';
+
+function getContinuePercent(item: ContinueSuggestion): number {
+  if (item.mode === 'reading') {
+    return Math.min(100, Math.max(0, item.scrollPercent));
+  }
+  if (item.durationSeconds > 0) {
+    return Math.min(
+      100,
+      Math.round((item.progressSeconds / item.durationSeconds) * 100)
+    );
+  }
+  return 0;
+}
+
+function HallIcon({ slug, size = 18 }: { slug: LibraryHallSlug; size?: number }) {
+  switch (slug) {
+    case 'khoa-hoc-tu-nhien':
+      return <LeafIcon size={size} />;
+    case 'am-thuc-nep-nha':
+      return <HearthCupIcon size={size} />;
+    case 'van-hoc-dong-thoai':
+      return <FeatherIcon size={size} />;
+    case 'lich-su-van-hoa':
+      return <CompassIcon size={size} />;
+    case 'nghe-thuat-tho-nhac':
+      return <MusicSparkIcon size={size} />;
+    case 'ky-nang-lon-khon':
+      return <LanternIcon size={size} />;
+  }
+}
 
 export default function HomeLibraryPage() {
   const {
     books,
+    isHydrated,
     isNight,
     toggleNight,
     favorites,
-    progressMap,
     isEpisodeNew,
     newEpisodesAcrossLibrary,
     activeEpisode,
     isPlaying,
     playEpisode,
-    continueItems
+    continueItems,
+    openUtilitySheet,
+    hasPassedGate,
+    enterLibraryFromGate,
+    returnToGate
   } = useLibraryPlayer();
 
-  // Only show the Continue Listening card when the listener has actual listening history
-  const resumeItem = continueItems.length > 0 ? continueItems[0] : null;
+  const [isOpeningGate, setIsOpeningGate] = useState(false);
 
-  // Up to 3 newest unread/unheard episodes across all books
+  const activeResumes = useMemo(() => continueItems.slice(0, 2), [continueItems]);
   const recentArrivals = useMemo(
     () => newEpisodesAcrossLibrary.slice(0, 3),
     [newEpisodesAcrossLibrary]
   );
 
-  // Order bookshelf so books with newly published unread episodes gently surface first
-  const orderedBooks = useMemo(() => {
-    return [...books].sort((a, b) => {
-      const aLatestNewMs = Math.max(
-        0,
-        ...a.episodes
-          .filter((ep) => isEpisodeNew(ep))
-          .map((ep) => Date.parse(ep.publishedAt || ep.createdAt || '') || 0)
-      );
-      const bLatestNewMs = Math.max(
-        0,
-        ...b.episodes
-          .filter((ep) => isEpisodeNew(ep))
-          .map((ep) => Date.parse(ep.publishedAt || ep.createdAt || '') || 0)
-      );
-      if (aLatestNewMs !== bLatestNewMs) return bLatestNewMs - aLatestNewMs;
-      return a.sortOrder - b.sortOrder;
-    });
-  }, [books, isEpisodeNew]);
-
-  const savedEpisodes = useMemo(() => {
-    const list: {
-      bookTitle: string;
-      episodeId: string;
-      title: string;
-      code: string;
-      durationLabel: string;
-    }[] = [];
+  // Group published books into the 6 Halls (supporting primary + cross-disciplinary halls)
+  const booksByHall = useMemo(() => {
+    const map = new Map<LibraryHallSlug, typeof books>();
+    for (const h of LIBRARY_HALLS) {
+      map.set(h.slug, []);
+    }
     for (const b of books) {
-      for (const ep of b.episodes) {
-        if (favorites.includes(ep.id)) {
-          const dur = ep.isTextOnly
-            ? estimateReadingMinutes(ep.wordCount)
-            : formatDurationShort(ep.audioTracks[0]?.durationSeconds || 0);
-          list.push({
-            bookTitle: b.title,
-            episodeId: ep.id,
-            title: ep.title,
-            code: ep.episodeCode,
-            durationLabel: dur
-          });
+      for (const hall of resolveBookHalls(b)) {
+        const list = map.get(hall.slug) || [];
+        if (!list.some((existing) => existing.id === b.id)) {
+          list.push(b);
+          map.set(hall.slug, list);
         }
       }
     }
-    return list.slice(0, 4);
-  }, [books, favorites]);
+    return map;
+  }, [books]);
 
-  const isResumePlaying =
-    resumeItem && activeEpisode?.id === resumeItem.episode.id && isPlaying;
+  const handleOpenGate = () => {
+    if (isOpeningGate) return;
+    setIsOpeningGate(true);
+    setTimeout(() => {
+      enterLibraryFromGate();
+      setIsOpeningGate(false);
+    }, 480);
+  };
 
-  const resumePct =
-    resumeItem && resumeItem.durationSeconds > 0
-      ? Math.min(
-          100,
-          Math.round((resumeItem.progressSeconds / resumeItem.durationSeconds) * 100)
-        )
-      : 0;
+  if (!isHydrated) {
+    return <div className="min-h-[80vh]" aria-hidden="true" />;
+  }
 
-  return (
-    <div className="px-4 pt-4 pb-6 space-y-6">
-      {/* Clean Editorial Header */}
-      <header
-        style={{ borderBottom: '1px solid var(--border-hairline)' }}
-        className="pb-3.5 flex items-center justify-between gap-3"
+  // ============================================================================
+  // LỚP 1: CỔNG ĐỒI MƠ (Yên tĩnh, tự nhiên, không khẩu hiệu)
+  // ============================================================================
+  if (!hasPassedGate) {
+    const gateArtSrc = isNight ? '/images/home/doi-mo-night.jpg' : '/images/home/doi-mo-day.jpg';
+    return (
+      <div
+        className={`px-5 pt-3 pb-4 flex-1 flex flex-col justify-between transition-all duration-500 ${
+          isOpeningGate ? 'opacity-0 scale-[1.03]' : 'opacity-100 scale-100'
+        }`}
       >
-        <div className="min-w-0">
-          <h1 className="text-[22px] font-bold tracking-tight font-editorial">
-            Thư viện Đồi Mơ
-          </h1>
-          <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
-            Sách đọc và nghe trước giờ ngủ
-          </p>
-        </div>
-
-        <div className="flex items-center gap-1.5 shrink-0">
-          <Link
-            href="/books"
-            aria-label="Tìm kiếm trong tủ sách"
-            style={{
-              backgroundColor: 'var(--bg-surface)',
-              border: '1px solid var(--border-hairline)',
-              color: 'var(--text-primary)'
-            }}
-            className="w-11 h-11 rounded-[8px] flex items-center justify-center"
-          >
-            <SearchIcon size={17} />
-          </Link>
+        <div className="flex justify-end">
           <button
             type="button"
             onClick={toggleNight}
-            aria-label={
-              isNight ? 'Chuyển sang giao diện giấy sáng' : 'Chuyển sang giao diện ban đêm'
-            }
+            aria-label={isNight ? 'Giao diện ban ngày' : 'Giao diện ban đêm'}
             style={{
               backgroundColor: 'var(--bg-surface)',
               border: '1px solid var(--border-hairline)',
-              color: 'var(--text-primary)'
+              color: isNight ? 'var(--accent-warm)' : 'var(--text-primary)'
             }}
-            className="w-11 h-11 rounded-[8px] flex items-center justify-center"
+            className="w-10 h-10 rounded-[10px] flex items-center justify-center"
           >
             {isNight ? <SunIcon size={17} /> : <MoonIcon size={17} />}
           </button>
         </div>
-      </header>
 
-      {/* Continue Listening Card (Only shown when listener has started listening) */}
-      {resumeItem && (
-        <section aria-label="Nghe tiếp">
-          <div className="flex items-center justify-between mb-2">
-            <span className="vn-eyebrow" style={{ color: 'var(--accent-primary)' }}>
-              {resumeItem.kind === 'in_progress' ? 'Đang nghe dở' : 'Tập kế tiếp'}
-            </span>
-            <Link
-              href={`/episodes/${resumeItem.episode.id}`}
-              style={{ color: 'var(--text-secondary)' }}
-              className="text-xs inline-flex items-center gap-1 hover:underline"
-            >
-              <BookOpenIcon size={14} />
-              <span>Mở trang đọc</span>
-            </Link>
-          </div>
-
+        <div className="my-4 flex flex-col items-center text-center">
           <div
             style={{
-              backgroundColor: 'var(--bg-elevated)',
-              border: '1px solid var(--border-hairline)'
+              border: '1px solid var(--border-hairline)',
+              backgroundColor: 'var(--bg-surface)'
             }}
-            className="rounded-[10px] p-3.5 flex gap-3.5 items-center"
+            className="w-full max-w-[336px] h-[392px] rounded-t-[168px] rounded-b-[14px] overflow-hidden relative shadow-sm"
           >
-            <Link
-              href={`/episodes/${resumeItem.episode.id}`}
-              className="w-[76px] shrink-0 block"
-            >
-              <BookCover
-                src={resumeItem.episode.effectiveCoverUrl}
-                alt={resumeItem.episode.title}
-                focalPoint={resumeItem.book.coverFocalPoint}
-              />
-            </Link>
+            <img
+              src={gateArtSrc}
+              alt="Thư viện Đồi Mơ"
+              className="w-full h-full object-cover object-[50%_62%] block select-none"
+            />
 
-            <div className="flex-1 min-w-0">
-              <p className="text-xs truncate" style={{ color: 'var(--text-secondary)' }}>
-                {resumeItem.book.title} · Tập {resumeItem.episode.episodeCode}
-              </p>
-              <Link href={`/episodes/${resumeItem.episode.id}`}>
-                <h2 className="text-[15.5px] font-semibold font-editorial line-clamp-2 mt-0.5">
-                  {resumeItem.episode.title}
-                </h2>
-              </Link>
-
-              {resumeItem.kind === 'in_progress' ? (
-                <div className="mt-2">
-                  <div className="h-[2px] w-full rounded-full bg-[var(--bg-surface)] overflow-hidden">
-                    <div
-                      className="h-full"
-                      style={{
-                        width: `${resumePct}%`,
-                        backgroundColor: 'var(--accent-warm)'
-                      }}
-                    />
-                  </div>
-                  <p
-                    className="text-[11px] mt-1 tabular-nums"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    {formatClock(resumeItem.progressSeconds)} /{' '}
-                    {formatClock(resumeItem.durationSeconds)}
-                  </p>
-                </div>
-              ) : (
-                <p
-                  className="text-xs mt-1 tabular-nums"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  {formatDurationShort(resumeItem.durationSeconds)}
-                </p>
-              )}
-
-              <div className="mt-2.5">
-                <button
-                  type="button"
-                  onClick={() => playEpisode(resumeItem.book, resumeItem.episode)}
+            {isNight && (
+              <>
+                <div
+                  aria-hidden="true"
                   style={{
-                    backgroundColor: 'var(--accent-primary)',
-                    color: 'var(--accent-primary-fg)'
+                    background:
+                      'radial-gradient(circle, rgba(212,172,110,0.40) 0%, rgba(212,172,110,0) 72%)'
                   }}
-                  className="h-9 px-3.5 rounded-[8px] text-xs font-medium inline-flex items-center gap-1.5"
-                >
-                  {isResumePlaying ? <PauseIcon size={13} /> : <PlayIcon size={13} />}
-                  <span>{isResumePlaying ? 'Tạm dừng' : 'Nghe tiếp'}</span>
-                </button>
-              </div>
-            </div>
+                  className="lantern-aura absolute top-[24%] left-[18%] w-16 h-16 rounded-full"
+                />
+                <div
+                  aria-hidden="true"
+                  style={{
+                    background:
+                      'radial-gradient(circle, rgba(212,172,110,0.34) 0%, rgba(212,172,110,0) 72%)',
+                    animationDelay: '1.8s'
+                  }}
+                  className="lantern-aura absolute top-[22%] right-[14%] w-14 h-14 rounded-full"
+                />
+                <div
+                  aria-hidden="true"
+                  style={{ backgroundColor: '#F3D289' }}
+                  className="firefly-dot absolute bottom-[24%] left-[28%] w-1.5 h-1.5 rounded-full"
+                />
+                <div
+                  aria-hidden="true"
+                  style={{ backgroundColor: '#F3D289', animationDelay: '2.1s' }}
+                  className="firefly-dot absolute bottom-[36%] right-[26%] w-1.5 h-1.5 rounded-full"
+                />
+              </>
+            )}
           </div>
+
+          <h1 className="text-[27px] font-bold font-editorial mt-6 tracking-tight">
+            Thư viện Đồi Mơ
+          </h1>
+          <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>
+            Sách đọc và nghe trước giờ ngủ
+          </p>
+        </div>
+
+        <div className="pt-1 pb-3 flex flex-col items-center">
+          <button
+            type="button"
+            onClick={handleOpenGate}
+            style={{
+              backgroundColor: 'var(--accent-primary)',
+              color: 'var(--accent-primary-fg)'
+            }}
+            className="w-[200px] h-11 rounded-[10px] text-sm font-semibold inline-flex items-center justify-center gap-1.5 transition active:scale-[0.98]"
+          >
+            <span>Bước vào</span>
+            <ChevronRightIcon size={16} />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ============================================================================
+  // LỚP 2 & 3: SẢNH SÁCH & CÁC GIAN SÁCH
+  // ============================================================================
+  return (
+    <div className="px-4 pt-4 pb-6 space-y-6">
+      <header
+        style={{ borderBottom: '1px solid var(--border-hairline)' }}
+        className="pb-3.5 flex items-center justify-between gap-2"
+      >
+        <div className="min-w-0">
+          <h1 className="text-[21px] font-bold tracking-tight font-editorial">
+            Thư viện Đồi Mơ
+          </h1>
+          <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--text-secondary)' }}>
+            Sảnh sách
+          </p>
+        </div>
+
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            type="button"
+            onClick={returnToGate}
+            aria-label="Ra cổng"
+            title="Ra cổng"
+            style={{
+              backgroundColor: 'var(--bg-surface)',
+              border: '1px solid var(--border-hairline)',
+              color: 'var(--accent-warm)'
+            }}
+            className="w-10 h-10 rounded-[8px] flex items-center justify-center"
+          >
+            <ArchDoorIcon size={16} />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => openUtilitySheet('search')}
+            aria-label="Tìm kiếm"
+            style={{
+              backgroundColor: 'var(--bg-surface)',
+              border: '1px solid var(--border-hairline)',
+              color: 'var(--text-primary)'
+            }}
+            className="w-10 h-10 rounded-[8px] flex items-center justify-center"
+          >
+            <SearchIcon size={16} />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => openUtilitySheet('saved')}
+            aria-label="Đã lưu"
+            style={{
+              backgroundColor: 'var(--bg-surface)',
+              border: '1px solid var(--border-hairline)',
+              color: favorites.length > 0 ? 'var(--accent-berry)' : 'var(--text-primary)'
+            }}
+            className="w-10 h-10 rounded-[8px] flex items-center justify-center relative"
+          >
+            <BookmarkIcon size={16} filled={favorites.length > 0} />
+            {favorites.length > 0 && (
+              <span
+                aria-hidden="true"
+                style={{ backgroundColor: 'var(--accent-warm)' }}
+                className="w-1.5 h-1.5 rounded-full absolute top-2 right-2"
+              />
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={toggleNight}
+            aria-label={isNight ? 'Giao diện sáng' : 'Giao diện đêm'}
+            style={{
+              backgroundColor: 'var(--bg-surface)',
+              border: '1px solid var(--border-hairline)',
+              color: 'var(--text-primary)'
+            }}
+            className="w-10 h-10 rounded-[8px] flex items-center justify-center"
+          >
+            {isNight ? <SunIcon size={16} /> : <MoonIcon size={16} />}
+          </button>
+        </div>
+      </header>
+
+      {/* Đang đọc / Đang nghe (tối đa 2 bộ gần nhất cho 2 bé hoặc đọc song song) */}
+      {activeResumes.length > 0 && (
+        <section aria-label="Tiếp tục" className="space-y-3.5">
+          {activeResumes.map((resumeItem) => {
+            const isResumeAudio = resumeItem.mode === 'audio';
+            const isResumePlaying = Boolean(
+              isResumeAudio && activeEpisode?.id === resumeItem.episode.id && isPlaying
+            );
+            const resumePct = getContinuePercent(resumeItem);
+            const epHasAudio = !isEpisodeReadingOnly(resumeItem.episode);
+
+            return (
+              <div key={`${resumeItem.mode}-${resumeItem.book.id}-${resumeItem.episode.id}`}>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="vn-eyebrow" style={{ color: 'var(--accent-primary)' }}>
+                    {resumeItem.kind === 'next_up'
+                      ? 'Tập tiếp theo'
+                      : resumeItem.mode === 'reading'
+                        ? 'Đang đọc'
+                        : 'Đang nghe'}
+                  </span>
+                  <Link
+                    href={`/episodes/${resumeItem.episode.id}`}
+                    style={{ color: 'var(--text-secondary)' }}
+                    className="text-xs inline-flex items-center gap-1 hover:underline"
+                  >
+                    <BookOpenIcon size={14} />
+                    <span>Mở trang đọc</span>
+                  </Link>
+                </div>
+
+                <div
+                  style={{
+                    backgroundColor: 'var(--bg-elevated)',
+                    border: '1px solid var(--border-hairline)'
+                  }}
+                  className="rounded-[10px] p-3.5 flex gap-3.5 items-center"
+                >
+                  <Link
+                    href={`/episodes/${resumeItem.episode.id}`}
+                    className="w-[70px] shrink-0 block"
+                  >
+                    <BookCover
+                      src={resumeItem.episode.effectiveCoverUrl}
+                      alt={resumeItem.episode.title}
+                      focalPoint={resumeItem.book.coverFocalPoint}
+                    />
+                  </Link>
+
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs truncate" style={{ color: 'var(--text-secondary)' }}>
+                      {resumeItem.book.title} · Tập {resumeItem.episode.episodeCode}
+                    </p>
+                    <Link href={`/episodes/${resumeItem.episode.id}`}>
+                      <h2 className="text-[15.5px] font-semibold font-editorial line-clamp-2 mt-0.5">
+                        {resumeItem.episode.title}
+                      </h2>
+                    </Link>
+
+                    {resumeItem.mode === 'reading' ? (
+                      resumeItem.kind === 'in_progress' ? (
+                        <div className="mt-2">
+                          <div className="h-[2px] w-full rounded-full bg-[var(--bg-surface)] overflow-hidden">
+                            <div
+                              className="h-full"
+                              style={{
+                                width: `${resumePct}%`,
+                                backgroundColor: 'var(--accent-warm)'
+                              }}
+                            />
+                          </div>
+                          <p
+                            className="text-[11px] mt-1 tabular-nums"
+                            style={{ color: 'var(--text-secondary)' }}
+                          >
+                            {resumePct}% ·{' '}
+                            {getEpisodeDurationLabel(resumeItem.episode)}
+                          </p>
+                        </div>
+                      ) : (
+                        <p
+                          className="text-xs mt-1 tabular-nums"
+                          style={{ color: 'var(--text-secondary)' }}
+                        >
+                          {getEpisodeDurationLabel(resumeItem.episode)}
+                        </p>
+                      )
+                    ) : resumeItem.kind === 'in_progress' ? (
+                      <div className="mt-2">
+                        <div className="h-[2px] w-full rounded-full bg-[var(--bg-surface)] overflow-hidden">
+                          <div
+                            className="h-full"
+                            style={{
+                              width: `${resumePct}%`,
+                              backgroundColor: 'var(--accent-warm)'
+                            }}
+                          />
+                        </div>
+                        <p
+                          className="text-[11px] mt-1 tabular-nums"
+                          style={{ color: 'var(--text-secondary)' }}
+                        >
+                          {formatClock(resumeItem.progressSeconds)} /{' '}
+                          {formatClock(resumeItem.durationSeconds)}
+                        </p>
+                      </div>
+                    ) : (
+                      <p
+                        className="text-xs mt-1 tabular-nums"
+                        style={{ color: 'var(--text-secondary)' }}
+                      >
+                        {getEpisodeDurationLabel(resumeItem.episode, {
+                          preferredDurationSeconds: resumeItem.durationSeconds
+                        })}
+                      </p>
+                    )}
+
+                    <div className="mt-2.5">
+                      {isResumeAudio && epHasAudio ? (
+                        <button
+                          type="button"
+                          onClick={() => playEpisode(resumeItem.book, resumeItem.episode)}
+                          style={{
+                            backgroundColor: 'var(--accent-primary)',
+                            color: 'var(--accent-primary-fg)'
+                          }}
+                          className="h-9 px-3.5 rounded-[8px] text-xs font-medium inline-flex items-center gap-1.5"
+                        >
+                          {isResumePlaying ? <PauseIcon size={13} /> : <PlayIcon size={13} />}
+                          <span>
+                            {isResumePlaying
+                              ? 'Tạm dừng'
+                              : resumeItem.kind === 'next_up'
+                                ? `Nghe Tập ${resumeItem.episode.episodeCode}`
+                                : 'Nghe tiếp'}
+                          </span>
+                        </button>
+                      ) : (
+                        <Link
+                          href={`/episodes/${resumeItem.episode.id}`}
+                          style={{
+                            backgroundColor: 'var(--accent-primary)',
+                            color: 'var(--accent-primary-fg)'
+                          }}
+                          className="h-9 px-3.5 rounded-[8px] text-xs font-medium inline-flex items-center gap-1.5"
+                        >
+                          <BookOpenIcon size={14} />
+                          <span>
+                            {resumeItem.kind === 'next_up'
+                              ? `Đọc Tập ${resumeItem.episode.episodeCode}`
+                              : `Đọc tiếp (${resumePct}%)`}
+                          </span>
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </section>
       )}
 
-      {/* Mới lên kệ (Recent Unread Releases Across All Books — Auto-clears when opened/listened) */}
+      {/* Các gian sách */}
+      <section aria-label="Các gian sách">
+        <div className="mb-3">
+          <h2 className="text-[17px] font-semibold font-editorial">Các gian sách</h2>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          {LIBRARY_HALLS.map((hall) => {
+            const hallBooks = booksByHall.get(hall.slug) || [];
+            const isLit = hallBooks.length > 0;
+            const totalEps = hallBooks.reduce((sum, b) => sum + b.episodes.length, 0);
+            const preset = BOOK_PRESETS[hall.preset];
+            const accentColor = isNight ? preset.nightAccent : preset.dayAccent;
+            const iconBg = isNight ? preset.nightWash : preset.dayWash;
+
+            const doorInner = (
+              <>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <div
+                      style={{
+                        backgroundColor: isLit ? iconBg : 'var(--bg-canvas)',
+                        border: '1px solid var(--border-hairline)',
+                        color: isLit ? accentColor : 'var(--text-secondary)'
+                      }}
+                      className="w-9 h-9 rounded-full flex items-center justify-center"
+                    >
+                      <HallIcon slug={hall.slug} size={17} />
+                    </div>
+
+                    <span
+                      style={{
+                        backgroundColor: isLit
+                          ? 'var(--accent-warm)'
+                          : 'var(--border-hairline)'
+                      }}
+                      className="w-2 h-2 rounded-full"
+                    />
+                  </div>
+
+                  <h3 className="text-[14.5px] font-semibold font-editorial mt-3 leading-snug">
+                    {hall.shortTitle}
+                  </h3>
+                </div>
+
+                <p
+                  className="text-[11.5px] mt-2 tabular-nums"
+                  style={{
+                    color: isLit ? 'var(--text-primary)' : 'var(--text-secondary)'
+                  }}
+                >
+                  {isLit ? `${hallBooks.length} bộ · ${totalEps} tập` : 'Sắp có sách'}
+                </p>
+              </>
+            );
+
+            if (!isLit) {
+              return (
+                <div
+                  key={hall.slug}
+                  aria-disabled="true"
+                  style={{
+                    backgroundColor: 'var(--bg-surface)',
+                    border: '1px solid var(--border-hairline)',
+                    opacity: 0.72
+                  }}
+                  className="rounded-t-[22px] rounded-b-[10px] p-3.5 flex flex-col justify-between select-none"
+                >
+                  {doorInner}
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={hall.slug}
+                href={`/halls/${hall.slug}`}
+                style={{
+                  backgroundColor: 'var(--bg-elevated)',
+                  border: '1px solid var(--border-hairline)'
+                }}
+                className="rounded-t-[22px] rounded-b-[10px] p-3.5 flex flex-col justify-between transition active:scale-[0.98]"
+              >
+                {doorInner}
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Mới lên kệ */}
       {recentArrivals.length > 0 && (
         <section aria-label="Mới lên kệ">
           <div className="flex items-baseline justify-between mb-2.5">
-            <h2 className="text-[17px] font-semibold font-editorial">Mới lên kệ</h2>
+            <h2 className="text-[16.5px] font-semibold font-editorial">Mới lên kệ</h2>
             <span className="text-xs tabular-nums" style={{ color: 'var(--accent-warm)' }}>
-              {newEpisodesAcrossLibrary.length} tập mới chưa mở
+              {newEpisodesAcrossLibrary.length} tập
             </span>
           </div>
 
@@ -260,18 +575,13 @@ export default function HomeLibraryPage() {
           >
             {recentArrivals.map(({ book, episode }) => {
               const isItemPlaying = activeEpisode?.id === episode.id && isPlaying;
-              const durLabel = episode.isTextOnly
-                ? estimateReadingMinutes(episode.wordCount)
-                : formatDurationShort(episode.audioTracks[0]?.durationSeconds || 0);
+              const durLabel = getEpisodeDurationLabel(episode);
 
               return (
-                <div
-                  key={episode.id}
-                  className="p-3 flex items-center gap-3"
-                >
+                <div key={episode.id} className="p-3 flex items-center gap-3">
                   <Link
                     href={`/episodes/${episode.id}`}
-                    className="w-[54px] shrink-0 block"
+                    className="w-[48px] shrink-0 block"
                   >
                     <BookCover
                       src={episode.effectiveCoverUrl}
@@ -280,10 +590,7 @@ export default function HomeLibraryPage() {
                     />
                   </Link>
 
-                  <Link
-                    href={`/episodes/${episode.id}`}
-                    className="flex-1 min-w-0"
-                  >
+                  <Link href={`/episodes/${episode.id}`} className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 text-[11px] truncate">
                       <span
                         className="font-semibold uppercase tracking-wider shrink-0"
@@ -295,18 +602,18 @@ export default function HomeLibraryPage() {
                         · {book.title}
                       </span>
                     </div>
-                    <h3 className="text-[14.5px] font-semibold font-editorial line-clamp-2 mt-0.5">
+                    <h3 className="text-[14px] font-semibold font-editorial line-clamp-2 mt-0.5">
                       Tập {episode.episodeCode}: {episode.title}
                     </h3>
                     <p
-                      className="text-[11.5px] mt-0.5 tabular-nums"
+                      className="text-[11px] mt-0.5 tabular-nums"
                       style={{ color: 'var(--text-secondary)' }}
                     >
                       {durLabel}
                     </p>
                   </Link>
 
-                  {!episode.isTextOnly && episode.audioTracks.length > 0 && (
+                  {!isEpisodeReadingOnly(episode) && (
                     <button
                       type="button"
                       aria-label={isItemPlaying ? `Tạm dừng ${episode.title}` : `Nghe ${episode.title}`}
@@ -332,137 +639,16 @@ export default function HomeLibraryPage() {
         </section>
       )}
 
-      {/* Clean Bookshelf */}
-      <section aria-label="Tủ sách">
-        <div className="flex items-baseline justify-between mb-3">
-          <h2 className="text-[17px] font-semibold font-editorial">Tủ sách</h2>
-          {books.length > 1 && (
-            <Link
-              href="/books"
-              style={{ color: 'var(--accent-primary)' }}
-              className="text-xs font-medium"
-            >
-              Tất cả ({books.length})
-            </Link>
-          )}
-        </div>
-
-        {orderedBooks.length === 0 ? (
-          <div
-            style={{
-              backgroundColor: 'var(--bg-surface)',
-              border: '1px solid var(--border-hairline)',
-              color: 'var(--text-secondary)'
-            }}
-            className="rounded-[10px] p-6 text-center text-sm font-editorial"
-          >
-            Tủ sách đang được cập nhật.
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-4">
-            {orderedBooks.map((book) => {
-              const completedCount = book.episodes.filter(
-                (ep) => progressMap[ep.id]?.completed
-              ).length;
-              const unreadNewEps = book.episodes.filter((ep) => isEpisodeNew(ep));
-              const latestNewEp =
-                unreadNewEps.length > 0
-                  ? unreadNewEps[unreadNewEps.length - 1]
-                  : null;
-
-              return (
-                <Link
-                  key={book.id}
-                  href={`/books/${book.slug}`}
-                  className="group block space-y-2"
-                >
-                  <BookCover
-                    src={book.coverUrl}
-                    alt={book.title}
-                    focalPoint={book.coverFocalPoint}
-                  />
-                  <div>
-                    <h3 className="text-[15px] font-semibold font-editorial line-clamp-2">
-                      {book.title}
-                    </h3>
-                    {book.author && (
-                      <p
-                        className="text-xs truncate mt-0.5"
-                        style={{ color: 'var(--text-secondary)' }}
-                      >
-                        {book.author}
-                      </p>
-                    )}
-                    <p
-                      className="text-[11.5px] mt-0.5 tabular-nums"
-                      style={{ color: 'var(--text-secondary)' }}
-                    >
-                      {completedCount > 0
-                        ? `${completedCount} / ${book.episodes.length} tập đã nghe`
-                        : `${book.episodes.length} tập`}
-                    </p>
-                    {latestNewEp && (
-                      <p
-                        className="text-[11.5px] font-medium mt-0.5 truncate tabular-nums"
-                        style={{ color: 'var(--accent-warm)' }}
-                      >
-                        {unreadNewEps.length > 1
-                          ? `${unreadNewEps.length} tập mới · Tập ${latestNewEp.episodeCode}`
-                          : `Mới: Tập ${latestNewEp.episodeCode}`}
-                      </p>
-                    )}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
-      </section>
-
-      {/* Bookmarked Episodes */}
-      {savedEpisodes.length > 0 && (
-        <section aria-label="Tập truyện đã lưu">
-          <div className="flex items-baseline justify-between mb-2.5">
-            <h2 className="text-[16px] font-semibold font-editorial">Đã đánh dấu</h2>
-            <Link
-              href="/saved"
-              style={{ color: 'var(--accent-primary)' }}
-              className="text-xs font-medium"
-            >
-              Xem tất cả
-            </Link>
-          </div>
-          <div
-            style={{
-              backgroundColor: 'var(--bg-elevated)',
-              border: '1px solid var(--border-hairline)'
-            }}
-            className="rounded-[10px] divide-y divide-[var(--border-hairline)]"
-          >
-            {savedEpisodes.map((item) => (
-              <Link
-                key={item.episodeId}
-                href={`/episodes/${item.episodeId}`}
-                className="px-3.5 py-2.5 flex items-center justify-between gap-3"
-              >
-                <div className="min-w-0">
-                  <p className="text-[11px] truncate" style={{ color: 'var(--text-secondary)' }}>
-                    {item.bookTitle} · Tập {item.code}
-                  </p>
-                  <p className="text-sm font-medium font-editorial truncate">{item.title}</p>
-                </div>
-                <span
-                  style={{ color: 'var(--accent-berry)' }}
-                  className="shrink-0 flex items-center gap-1.5 text-xs tabular-nums"
-                >
-                  <span>{item.durationLabel}</span>
-                  <BookmarkIcon size={14} filled />
-                </span>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
+      <div className="pt-1 flex justify-center">
+        <Link
+          href="/books"
+          style={{ color: 'var(--text-secondary)' }}
+          className="text-xs inline-flex items-center gap-1 hover:underline py-1"
+        >
+          <span>Tất cả sách ({books.length})</span>
+          <ChevronRightIcon size={13} />
+        </Link>
+      </div>
     </div>
   );
 }

@@ -3,11 +3,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { HydratedBook, HydratedEpisode, VoiceProfile } from '@/lib/types';
+import { formatBookDisplayGenre, resolveBookHall } from '@/lib/halls';
 import {
   BOOK_PRESETS,
-  estimateReadingMinutes,
   focalPointClass,
-  formatDurationShort
+  getEpisodeDurationLabel,
+  isEpisodeReadingOnly
 } from '@/lib/presets';
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { BookCover } from './BookCover';
@@ -16,6 +17,7 @@ import {
   BookOpenIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
+  ChevronRightIcon,
   CloseIcon,
   MicIcon,
   MoonIcon,
@@ -25,7 +27,8 @@ import {
   SunIcon
 } from './Icons';
 
-const CHUNK_SIZE = 20;
+// Progressive Disclosure threshold: books up to 25 episodes render continuously without splitting chunks
+const CHUNK_SIZE = 25;
 
 interface CollectionGroup {
   key: string;
@@ -40,6 +43,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
     favorites,
     toggleFavorite,
     progressMap,
+    readingProgressMap,
     isEpisodeNew,
     preferredVoiceKey,
     selectVoicePreference,
@@ -50,12 +54,14 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
   } = useLibraryPlayer();
 
   const [showIntro, setShowIntro] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(book.episodes.length > 15);
   const [searchQuery, setSearchQuery] = useState('');
   const [quickFilter, setQuickFilter] = useState<'none' | 'new' | 'saved'>('none');
   const [activeCollectionKey, setActiveCollectionKey] = useState<string>('ALL');
   const [chunkIndex, setChunkIndex] = useState<number>(0);
 
   const preset = BOOK_PRESETS[book.themePreset] || BOOK_PRESETS.moss;
+  const hall = useMemo(() => resolveBookHall(book), [book]);
   const washBg = isNight ? preset.nightWash : preset.dayWash;
   const accentColor = isNight ? preset.nightAccent : preset.dayAccent;
   const accentTextOnSolid = isNight ? '#111613' : '#F8F5EE';
@@ -87,10 +93,9 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
     return availableVoices[0]?.voiceKey || '';
   }, [activeEpisode, activeTrack, availableVoices, book.episodes, preferredVoiceKey]);
 
-  // Determine TOC mode: explicit book.tocMode ('thematic' | 'sequential')
   const isThematicMode = (book.tocMode || 'thematic') === 'thematic';
 
-  // Build thematic collections from Parts (if defined) or distinct episode categoryTags
+  // Build thematic collections from Parts or distinct episode categoryTags
   const collections = useMemo<CollectionGroup[]>(() => {
     if (!isThematicMode) return [];
 
@@ -120,11 +125,9 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
     }));
   }, [book.episodes, book.parts, isThematicMode]);
 
-  // Primary CTA target (in-progress episode -> first unheard -> first episode)
+  // Primary CTA target for audio books
   const primaryAudioTarget = useMemo(() => {
-    const audioEpisodes = book.episodes.filter(
-      (e) => !e.isTextOnly && e.audioTracks.length > 0
-    );
+    const audioEpisodes = book.episodes.filter((e) => !isEpisodeReadingOnly(e));
     if (audioEpisodes.length === 0) return null;
 
     const inProg = audioEpisodes.find((e) => {
@@ -137,9 +140,36 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
     return { episode: firstUnheard || audioEpisodes[0], resume: false };
   }, [book.episodes, progressMap]);
 
-  const completedCount = useMemo(
+  // Primary CTA target for text-only books
+  const primaryReadingTarget = useMemo(() => {
+    if (book.episodes.length === 0) return null;
+    const inProg = book.episodes.find((e) => {
+      const rp = readingProgressMap[e.id];
+      return rp && rp.scrollPercent > 0 && !rp.completed;
+    });
+    if (inProg) {
+      return {
+        episode: inProg,
+        resume: true,
+        scrollPercent: readingProgressMap[inProg.id].scrollPercent
+      };
+    }
+    const firstUnread = book.episodes.find((e) => !readingProgressMap[e.id]?.completed);
+    return {
+      episode: firstUnread || book.episodes[0],
+      resume: false,
+      scrollPercent: 0
+    };
+  }, [book.episodes, readingProgressMap]);
+
+  const completedAudioCount = useMemo(
     () => book.episodes.filter((ep) => progressMap[ep.id]?.completed).length,
     [book.episodes, progressMap]
+  );
+
+  const completedReadCount = useMemo(
+    () => book.episodes.filter((ep) => readingProgressMap[ep.id]?.completed).length,
+    [book.episodes, readingProgressMap]
   );
 
   const unreadNewCount = useMemo(
@@ -152,7 +182,6 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
     [book.episodes, favorites]
   );
 
-  // Filter episodes by search / quickFilter / activeCollectionKey
   const filteredEpisodes = useMemo(() => {
     const q = searchQuery.normalize('NFC').trim().toLowerCase();
 
@@ -188,13 +217,13 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
     searchQuery
   ]);
 
-  // Auto-jump to the 20-episode chunk containing the active / in-progress episode on initial load
   useEffect(() => {
     if (searchQuery.trim() || quickFilter !== 'none') {
       setChunkIndex(0);
       return;
     }
-    const targetId = activeEpisode?.id || primaryAudioTarget?.episode.id;
+    const targetId =
+      activeEpisode?.id || primaryAudioTarget?.episode.id || primaryReadingTarget?.episode.id;
     if (!targetId || filteredEpisodes.length <= CHUNK_SIZE) {
       setChunkIndex(0);
       return;
@@ -206,6 +235,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
     activeEpisode?.id,
     filteredEpisodes,
     primaryAudioTarget?.episode.id,
+    primaryReadingTarget?.episode.id,
     quickFilter,
     searchQuery
   ]);
@@ -213,7 +243,6 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
   const totalChunks = Math.ceil(filteredEpisodes.length / CHUNK_SIZE);
   const safeChunkIndex = Math.min(chunkIndex, Math.max(0, totalChunks - 1));
 
-  // If searching, show up to 30 matches directly; otherwise show the active 20-episode chunk
   const displayedEpisodes = useMemo(() => {
     if (searchQuery.trim()) {
       return filteredEpisodes.slice(0, 30);
@@ -238,9 +267,18 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
     return list;
   }, [filteredEpisodes, searchQuery, totalChunks]);
 
+  const hasAudioBook = Boolean(primaryAudioTarget);
+  const summaryStats = hasAudioBook
+    ? completedAudioCount > 0
+      ? `${completedAudioCount}/${book.episodes.length} đã nghe`
+      : `${book.episodes.length} tập`
+    : completedReadCount > 0
+      ? `${completedReadCount}/${book.episodes.length} đã đọc`
+      : `${book.episodes.length} tập · Đọc chữ`;
+
   return (
     <div className="pb-6">
-      {/* Compact Preset Wash Book Header (Leaves maximum vertical screen space for episodes) */}
+      {/* Compact Preset Wash Book Header */}
       <div
         style={{
           backgroundColor: washBg,
@@ -248,41 +286,68 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
         }}
         className="px-4 pt-2.5 pb-3.5"
       >
-        {/* Top Navigation Row */}
-        <div className="flex items-center justify-between mb-2.5">
-          <Link
-            href="/books"
-            style={{ color: 'var(--text-primary)' }}
-            className="h-9 pr-2 inline-flex items-center gap-1 text-xs font-medium"
+        {/* Top Hierarchical Spatial Breadcrumb: Sảnh sách › Tên Gian */}
+        <div className="flex items-center justify-between gap-2 mb-2.5">
+          <nav
+            aria-label="Định vị không gian thư viện"
+            className="flex items-center gap-1 min-w-0 text-xs"
           >
-            <ChevronLeftIcon size={16} />
-            <span>Tủ sách</span>
-          </Link>
-
-          <div className="flex items-center gap-2">
             <Link
               href="/"
               style={{ color: 'var(--text-secondary)' }}
-              className="h-9 px-2 inline-flex items-center text-xs"
+              className="h-9 inline-flex items-center gap-0.5 font-medium shrink-0 hover:underline"
             >
-              Trang chủ
+              <ChevronLeftIcon size={15} />
+              <span>Sảnh sách</span>
             </Link>
+            <ChevronRightIcon size={12} className="shrink-0 opacity-50" />
+            <Link
+              href={`/halls/${hall.slug}`}
+              style={{ color: accentColor }}
+              className="h-9 inline-flex items-center font-semibold truncate hover:underline"
+            >
+              <span className="truncate">{hall.shortTitle}</span>
+            </Link>
+          </nav>
+
+          <div className="flex items-center gap-1.5 shrink-0">
+            {book.episodes.length <= 15 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsSearchOpen((v) => !v);
+                  if (isSearchOpen) setSearchQuery('');
+                }}
+                aria-label="Tìm tập trong bộ sách"
+                style={{
+                  backgroundColor: isSearchOpen
+                    ? 'var(--text-primary)'
+                    : 'var(--bg-elevated)',
+                  color: isSearchOpen ? 'var(--bg-canvas)' : 'var(--text-primary)',
+                  border: '1px solid var(--border-hairline)'
+                }}
+                className="w-10 h-10 rounded-[8px] flex items-center justify-center"
+              >
+                <SearchIcon size={15} />
+              </button>
+            )}
             <button
               type="button"
               onClick={toggleNight}
               aria-label={isNight ? 'Giao diện sáng' : 'Giao diện đêm'}
               style={{
                 backgroundColor: 'var(--bg-elevated)',
-                border: '1px solid var(--border-hairline)'
+                border: '1px solid var(--border-hairline)',
+                color: 'var(--text-primary)'
               }}
-              className="w-9 h-9 rounded-[7px] flex items-center justify-center"
+              className="w-10 h-10 rounded-[8px] flex items-center justify-center"
             >
               {isNight ? <SunIcon size={15} /> : <MoonIcon size={15} />}
             </button>
           </div>
         </div>
 
-        {/* Compact Identity + Actions */}
+        {/* Compact Identity + Single-line Actions */}
         <div className="flex items-start gap-3">
           <div className="w-[62px] shrink-0">
             <BookCover
@@ -293,22 +358,18 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
           </div>
 
           <div className="flex-1 min-w-0">
-            <h1 className="text-[18px] font-bold font-editorial leading-snug truncate">
+            <h1 className="text-[18px] font-bold font-editorial leading-snug line-clamp-2">
               {book.title}
             </h1>
             <p
               className="text-xs truncate mt-0.5 tabular-nums"
               style={{ color: 'var(--text-secondary)' }}
             >
-              {book.subtitle || book.author || book.genreTag}
-              {' · '}
-              {completedCount > 0
-                ? `${completedCount}/${book.episodes.length} đã nghe`
-                : `${book.episodes.length} tập`}
+              {book.subtitle || book.author || formatBookDisplayGenre(book)} · {summaryStats}
             </p>
 
-            {/* Single-row Primary Play + Voice Selector */}
-            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            {/* Primary Play/Read CTA + Voice Selector + Intro Toggle (clean wrapping, never clipped) */}
+            <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
               {primaryAudioTarget ? (
                 <button
                   type="button"
@@ -323,7 +384,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
                     backgroundColor: accentColor,
                     color: accentTextOnSolid
                   }}
-                  className="h-8 px-3 rounded-[7px] text-xs font-semibold inline-flex items-center gap-1.5 tabular-nums"
+                  className="h-9 px-3.5 rounded-[8px] text-xs font-semibold inline-flex items-center gap-1.5 tabular-nums whitespace-nowrap shrink-0"
                 >
                   {activeEpisode?.id === primaryAudioTarget.episode.id && isPlaying ? (
                     <PauseIcon size={12} />
@@ -339,17 +400,21 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
                   </span>
                 </button>
               ) : (
-                book.episodes[0] && (
+                primaryReadingTarget && (
                   <Link
-                    href={`/episodes/${book.episodes[0].id}`}
+                    href={`/episodes/${primaryReadingTarget.episode.id}`}
                     style={{
                       backgroundColor: accentColor,
                       color: accentTextOnSolid
                     }}
-                    className="h-8 px-3 rounded-[7px] text-xs font-semibold inline-flex items-center gap-1.5"
+                    className="h-9 px-3.5 rounded-[8px] text-xs font-semibold inline-flex items-center gap-1.5 tabular-nums whitespace-nowrap shrink-0"
                   >
                     <BookOpenIcon size={13} />
-                    <span>Đọc Tập {book.episodes[0].episodeCode}</span>
+                    <span>
+                      {primaryReadingTarget.resume
+                        ? `Đọc tiếp Tập ${primaryReadingTarget.episode.episodeCode} (${primaryReadingTarget.scrollPercent}%)`
+                        : `Đọc Tập ${primaryReadingTarget.episode.episodeCode}`}
+                    </span>
                   </Link>
                 )
               )}
@@ -361,7 +426,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
                     border: '1px solid var(--border-hairline)',
                     color: accentColor
                   }}
-                  className="h-8 px-2 rounded-[7px] inline-flex items-center gap-1 text-xs font-medium"
+                  className="h-9 px-2.5 rounded-[8px] inline-flex items-center gap-1 text-xs font-medium shrink-0"
                 >
                   <MicIcon size={12} className="shrink-0" />
                   <select
@@ -384,7 +449,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
                   type="button"
                   onClick={() => setShowIntro((v) => !v)}
                   style={{ color: 'var(--text-secondary)' }}
-                  className="h-8 px-1.5 inline-flex items-center gap-0.5 text-xs"
+                  className="h-9 px-2 inline-flex items-center gap-0.5 text-xs whitespace-nowrap shrink-0"
                 >
                   <span>Giới thiệu</span>
                   <ChevronDownIcon
@@ -412,79 +477,87 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
         )}
       </div>
 
-      {/* High-Density Scalable Table of Contents (Phương án 1) */}
+      {/* Progressive Disclosure Table of Contents */}
       <section aria-label="Mục lục tập truyện" className="px-3.5 pt-3 space-y-2.5">
-        {/* 1. Quick Number/Title Search + Compact New / Saved Toggles */}
-        <div className="flex items-center gap-1.5">
-          <div
-            style={{
-              backgroundColor: 'var(--bg-elevated)',
-              border: '1px solid var(--border-hairline)'
-            }}
-            className="flex-1 h-9 px-2.5 rounded-[8px] flex items-center gap-2 min-w-0"
-          >
-            <SearchIcon size={14} className="shrink-0 opacity-60" />
-            <input
-              type="search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Tìm số tập hoặc tên tập..."
-              className="flex-1 bg-transparent outline-none text-xs min-w-0"
-            />
-            {searchQuery && (
+        {/* 1. Search Bar (collapsible when <= 15 episodes) + New / Saved quick filters */}
+        {(isSearchOpen || unreadNewCount > 0 || savedInBookCount > 0 || quickFilter !== 'none') && (
+          <div className="flex items-center gap-1.5">
+            {isSearchOpen ? (
+              <div
+                style={{
+                  backgroundColor: 'var(--bg-elevated)',
+                  border: '1px solid var(--border-hairline)'
+                }}
+                className="flex-1 h-9 px-2.5 rounded-[8px] flex items-center gap-2 min-w-0"
+              >
+                <SearchIcon size={14} className="shrink-0 opacity-60" />
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Tìm số tập hoặc tên tập..."
+                  className="flex-1 bg-transparent outline-none text-xs min-w-0"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    aria-label="Xóa tìm kiếm"
+                    onClick={() => setSearchQuery('')}
+                    className="w-6 h-6 flex items-center justify-center opacity-70"
+                  >
+                    <CloseIcon size={13} />
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="flex-1 text-xs font-semibold font-editorial" style={{ color: 'var(--text-secondary)' }}>
+                Mục lục ({book.episodes.length} tập)
+              </div>
+            )}
+
+            {(unreadNewCount > 0 || quickFilter === 'new') && (
               <button
                 type="button"
-                aria-label="Xóa tìm kiếm"
-                onClick={() => setSearchQuery('')}
-                className="w-6 h-6 flex items-center justify-center opacity-70"
+                onClick={() =>
+                  setQuickFilter((prev) => (prev === 'new' ? 'none' : 'new'))
+                }
+                style={{
+                  backgroundColor:
+                    quickFilter === 'new' ? 'var(--accent-warm)' : 'var(--bg-surface)',
+                  color:
+                    quickFilter === 'new' ? '#1B140A' : 'var(--accent-warm)',
+                  border: '1px solid var(--border-hairline)'
+                }}
+                className="h-9 px-2.5 rounded-[8px] text-xs font-semibold shrink-0 tabular-nums"
               >
-                <CloseIcon size={13} />
+                Mới ({unreadNewCount})
+              </button>
+            )}
+
+            {(savedInBookCount > 0 || quickFilter === 'saved') && (
+              <button
+                type="button"
+                aria-label="Lọc tập đã lưu"
+                onClick={() =>
+                  setQuickFilter((prev) => (prev === 'saved' ? 'none' : 'saved'))
+                }
+                style={{
+                  backgroundColor:
+                    quickFilter === 'saved' ? 'var(--accent-berry)' : 'var(--bg-surface)',
+                  color:
+                    quickFilter === 'saved' ? '#F8F5EE' : 'var(--text-secondary)',
+                  border: '1px solid var(--border-hairline)'
+                }}
+                className="h-9 px-2.5 rounded-[8px] text-xs font-medium inline-flex items-center gap-1 shrink-0 tabular-nums"
+              >
+                <BookmarkIcon size={13} filled={quickFilter === 'saved'} />
+                <span>{savedInBookCount}</span>
               </button>
             )}
           </div>
+        )}
 
-          {(unreadNewCount > 0 || quickFilter === 'new') && (
-            <button
-              type="button"
-              onClick={() =>
-                setQuickFilter((prev) => (prev === 'new' ? 'none' : 'new'))
-              }
-              style={{
-                backgroundColor:
-                  quickFilter === 'new' ? 'var(--accent-warm)' : 'var(--bg-surface)',
-                color:
-                  quickFilter === 'new' ? '#1B140A' : 'var(--accent-warm)',
-                border: '1px solid var(--border-hairline)'
-              }}
-              className="h-9 px-2.5 rounded-[8px] text-xs font-semibold shrink-0 tabular-nums"
-            >
-              Mới ({unreadNewCount})
-            </button>
-          )}
-
-          {(savedInBookCount > 0 || quickFilter === 'saved') && (
-            <button
-              type="button"
-              aria-label="Lọc tập đã lưu"
-              onClick={() =>
-                setQuickFilter((prev) => (prev === 'saved' ? 'none' : 'saved'))
-              }
-              style={{
-                backgroundColor:
-                  quickFilter === 'saved' ? 'var(--accent-berry)' : 'var(--bg-surface)',
-                color:
-                  quickFilter === 'saved' ? '#F8F5EE' : 'var(--text-secondary)',
-                border: '1px solid var(--border-hairline)'
-              }}
-              className="h-9 px-2.5 rounded-[8px] text-xs font-medium inline-flex items-center gap-1 shrink-0 tabular-nums"
-            >
-              <BookmarkIcon size={13} filled={quickFilter === 'saved'} />
-              <span>{savedInBookCount}</span>
-            </button>
-          )}
-        </div>
-
-        {/* 2. Horizontal Collection Tabs (Shown for Thematic Multi-Topic Books when not in search/quickFilter) */}
+        {/* 2. Horizontal Collection Tabs (Shown for Thematic Books) */}
         {collections.length > 0 && !searchQuery.trim() && quickFilter === 'none' && (
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
             <button
@@ -531,7 +604,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
           </div>
         )}
 
-        {/* 3. Automatic 20-Episode Range Chunks (01–20 | 21–40 | 41–60...) */}
+        {/* 3. 25-Episode Range Chunks (Hidden for <= 25 episodes) */}
         {chunkLabels.length > 0 && (
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
             {chunkLabels.map((chunk) => {
@@ -555,7 +628,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
           </div>
         )}
 
-        {/* 4. Minimalist High-Density Episode List (6–7 episodes visible per mobile screen) */}
+        {/* 4. Minimalist High-Density Episode List */}
         {displayedEpisodes.length === 0 ? (
           <div
             style={{
@@ -591,11 +664,12 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
           >
             {displayedEpisodes.map((ep) => {
               const prog = progressMap[ep.id];
+              const readProg = readingProgressMap[ep.id];
               const isEpActive = activeEpisode?.id === ep.id;
               const isEpPlaying = isEpActive && isPlaying;
               const isSaved = favorites.includes(ep.id);
               const isNew = isEpisodeNew(ep);
-              const pct =
+              const audioPct =
                 prog && prog.durationSeconds > 0
                   ? Math.min(
                       99,
@@ -607,9 +681,9 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
                 ep.audioTracks.find(
                   (t) => t.voiceProfile.voiceKey === effectiveSelectedVoice
                 ) || ep.audioTracks[0];
-              const durationText = ep.isTextOnly
-                ? estimateReadingMinutes(ep.wordCount)
-                : formatDurationShort(preferredTrack?.durationSeconds || 0);
+              const durationText = getEpisodeDurationLabel(ep, {
+                preferredDurationSeconds: preferredTrack?.durationSeconds
+              });
 
               return (
                 <div
@@ -632,7 +706,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
                     </Link>
                   )}
 
-                  {/* Miniature 38×50px (3:4) Watercolor Thumbnail */}
+                  {/* Miniature 38×50px (3:4) Clean Watercolor Thumbnail */}
                   <Link
                     href={`/episodes/${ep.id}`}
                     aria-label={`Đọc ${ep.title}`}
@@ -652,11 +726,8 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
                     />
                   </Link>
 
-                  {/* Title + Minimalist Sub-line ("16 phút" · Mới / Đã nghe) */}
-                  <Link
-                    href={`/episodes/${ep.id}`}
-                    className="flex-1 min-w-0 py-0.5"
-                  >
+                  {/* Title + Minimalist Sub-line */}
+                  <Link href={`/episodes/${ep.id}`} className="flex-1 min-w-0 py-0.5">
                     <h3
                       style={{
                         color: isEpActive ? accentColor : 'var(--text-primary)'
@@ -680,9 +751,15 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
                       )}
                       {prog?.completed ? (
                         <span style={{ color: accentColor }}>&middot; Đã nghe</span>
-                      ) : pct > 0 ? (
+                      ) : audioPct > 0 ? (
                         <span style={{ color: 'var(--accent-warm)' }}>
-                          &middot; {pct}%
+                          &middot; Nghe {audioPct}%
+                        </span>
+                      ) : readProg?.completed ? (
+                        <span style={{ color: accentColor }}>&middot; Đã đọc</span>
+                      ) : readProg && readProg.scrollPercent > 3 ? (
+                        <span style={{ color: 'var(--accent-warm)' }}>
+                          &middot; Đọc {readProg.scrollPercent}%
                         </span>
                       ) : null}
                     </div>
@@ -698,12 +775,12 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
                         color: isSaved ? 'var(--accent-berry)' : 'var(--text-secondary)',
                         opacity: isSaved ? 1 : 0.55
                       }}
-                      className="w-8 h-9 flex items-center justify-center"
+                      className="w-9 h-10 flex items-center justify-center"
                     >
                       <BookmarkIcon size={15} filled={isSaved} />
                     </button>
 
-                    {!ep.isTextOnly && ep.audioTracks.length > 0 && (
+                    {!isEpisodeReadingOnly(ep) && (
                       <button
                         type="button"
                         aria-label={isEpPlaying ? `Tạm dừng ${ep.title}` : `Phát ${ep.title}`}
@@ -729,7 +806,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
           </div>
         )}
 
-        {/* Bottom Chunk Switcher when scrolling to end of 20 episodes */}
+        {/* Bottom Chunk Switcher when > 25 episodes */}
         {chunkLabels.length > 1 && (
           <div className="pt-1 flex items-center justify-between text-xs">
             <button
