@@ -8,8 +8,8 @@ import { collectEpisodeIllustrations, parseStoryMarkdown } from '@/lib/markdown'
 import { BOOK_PRESETS, formatClock, formatDurationShort, isEpisodeReadingOnly } from '@/lib/presets';
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { StorybookHeroStage } from './StorybookHeroStage';
+import { LibraryWayfinder } from './LibraryWayfinder';
 import {
-  ChevronLeftIcon,
   CloseIcon,
   ExpandIcon,
   MicIcon,
@@ -357,38 +357,22 @@ export function EpisodeReaderClient({
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* 1. Sticky 42px Exit, 0px Micro-Audio Control & Typography Bar */}
+      {/* 1. Sticky 42px 5-Step Wayfinder, 0px Micro-Audio Control & Typography Bar */}
       <header
         style={{
           backgroundColor: 'var(--bg-canvas)',
           borderBottom: '1px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[42px] px-3 flex items-center justify-between gap-1.5"
+        className="sticky top-0 z-20 h-[42px] px-2.5 flex items-center justify-between gap-1"
       >
-        <div className="flex items-center gap-1.5 min-w-0">
-          <Link
-            href={`/books/${book.slug}`}
-            style={{ color: 'var(--accent-primary)' }}
-            className="h-9 inline-flex items-center gap-0.5 text-xs font-semibold max-w-[150px]"
-          >
-            <ChevronLeftIcon size={16} className="shrink-0" />
-            <span className="truncate">{book.title}</span>
-          </Link>
+        <LibraryWayfinder
+          currentStep="episode"
+          currentHall={hall}
+          currentBook={book}
+          currentEpisode={episode}
+        />
 
-          <span style={{ color: 'var(--border-hairline)' }} aria-hidden="true">
-            |
-          </span>
-
-          <Link
-            href="/"
-            style={{ color: 'var(--text-secondary)' }}
-            className="h-9 px-1 inline-flex items-center text-xs font-medium shrink-0"
-          >
-            Sảnh sách
-          </Link>
-        </div>
-
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-0.5 shrink-0">
           {showStickyMicroControl && (
             <button
               type="button"
@@ -407,7 +391,7 @@ export function EpisodeReaderClient({
             >
               {isThisEpisodePlaying ? <PauseIcon size={11} /> : <PlayIcon size={11} />}
               {isThisEpisodeActive && duration > 0 && (
-                <span>{formatClock(currentTime)}</span>
+                <span className="hidden min-[380px]:inline">{formatClock(currentTime)}</span>
               )}
             </button>
           )}
@@ -419,7 +403,7 @@ export function EpisodeReaderClient({
                 aria-label="Giảm cỡ chữ"
                 onClick={() => adjustReaderFontSize(-1)}
                 style={{ color: 'var(--text-secondary)' }}
-                className="w-8 h-8 rounded-[6px] text-xs font-medium flex items-center justify-center"
+                className="w-7 h-7 rounded-[6px] text-xs font-medium flex items-center justify-center"
               >
                 A-
               </button>
@@ -428,7 +412,7 @@ export function EpisodeReaderClient({
                 aria-label="Tăng cỡ chữ"
                 onClick={() => adjustReaderFontSize(1)}
                 style={{ color: 'var(--text-primary)' }}
-                className="w-8 h-8 rounded-[6px] text-xs font-semibold flex items-center justify-center"
+                className="w-7 h-7 rounded-[6px] text-xs font-semibold flex items-center justify-center"
               >
                 A+
               </button>
@@ -439,7 +423,7 @@ export function EpisodeReaderClient({
             aria-label={isNight ? 'Giao diện giấy sáng' : 'Giao diện ban đêm'}
             onClick={toggleNight}
             style={{ color: 'var(--text-primary)' }}
-            className="w-8 h-8 rounded-[6px] flex items-center justify-center"
+            className="w-7 h-7 rounded-[6px] flex items-center justify-center"
           >
             {isNight ? <SunIcon size={15} /> : <MoonIcon size={15} />}
           </button>
@@ -467,6 +451,8 @@ export function EpisodeReaderClient({
           focalPoint={book.coverFocalPoint}
           washBg={heroWashBg}
           roundedClass="rounded-[8px]"
+          maxHeightDvh={66}
+          paddingXClass="px-4"
         >
           <div className="px-0.5">{episodeHeaderContent}</div>
         </StorybookHeroStage>
@@ -515,16 +501,17 @@ export function EpisodeReaderClient({
                     onClick={() => openIllustrationByUrl(block.url)}
                     aria-label="Chạm để ngắm tranh toàn màn hình"
                     style={{
+                      width: 'min(100%, calc(78dvh * 0.75))',
                       border: '1px solid var(--border-hairline)',
                       backgroundColor: 'var(--bg-surface)'
                     }}
-                    className="w-full rounded-[8px] overflow-hidden block"
+                    className="mx-auto rounded-[8px] overflow-hidden block shadow-sm transition active:scale-[0.995]"
                   >
                     <img
                       src={block.url}
                       alt={block.alt}
                       loading="lazy"
-                      className="w-full max-h-[72vh] h-auto object-contain mx-auto block"
+                      className="w-full h-auto block select-none"
                     />
                   </button>
                 </div>
@@ -550,16 +537,17 @@ export function EpisodeReaderClient({
               onClick={() => setLightboxIndex(idx)}
               aria-label={`Xem tranh ${idx + 1} toàn màn hình`}
               style={{
+                width: 'min(100%, calc(78dvh * 0.75))',
                 border: '1px solid var(--border-hairline)',
                 backgroundColor: 'var(--bg-surface)'
               }}
-              className="w-full rounded-[8px] overflow-hidden block"
+              className="mx-auto rounded-[8px] overflow-hidden block shadow-sm transition active:scale-[0.995]"
             >
               <img
                 src={ill.url}
                 alt={ill.alt}
                 loading="lazy"
-                className="w-full max-h-[75vh] h-auto object-contain mx-auto block"
+                className="w-full h-auto block select-none"
               />
             </button>
           ))}
@@ -589,22 +577,6 @@ export function EpisodeReaderClient({
               <span>&larr; Mục lục sách</span>
             </Link>
           )}
-
-          <Link
-            href={`/halls/${hall.slug}`}
-            style={{ color: 'var(--text-secondary)' }}
-            className="h-10 px-2 inline-flex items-center truncate max-w-[140px]"
-          >
-            {hall.shortTitle}
-          </Link>
-
-          <Link
-            href="/"
-            style={{ color: 'var(--text-secondary)' }}
-            className="h-10 px-2 inline-flex items-center"
-          >
-            Sảnh sách
-          </Link>
 
           {nextEpisode ? (
             <Link

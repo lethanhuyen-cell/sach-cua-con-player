@@ -12,6 +12,8 @@ interface StorybookHeroStageProps {
   focalPoint?: CoverFocalPoint;
   washBg?: string;
   roundedClass?: string;
+  maxHeightDvh?: number;
+  paddingXClass?: string;
   children?: React.ReactNode;
 }
 
@@ -29,6 +31,8 @@ export function StorybookHeroStage({
   focalPoint = 'center',
   washBg,
   roundedClass = 'rounded-[8px]',
+  maxHeightDvh = 58,
+  paddingXClass = 'px-3.5',
   children
 }: StorybookHeroStageProps) {
   const [isZoomOpen, setIsZoomOpen] = useState(false);
@@ -56,9 +60,9 @@ export function StorybookHeroStage({
           backgroundColor: washBg || 'transparent',
           borderBottom: washBg ? '1px solid var(--border-hairline)' : undefined
         }}
-        className="px-3.5 pt-2.5 pb-3.5"
+        className={`${paddingXClass} pt-2.5 pb-3.5`}
       >
-        <div style={{ width: 'min(100%, calc(58dvh * 0.75))' }} className="mx-auto">
+        <div style={{ width: `min(100%, calc(${maxHeightDvh}dvh * 0.75))` }} className="mx-auto">
           {hasValidImage ? (
             <button
               type="button"
