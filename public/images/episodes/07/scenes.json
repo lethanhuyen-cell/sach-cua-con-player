@@ -1,0 +1,51 @@
+[
+  {
+    "id": "scene_01",
+    "file": "scene_01.jpg",
+    "after_paragraph": 11,
+    "aspect_ratio": "3:4",
+    "caption": "Giữa cơn mưa rào mùa thu, nước mưa đọng thành hạt thủy tinh lóng lánh trên lớp lông trắng xốp của Cô Cừu Daisy rồi bắn tung thành vòng hào quang khi cô lắc mình khô ráo."
+  },
+  {
+    "id": "scene_02",
+    "file": "scene_02.jpg",
+    "after_paragraph": 25,
+    "aspect_ratio": "3:4",
+    "caption": "Sau cơn mưa tạnh nắng bừng lên, Cô Cừu Daisy dừng trước thanh rào gỗ mỉm cười nhận ra ngay chú chim nhỏ đội mũ beret xanh từ mùa thu năm ngoái nhờ trí nhớ khuôn mặt tuyệt vời."
+  },
+  {
+    "id": "scene_03",
+    "file": "scene_03.jpg",
+    "after_paragraph": 39,
+    "aspect_ratio": "3:4",
+    "caption": "Qua chiếc kính lúp đồng nhỏ của Mẹ Vacci, Lim thích thú soi những sợi lông cừu uốn sóng giữ hàng triệu túi khí ấm và phủ lớp sáp lanolin chống thấm nước."
+  },
+  {
+    "id": "scene_04",
+    "file": "scene_04.jpg",
+    "after_paragraph": 52,
+    "aspect_ratio": "3:4",
+    "caption": "Sát bờ cỏ non xanh mướt, Cô Daisy dùng đôi môi nhỏ linh hoạt và đệm lợi hàm trên khéo léo bứt gọn từng ngọn cỏ mềm sát gốc dưới ánh nhìn chăm chú của Lim."
+  },
+  {
+    "id": "scene_05",
+    "file": "scene_05.jpg",
+    "after_paragraph": 61,
+    "aspect_ratio": "3:4",
+    "caption": "Khi Daisy cúi đầu gặm cỏ, hai con ngươi nằm ngang trong mắt cô tự động xoay giữ thăng bằng với đường chân trời để canh chừng sườn đồi hơn 300 độ."
+  },
+  {
+    "id": "scene_06",
+    "file": "scene_06.jpg",
+    "after_paragraph": 71,
+    "aspect_ratio": "3:4",
+    "caption": "Daisy nhấc nhẹ bàn chân trước chỉ khe tuyến mùi giữa hai ngón móng, nơi lưu lại vệt hương thảo mộc dẫn đường cho cả đàn giữa sương mù dày đặc."
+  },
+  {
+    "id": "scene_07",
+    "file": "scene_07.jpg",
+    "after_paragraph": 82,
+    "aspect_ratio": "3:4",
+    "caption": "Chiều xuống bên hiên lán gỗ ấm áp, Lim gắp búp lông cừu trắng muốt đượm hương lanolin cất vào túi da trong tiếng chuông đồng ngân khẽ trên cổ Cô Daisy."
+  }
+]

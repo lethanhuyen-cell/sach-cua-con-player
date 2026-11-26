@@ -1,0 +1,44 @@
+[
+  {
+    "id": "scene_01",
+    "file": "scene_01.jpg",
+    "after_paragraph": 16,
+    "aspect_ratio": "3:4",
+    "caption": "Bên gốc sồi cổ thụ đất khô cứng, Bác Lợn Pip bước tới hếch chiếc đĩa mũi tròn hồng hào hít hà tìm đúng vị trí củ khoai mài thơm phức ẩn sâu ba tấc đất."
+  },
+  {
+    "id": "scene_02",
+    "file": "scene_02.jpg",
+    "after_paragraph": 28,
+    "aspect_ratio": "3:4",
+    "caption": "Dùng chiếc đĩa mũi khỏe như xẻng thép, Bác Pip bẩy văng hòn đá nặng sang bên và ủi lộ ra củ khoai mài rừng to tròn trước sự thán phục của Lim và Mẹ Vacci."
+  },
+  {
+    "id": "scene_03",
+    "file": "scene_03.jpg",
+    "after_paragraph": 41,
+    "aspect_ratio": "3:4",
+    "caption": "Ở cự ly gần sát miệng hố đất tơi, Lim tròn mắt ngắm chiếc đĩa sụn mũi đàn hồi có xương mõm vững chắc giúp Bác Pip đánh hơi nhạy gấp hàng ngàn lần con người."
+  },
+  {
+    "id": "scene_04",
+    "file": "scene_04.jpg",
+    "after_paragraph": 56,
+    "aspect_ratio": "3:4",
+    "caption": "Dưới bóng rặng liễu mát ven ao, Bác Pip khoan khoái đằm mình phủ lớp bùn mát lên làn da không có tuyến mồ hôi để giải nhiệt và che nắng chống muỗi."
+  },
+  {
+    "id": "scene_05",
+    "file": "scene_05.jpg",
+    "after_paragraph": 63,
+    "aspect_ratio": "3:4",
+    "caption": "Bên góc chuồng rải rơm khô sạch tinh tươm tách biệt hẳn chỗ ăn, Bác Pip cười híp mắt kể về trí thông minh sắc sảo thuộc nhóm đầu thế giới loài vật của họ nhà lợn."
+  },
+  {
+    "id": "scene_06",
+    "file": "scene_06.jpg",
+    "after_paragraph": 74,
+    "aspect_ratio": "3:4",
+    "caption": "Hoàng hôn buông trên Đồi Sồi, Lim gắp mẩu vỏ hạt dẻ rừng bóng mượt cất vào túi da bên cạnh Bác Lợn Pip đang gập chân ngủ yên bình trên ổ rơm thơm."
+  }
+]

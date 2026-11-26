@@ -1,0 +1,44 @@
+[
+  {
+    "id": "scene_01",
+    "file": "scene_01.jpg",
+    "after_paragraph": 15,
+    "aspect_ratio": "3:4",
+    "caption": "Bên chiếc lỗ tròn phẳng lì gặm xuyên vách hòm gỗ sồi dày trong cối xay gió, chú chuột đồng nhỏ xíu Dusty đứng bằng hai chân sau chắp tay chào hai mẹ con Lim và Mẹ Vacci."
+  },
+  {
+    "id": "scene_02",
+    "file": "scene_02.jpg",
+    "after_paragraph": 32,
+    "aspect_ratio": "3:4",
+    "caption": "Qua chiếc kính lúp đồng của Mẹ Vacci, Lim kinh ngạc soi đôi răng cửa màu vàng cam đậm giàu khoáng sắt cứng ngang thép và tự mài vát sắc như lưỡi đục của Dusty."
+  },
+  {
+    "id": "scene_03",
+    "file": "scene_03.jpg",
+    "after_paragraph": 45,
+    "aspect_ratio": "3:4",
+    "caption": "Ôm hạt lúa mì vàng óng bằng hai bàn chân nhỏ, Dusty kể về đôi răng không bao giờ ngủ mọc dài thêm hơn mười hai centimet mỗi năm buộc chú phải chăm chỉ gặm gỗ cứng."
+  },
+  {
+    "id": "scene_04",
+    "file": "scene_04.jpg",
+    "after_paragraph": 53,
+    "aspect_ratio": "3:4",
+    "caption": "Bộ râu mép rung nhanh 25 lần mỗi giây quét bản đồ không gian khi Dusty thoăn thoắt đi thăng bằng trên sợi dây thừng nhà kho nhờ chiếc đuôi dài làm sào đối trọng."
+  },
+  {
+    "id": "scene_05",
+    "file": "scene_05.jpg",
+    "after_paragraph": 64,
+    "aspect_ratio": "3:4",
+    "caption": "Nghe tiếng mèo thoảng ngoài hiên, Dusty thu gọn xương bả vai lách tuột cả cơ thể qua khe đá hẹp chỉ bằng đồng xu rồi thò đầu ra cười tinh nghịch với Lim."
+  },
+  {
+    "id": "scene_06",
+    "file": "scene_06.jpg",
+    "after_paragraph": 75,
+    "aspect_ratio": "3:4",
+    "caption": "Dưới ánh đèn bão dịu ấm đêm thu trong cối xay gió, Dusty trao tặng Lim hạt lúa mì giống vàng óng — kỷ vật thứ mười khép lại chặng khám phá đầu tiên đầy ắp yêu thương."
+  }
+]

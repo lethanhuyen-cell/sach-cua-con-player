@@ -1,0 +1,51 @@
+[
+  {
+    "id": "scene_01",
+    "file": "scene_01.jpg",
+    "after_paragraph": 11,
+    "aspect_ratio": "3:4",
+    "caption": "Bên chiếc cổng gỗ bật chốt đầu thu, Bác Chó Barley cúi sát thảm cỏ đánh hơi tìm dấu vết của Mây, còn Lim đậu trên cành táo thấp hếch mỏ tập ngửi hương gió sớm."
+  },
+  {
+    "id": "scene_02",
+    "file": "scene_02.jpg",
+    "after_paragraph": 28,
+    "aspect_ratio": "3:4",
+    "caption": "Giữa vườn táo chín rụng, Lim vỗ cánh chỉ mảnh vải đỏ mắc trên hàng rào gỗ và khám phá ra thế giới sắc màu xanh – vàng khác biệt trong đôi mắt loài chó."
+  },
+  {
+    "id": "scene_03",
+    "file": "scene_03.jpg",
+    "after_paragraph": 42,
+    "aspect_ratio": "3:4",
+    "caption": "Trước cửa nhà kho, Barley đánh hơi túm lông cừu trắng vương ở đáy bao tải cỏ khô trong khi Lim tinh mắt phát hiện hai vệt bánh xe kéo dài trên nền đất ẩm."
+  },
+  {
+    "id": "scene_04",
+    "file": "scene_04.jpg",
+    "after_paragraph": 55,
+    "aspect_ratio": "3:4",
+    "caption": "Bên bờ mương cũ rậm rạp lau sậy dưới gốc liễu già, đôi tai nhạy bén của Bác Chó Barley dựng đứng đón tiếng chuông đồng tần số cao rất khẽ."
+  },
+  {
+    "id": "scene_05",
+    "file": "scene_05.jpg",
+    "after_paragraph": 70,
+    "aspect_ratio": "3:4",
+    "caption": "Bước lên an toàn qua tấm ván gỗ bắc dốc, chú cừu nhỏ Mây mừng rỡ dụi đầu vào bộ lông vàng ấm áp của Bác Chó Barley dưới ánh mắt hân hoan của hai mẹ con."
+  },
+  {
+    "id": "scene_06",
+    "file": "scene_06.jpg",
+    "after_paragraph": 82,
+    "aspect_ratio": "3:4",
+    "caption": "Dưới gốc táo già ngập nắng chiều, Bác Chó Barley bình yên tựa mõm lên đầu gối bác thợ mộc — khoảnh khắc lặng lẽ nối dài tình bạn hàng vạn năm."
+  },
+  {
+    "id": "scene_07",
+    "file": "scene_07.jpg",
+    "after_paragraph": 95,
+    "aspect_ratio": "3:4",
+    "caption": "Hoàng hôn mật ong buông xuống khu vườn, Lim phác họa bản đồ dấu mùi của Bác Chó Barley và bắt gặp một chú ong mật phủ phấn vàng vừa đáp xuống khóm hoa dại."
+  }
+]
