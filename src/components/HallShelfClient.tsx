@@ -93,7 +93,7 @@ export function HallShelfClient({
           backgroundColor: 'var(--bg-canvas)',
           borderBottom: '1px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[44px] px-3 flex items-center justify-between gap-1.5"
+        className="sticky top-0 z-20 h-[44px] px-3 md:px-6 flex items-center justify-between gap-1.5"
       >
         <LibraryWayfinder currentStep="shelf" shelfBranch="hall" currentHall={hall} />
 
@@ -130,26 +130,29 @@ export function HallShelfClient({
         </div>
       </header>
 
-      <StorybookHeroStage
-        src={isNight ? hall.nightHeroUrl : hall.dayHeroUrl}
-        alt={hall.title}
-        washBg={washBg}
-        variant="immersive"
-      >
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span style={{ color: isNight ? preset.nightAccent : preset.dayAccent }}>
-              <HallGlyph slug={hall.slug} />
-            </span>
-            <h1 className="text-[20px] font-bold font-editorial leading-snug">{hall.title}</h1>
-          </div>
-          <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-            {hall.epigraph}
-          </p>
+      <div className="md:grid md:grid-cols-[400px_1fr] lg:grid-cols-[436px_1fr] md:gap-8 md:px-6 md:pt-5 md:items-start">
+        <div className="md:sticky md:top-[62px]">
+          <StorybookHeroStage
+            src={isNight ? hall.nightHeroUrl : hall.dayHeroUrl}
+            alt={hall.title}
+            washBg={washBg}
+            variant="immersive"
+          >
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span style={{ color: isNight ? preset.nightAccent : preset.dayAccent }}>
+                  <HallGlyph slug={hall.slug} />
+                </span>
+                <h1 className="text-[20px] font-bold font-editorial leading-snug">{hall.title}</h1>
+              </div>
+              <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                {hall.epigraph}
+              </p>
+            </div>
+          </StorybookHeroStage>
         </div>
-      </StorybookHeroStage>
 
-      <section aria-label="Kệ sách" className="px-4 pt-5 space-y-7">
+        <section aria-label="Kệ sách" className="px-4 md:px-0 pt-5 md:pt-1 space-y-7 min-w-0">
         {booksInHall.length === 0 ? (
           <div className="space-y-6">
             <div>
@@ -278,7 +281,8 @@ export function HallShelfClient({
             </div>
           ))
         )}
-      </section>
+        </section>
+      </div>
     </div>
   );
 }

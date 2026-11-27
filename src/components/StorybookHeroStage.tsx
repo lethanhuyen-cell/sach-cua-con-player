@@ -20,13 +20,13 @@ interface StorybookHeroStageProps {
 }
 
 /**
- * Sân Khấu Tranh Mở Đầu Đa Tầng (GEMINI.md — Botanical Paper Edition):
- * - `immersive` (Sảnh sách, Kệ sách, Tủ sách): Tranh không gian 3:4 mở rộng tràn sát hai mép khung 480px
- *   như bước thẳng vào căn phòng gỗ sồi; chân tranh tan sương nhẹ đón thẻ định danh nổi bên dưới.
- * - `bookplate` (Bộ sách, Tập truyện): Khung ấn bản bo viền giấy kem 6px (passe-partout) rộng 100% cột,
- *   ôm liền cả tranh bìa 3:4 và bệ tiêu đề / điều khiển vào chung một tấm thẻ tác phẩm sang trọng.
- * - Tuyệt đối 0 chữ, 0 nhãn, 0 nút đè lên mặt nhân vật/chi tiết tranh 3:4.
- * - Chạm vào tranh mở xem phóng to toàn màn hình (Lightbox).
+ * Sân Khấu Tranh Mở Đầu Đa Tầng & Sách Tranh Mở Đôi (GEMINI.md — Botanical Paper Edition):
+ * - Điện thoại (< 768px):
+ *   + `immersive` (Sảnh, Kệ, Tủ sách): Tranh tràn sát hai mép khung, chân tranh tan sương đón thẻ nổi.
+ *   + `bookplate` (Bộ sách, Tập truyện): Khung ấn bản bo viền giấy kem 6px ôm liền tranh & tiêu đề.
+ * - Máy tính & iPad (>= 768px):
+ *   + Tự động định hình thành Trang Trái của cuốn sách mở đôi (Passe-partout Art Plate 8px) đặt song song
+ *     cùng Trang Phải chứa danh sách kệ / mục lục / văn bản.
  */
 export function StorybookHeroStage({
   src,
@@ -59,80 +59,75 @@ export function StorybookHeroStage({
   return (
     <>
       {variant === 'immersive' ? (
-        <section className="pb-1">
-          <div className="relative w-full">
-            {hasValidImage ? (
-              <button
-                type="button"
-                onClick={() => setIsZoomOpen(true)}
-                aria-label={`Chạm để xem toàn màn hình: ${alt}`}
-                style={{ backgroundColor: washBg || 'var(--bg-surface)' }}
-                className="block relative w-full aspect-[3/4] overflow-hidden select-none"
+        <section className="pb-1 md:pb-0">
+          <div className="md:rounded-[16px] md:p-2 md:bg-[var(--bg-elevated)] md:border md:border-[var(--border-hairline)] md:shadow-[0_10px_28px_-8px_rgba(20,26,22,0.10)]">
+            <div className="relative w-full">
+              {hasValidImage ? (
+                <button
+                  type="button"
+                  onClick={() => setIsZoomOpen(true)}
+                  aria-label={`Chạm để xem toàn màn hình: ${alt}`}
+                  style={{ backgroundColor: washBg || 'var(--bg-surface)' }}
+                  className="block relative w-full aspect-[3/4] overflow-hidden select-none md:rounded-[10px] md:border md:border-[var(--border-hairline)] transition active:scale-[0.99]"
+                >
+                  <img
+                    src={src!}
+                    alt={alt}
+                    onError={() => setImgError(true)}
+                    className={`w-full h-full object-cover ${focalPointClass(focalPoint)} block select-none`}
+                  />
+                  <div
+                    aria-hidden="true"
+                    style={{
+                      background:
+                        'linear-gradient(180deg, rgba(0,0,0,0) 74%, var(--bg-canvas) 100%)'
+                    }}
+                    className="absolute inset-0 pointer-events-none md:hidden"
+                  />
+                </button>
+              ) : (
+                <div className={`${paddingXClass} md:px-0`}>
+                  <BookCover
+                    src={src || ''}
+                    alt={alt}
+                    focalPoint={focalPoint}
+                    className="rounded-[12px] md:rounded-[10px]"
+                  />
+                </div>
+              )}
+            </div>
+
+            {children && (
+              <div
+                className={`px-4 ${
+                  hasValidImage ? '-mt-5' : 'mt-3'
+                } relative z-10 md:mt-0 md:px-2.5 md:pt-3 md:pb-1.5`}
               >
-                <img
-                  src={src!}
-                  alt={alt}
-                  onError={() => setImgError(true)}
-                  className={`w-full h-full object-cover ${focalPointClass(focalPoint)} block select-none`}
-                />
-                <div
-                  aria-hidden="true"
-                  style={{
-                    background:
-                      'linear-gradient(180deg, rgba(0,0,0,0) 74%, var(--bg-canvas) 100%)'
-                  }}
-                  className="absolute inset-0 pointer-events-none"
-                />
-              </button>
-            ) : (
-              <div className={paddingXClass}>
-                <BookCover src={src || ''} alt={alt} focalPoint={focalPoint} className="rounded-[12px]" />
+                <div className="rounded-[12px] px-3.5 py-2.5 bg-[var(--bg-elevated)] border border-[var(--border-hairline)] shadow-[0_8px_24px_-6px_rgba(20,26,22,0.14)] md:rounded-none md:p-0 md:bg-transparent md:border-0 md:shadow-none">
+                  {children}
+                </div>
               </div>
             )}
           </div>
-
-          {children && (
-            <div className={`px-4 ${hasValidImage ? '-mt-5' : 'mt-3'} relative z-10`}>
-              <div
-                style={{
-                  backgroundColor: 'var(--bg-elevated)',
-                  border: '1px solid var(--border-hairline)',
-                  boxShadow: '0 8px 24px -6px rgba(20, 26, 22, 0.14)'
-                }}
-                className="rounded-[12px] px-3.5 py-2.5"
-              >
-                {children}
-              </div>
-            </div>
-          )}
         </section>
       ) : (
-        <section
-          style={{
-            background: washBg
-              ? `linear-gradient(180deg, ${washBg} 0%, var(--bg-canvas) 100%)`
-              : 'transparent'
-          }}
-          className={`${paddingXClass} pt-3 pb-1.5`}
-        >
-          <div
-            style={{
-              backgroundColor: 'var(--bg-elevated)',
-              border: '1px solid var(--border-hairline)',
-              boxShadow: '0 10px 28px -8px rgba(20, 26, 22, 0.10)'
-            }}
-            className="w-full rounded-[14px] p-1.5"
-          >
+        <section className={`relative ${paddingXClass} pt-3 pb-1.5 md:p-0`}>
+          {washBg && (
+            <div
+              aria-hidden="true"
+              style={{
+                background: `linear-gradient(180deg, ${washBg} 0%, var(--bg-canvas) 100%)`
+              }}
+              className="absolute inset-0 pointer-events-none md:hidden"
+            />
+          )}
+          <div className="relative z-10 w-full rounded-[14px] md:rounded-[16px] p-1.5 md:p-2 bg-[var(--bg-elevated)] border border-[var(--border-hairline)] shadow-[0_10px_28px_-8px_rgba(20,26,22,0.10)]">
             {hasValidImage ? (
               <button
                 type="button"
                 onClick={() => setIsZoomOpen(true)}
                 aria-label={`Chạm để xem toàn màn hình: ${alt}`}
-                style={{
-                  border: '1px solid var(--border-hairline)',
-                  backgroundColor: 'var(--bg-surface)'
-                }}
-                className={`block w-full aspect-[3/4] ${roundedClass} overflow-hidden transition active:scale-[0.99]`}
+                className={`block w-full aspect-[3/4] ${roundedClass} md:rounded-[10px] overflow-hidden bg-[var(--bg-surface)] border border-[var(--border-hairline)] transition active:scale-[0.99]`}
               >
                 <img
                   src={src!}

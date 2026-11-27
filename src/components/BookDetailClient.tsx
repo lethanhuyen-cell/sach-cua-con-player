@@ -284,7 +284,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
           backgroundColor: 'var(--bg-canvas)',
           borderBottom: '1px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[44px] px-3 flex items-center justify-between gap-1.5"
+        className="sticky top-0 z-20 h-[44px] px-3 md:px-6 flex items-center justify-between gap-1.5"
       >
         <LibraryWayfinder currentStep="book" currentHall={hall} currentBook={book} />
 
@@ -318,15 +318,17 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
         </div>
       </header>
 
-      {/* Gallery Bookplate Stage (Clean 3:4 Cover with Passe-partout Matting + Integrated Plinth) */}
-      <StorybookHeroStage
-        src={book.coverUrl}
-        alt={book.title}
-        focalPoint={book.coverFocalPoint}
-        washBg={washBg}
-        variant="bookplate"
-        roundedClass="rounded-[9px]"
-      >
+      <div className="md:grid md:grid-cols-[390px_1fr] lg:grid-cols-[424px_1fr] md:gap-8 md:px-6 md:pt-5 md:items-start">
+        {/* Gallery Bookplate Stage (Left Page on >= 768px) */}
+        <div className="md:sticky md:top-[62px]">
+          <StorybookHeroStage
+            src={book.coverUrl}
+            alt={book.title}
+            focalPoint={book.coverFocalPoint}
+            washBg={washBg}
+            variant="bookplate"
+            roundedClass="rounded-[9px]"
+          >
         <div>
           <h1 className="text-[20px] font-bold font-editorial leading-snug line-clamp-2">
             {book.title}
@@ -445,9 +447,10 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
           )}
         </div>
       </StorybookHeroStage>
+        </div>
 
-      {/* Progressive Disclosure Table of Contents */}
-      <section aria-label="Mục lục tập truyện" className="px-3.5 pt-3 space-y-2.5">
+        {/* Progressive Disclosure Table of Contents (Right Page on >= 768px) */}
+        <section aria-label="Mục lục tập truyện" className="px-3.5 md:px-0 pt-3 md:pt-0 space-y-2.5 min-w-0">
         {/* 1. Search Bar (collapsible when <= 15 episodes) + New / Saved quick filters */}
         {(isSearchOpen || unreadNewCount > 0 || savedInBookCount > 0 || quickFilter !== 'none') && (
           <div className="flex items-center gap-1.5">
@@ -807,7 +810,8 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
             </button>
           </div>
         )}
-      </section>
+        </section>
+      </div>
     </div>
   );
 }

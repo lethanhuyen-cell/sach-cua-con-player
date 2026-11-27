@@ -111,7 +111,7 @@ export default function BooksShelfPage() {
           backgroundColor: 'var(--bg-canvas)',
           borderBottom: '1px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[44px] px-3 flex items-center justify-between gap-1.5"
+        className="sticky top-0 z-20 h-[44px] px-3 md:px-6 flex items-center justify-between gap-1.5"
       >
         <LibraryWayfinder currentStep="shelf" shelfBranch="all_books" />
         <button
@@ -125,21 +125,24 @@ export default function BooksShelfPage() {
         </button>
       </header>
 
-      <StorybookHeroStage
-        src={isNight ? FOYER_HERO_ART.night : FOYER_HERO_ART.day}
-        alt="Tủ sách Thư viện Đồi Mơ"
-        washBg={washBg}
-        variant="immersive"
-      >
-        <div className="flex items-baseline justify-between gap-2">
-          <h1 className="text-[20px] font-bold font-editorial leading-snug">Tủ sách</h1>
-          <span className="text-xs tabular-nums" style={{ color: 'var(--text-secondary)' }}>
-            {books.length} bộ sách đã xuất bản
-          </span>
+      <div className="md:grid md:grid-cols-[380px_1fr] lg:grid-cols-[416px_1fr] md:gap-8 md:px-6 md:pt-5 md:items-start">
+        <div className="md:sticky md:top-[62px]">
+          <StorybookHeroStage
+            src={isNight ? FOYER_HERO_ART.night : FOYER_HERO_ART.day}
+            alt="Tủ sách Thư viện Đồi Mơ"
+            washBg={washBg}
+            variant="immersive"
+          >
+            <div className="flex items-baseline justify-between gap-2">
+              <h1 className="text-[20px] font-bold font-editorial leading-snug">Tủ sách</h1>
+              <span className="text-xs tabular-nums" style={{ color: 'var(--text-secondary)' }}>
+                {books.length} bộ sách đã xuất bản
+              </span>
+            </div>
+          </StorybookHeroStage>
         </div>
-      </StorybookHeroStage>
 
-      <div className="px-4 pt-4 space-y-5">
+        <div className="px-4 md:px-0 pt-4 md:pt-0 space-y-5 min-w-0">
         {/* Search Bar */}
       <div
         style={{
@@ -341,6 +344,7 @@ export default function BooksShelfPage() {
           </div>
         </section>
       )}
+        </div>
       </div>
     </div>
   );

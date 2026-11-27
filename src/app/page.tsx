@@ -125,17 +125,17 @@ export default function HomeLibraryPage() {
     const gateArtSrc = isNight ? '/images/home/doi-mo-night.jpg' : '/images/home/doi-mo-day.jpg';
     return (
       <div
-        className={`h-[100dvh] max-h-[100dvh] overflow-hidden px-3.5 pt-3 pb-[max(14px,calc(env(safe-area-inset-bottom)+10px))] flex flex-col items-center justify-between transition-all duration-500 ${
+        className={`h-[100dvh] max-h-[100dvh] overflow-hidden px-3.5 md:px-10 pt-3 md:py-8 pb-[max(14px,calc(env(safe-area-inset-bottom)+10px))] flex flex-col md:flex-row items-center justify-between md:justify-center md:gap-12 transition-all duration-500 ${
           isOpeningGate ? 'opacity-0 scale-[1.03]' : 'opacity-100 scale-100'
         }`}
       >
-        <div className="flex-1 min-h-0 w-full flex items-center justify-center">
+        <div className="flex-1 md:flex-none min-h-0 w-full md:w-auto flex items-center justify-center">
           <div
             style={{
               border: '1px solid var(--border-hairline)',
               backgroundColor: 'var(--bg-elevated)'
             }}
-            className="w-[min(100%,calc((100dvh-160px)*0.75))] aspect-[3/4] rounded-[20px] p-1.5 relative shadow-sm mx-auto"
+            className="w-[min(100%,calc((100dvh-160px)*0.75))] md:w-[min(44vw,420px)] md:max-h-[82dvh] aspect-[3/4] rounded-[20px] p-1.5 md:p-2 relative shadow-sm mx-auto"
           >
             <div
               style={{ border: '1px solid var(--border-hairline)' }}
@@ -196,11 +196,11 @@ export default function HomeLibraryPage() {
           </div>
         </div>
 
-        <div className="shrink-0 pt-3 flex flex-col items-center text-center w-full">
-          <h1 className="text-[24px] font-bold font-editorial leading-snug tracking-tight">
+        <div className="shrink-0 pt-3 md:pt-0 flex flex-col items-center md:items-start text-center md:text-left w-full md:w-[300px]">
+          <h1 className="text-[24px] md:text-[32px] font-bold font-editorial leading-snug tracking-tight">
             Thư viện Đồi Mơ
           </h1>
-          <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-xs md:text-sm mt-0.5 md:mt-1.5" style={{ color: 'var(--text-secondary)' }}>
             Sách đọc và nghe trước giờ ngủ
           </p>
 
@@ -211,7 +211,7 @@ export default function HomeLibraryPage() {
               backgroundColor: 'var(--accent-primary)',
               color: 'var(--accent-primary-fg)'
             }}
-            className="mt-3 w-full max-w-[236px] h-[46px] rounded-[11px] text-sm font-semibold inline-flex items-center justify-center gap-1.5 transition active:scale-[0.98]"
+            className="mt-3 md:mt-6 w-full max-w-[236px] h-[46px] rounded-[11px] text-sm font-semibold inline-flex items-center justify-center gap-1.5 transition active:scale-[0.98]"
           >
             <span>Bước vào</span>
             <ChevronRightIcon size={16} />
@@ -234,7 +234,7 @@ export default function HomeLibraryPage() {
           backgroundColor: 'var(--bg-canvas)',
           borderBottom: '1px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[44px] px-3 flex items-center justify-between gap-1.5"
+        className="sticky top-0 z-20 h-[44px] px-3 md:px-6 flex items-center justify-between gap-1.5"
       >
         <LibraryWayfinder currentStep="foyer" />
 
@@ -280,21 +280,24 @@ export default function HomeLibraryPage() {
         </div>
       </header>
 
-      <StorybookHeroStage
-        src={isNight ? FOYER_HERO_ART.night : FOYER_HERO_ART.day}
-        alt="Sảnh sách Thư viện Đồi Mơ"
-        washBg={foyerWashBg}
-        variant="immersive"
-      >
-        <div className="flex items-baseline justify-between gap-2">
-          <h1 className="text-[20px] font-bold font-editorial leading-snug">Sảnh sách</h1>
-          <span className="text-xs tabular-nums" style={{ color: 'var(--text-secondary)' }}>
-            {books.length} bộ sách · {totalPublishedEpisodes} tập
-          </span>
+      <div className="md:grid md:grid-cols-[400px_1fr] lg:grid-cols-[436px_1fr] md:gap-8 md:px-6 md:pt-5 md:items-start">
+        <div className="md:sticky md:top-[62px]">
+          <StorybookHeroStage
+            src={isNight ? FOYER_HERO_ART.night : FOYER_HERO_ART.day}
+            alt="Sảnh sách Thư viện Đồi Mơ"
+            washBg={foyerWashBg}
+            variant="immersive"
+          >
+            <div className="flex items-baseline justify-between gap-2">
+              <h1 className="text-[20px] font-bold font-editorial leading-snug">Sảnh sách</h1>
+              <span className="text-xs tabular-nums" style={{ color: 'var(--text-secondary)' }}>
+                {books.length} bộ sách · {totalPublishedEpisodes} tập
+              </span>
+            </div>
+          </StorybookHeroStage>
         </div>
-      </StorybookHeroStage>
 
-      <div className="px-4 pt-4 space-y-6">
+        <div className="px-4 md:px-0 pt-4 md:pt-0 space-y-6 min-w-0">
         {/* Đang đọc / Đang nghe (tối đa 2 bộ gần nhất cho 2 bé hoặc đọc song song) */}
       {activeResumes.length > 0 && (
         <section aria-label="Tiếp tục" className="space-y-3.5">
@@ -640,6 +643,7 @@ export default function HomeLibraryPage() {
             <span>Tất cả sách ({books.length})</span>
             <ChevronRightIcon size={13} />
           </Link>
+        </div>
         </div>
       </div>
     </div>

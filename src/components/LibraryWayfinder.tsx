@@ -296,7 +296,11 @@ export function LibraryWayfinder({
           <div
             role="dialog"
             aria-label="Chọn nhanh trong tầng hiện tại"
-            className={`fixed left-0 right-0 ${popoverTop} ${popoverZ} max-w-[480px] mx-auto px-3`}
+            className={`fixed left-0 right-0 ${popoverTop} ${popoverZ} ${
+              elevateZIndex
+                ? 'max-w-[480px] md:max-w-[820px]'
+                : 'max-w-[480px] md:max-w-[1040px]'
+            } mx-auto px-3 md:px-6`}
           >
             <div
               style={{
@@ -304,7 +308,9 @@ export function LibraryWayfinder({
                 border: '1px solid var(--border-hairline)',
                 color: 'var(--text-primary)'
               }}
-              className="rounded-[10px] p-3 shadow-lg space-y-2.5"
+              className={`rounded-[10px] p-3 shadow-lg space-y-2.5 ${
+                elevateZIndex ? 'md:max-w-[420px] md:mx-auto' : 'md:max-w-[420px]'
+              }`}
             >
               {currentStep === 'foyer' && (
                 <>

@@ -363,7 +363,7 @@ export function EpisodeReaderClient({
           backgroundColor: 'var(--bg-canvas)',
           borderBottom: '1px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[42px] px-2.5 flex items-center justify-between gap-1"
+        className="sticky top-0 z-20 h-[42px] px-2.5 md:px-6 flex items-center justify-between gap-1"
       >
         <LibraryWayfinder
           currentStep="episode"
@@ -443,169 +443,181 @@ export function EpisodeReaderClient({
         </div>
       )}
 
-      {/* 2. Gallery Bookplate Stage (Only when episode has its own coverUrl) OR Direct Text-First Header */}
-      {hasOwnEpisodeCover && viewMode === 'story' ? (
-        <StorybookHeroStage
-          src={ownCoverUrl}
-          alt={episode.title}
-          focalPoint={book.coverFocalPoint}
-          washBg={heroWashBg}
-          variant="bookplate"
-          roundedClass="rounded-[9px]"
-          paddingXClass="px-4"
-        >
-          <div>{episodeHeaderContent}</div>
-        </StorybookHeroStage>
-      ) : (
-        <div className="px-4 pt-4 pb-2">{episodeHeaderContent}</div>
-      )}
-
-      {/* 4A. Long-Form Story Reader Mode (Uncaptioned 3:4 Portrait Interleaved Illustrations) */}
-      {viewMode === 'story' ? (
-        <article
-          ref={articleRef}
-          style={{ fontSize: `${readerFontSize}px` }}
-          className="px-4 pt-3 pb-8 story-prose space-y-4 flex-1"
-        >
-          {blocks.map((block, idx) => {
-            if (block.type === 'heading') {
-              return (
-                <h2
-                  key={idx}
-                  className="text-[1.12em] font-semibold font-editorial pt-3"
-                >
-                  {block.text}
-                </h2>
-              );
-            }
-            if (block.type === 'divider') {
-              return (
-                <div
-                  key={idx}
-                  aria-hidden="true"
-                  style={{ color: 'var(--accent-warm)' }}
-                  className="py-2 text-center text-sm select-none opacity-80"
-                >
-                  &#10086;
-                </div>
-              );
-            }
-            if (block.type === 'image') {
-              if (hasOwnEpisodeCover && block.url.trim() === ownCoverUrl) {
-                return null;
-              }
-              return (
-                <div key={idx} className="my-5">
-                  <button
-                    type="button"
-                    onClick={() => openIllustrationByUrl(block.url)}
-                    aria-label="Chạm để ngắm tranh toàn màn hình"
-                    style={{
-                      width: 'min(100%, calc(78dvh * 0.75))',
-                      border: '1px solid var(--border-hairline)',
-                      backgroundColor: 'var(--bg-surface)'
-                    }}
-                    className="mx-auto rounded-[8px] overflow-hidden block shadow-sm transition active:scale-[0.995]"
-                  >
-                    <img
-                      src={block.url}
-                      alt={block.alt}
-                      loading="lazy"
-                      className="w-full h-auto block select-none"
-                    />
-                  </button>
-                </div>
-              );
-            }
-            return (
-              <p key={idx} className="text-[1em]">
-                {block.text}
-              </p>
-            );
-          })}
-        </article>
-      ) : (
-        /* 4B. Gallery Mode when an episode has multiple uploaded illustrations */
-        <section
-          aria-label="Bộ tranh minh họa của tập truyện"
-          className="px-4 pt-3 pb-8 space-y-5 flex-1"
-        >
-          {illustrations.map((ill, idx) => (
-            <button
-              key={`${ill.url}-${idx}`}
-              type="button"
-              onClick={() => setLightboxIndex(idx)}
-              aria-label={`Xem tranh ${idx + 1} toàn màn hình`}
-              style={{
-                width: 'min(100%, calc(78dvh * 0.75))',
-                border: '1px solid var(--border-hairline)',
-                backgroundColor: 'var(--bg-surface)'
-              }}
-              className="mx-auto rounded-[8px] overflow-hidden block shadow-sm transition active:scale-[0.995]"
-            >
-              <img
-                src={ill.url}
-                alt={ill.alt}
-                loading="lazy"
-                className="w-full h-auto block select-none"
-              />
-            </button>
-          ))}
-        </section>
-      )}
-
-      {/* 5. Quiet Bottom Exit & Next/Prev Episode Navigation */}
-      <footer
-        style={{ borderTop: '1px solid var(--border-hairline)' }}
-        className="px-4 py-5 space-y-3 text-xs"
+      {/* 2–5. Open-Book Spread on >= 768px (when cover + story mode) or Centered Editorial Column */}
+      <div
+        className={
+          hasOwnEpisodeCover && viewMode === 'story'
+            ? 'flex-1 md:grid md:grid-cols-[360px_1fr] lg:grid-cols-[396px_1fr] md:gap-8 md:px-6 md:pt-5 md:items-start'
+            : `flex-1 flex flex-col w-full ${
+                viewMode === 'gallery' ? 'md:max-w-[860px]' : 'md:max-w-[680px]'
+              } md:mx-auto`
+        }
       >
-        <div className="flex items-center justify-between gap-2">
-          {prevEpisode ? (
-            <Link
-              href={`/episodes/${prevEpisode.id}`}
-              style={{ color: 'var(--text-secondary)' }}
-              className="h-10 inline-flex items-center gap-1 font-medium"
+        {hasOwnEpisodeCover && viewMode === 'story' ? (
+          <div className="md:sticky md:top-[58px]">
+            <StorybookHeroStage
+              src={ownCoverUrl}
+              alt={episode.title}
+              focalPoint={book.coverFocalPoint}
+              washBg={heroWashBg}
+              variant="bookplate"
+              roundedClass="rounded-[9px]"
+              paddingXClass="px-4"
             >
-              <span>&larr; Tập {prevEpisode.episodeCode}</span>
-            </Link>
+              <div>{episodeHeaderContent}</div>
+            </StorybookHeroStage>
+          </div>
+        ) : (
+          <div className="px-4 md:px-6 pt-4 md:pt-6 pb-2">{episodeHeaderContent}</div>
+        )}
+
+        <div className="min-w-0 flex-1 flex flex-col">
+          {/* 4A. Long-Form Story Reader Mode (Uncaptioned 3:4 Portrait Interleaved Illustrations) */}
+          {viewMode === 'story' ? (
+            <article
+              ref={articleRef}
+              style={{ fontSize: `${readerFontSize}px` }}
+              className="px-4 md:px-2 pt-3 md:pt-0 pb-8 story-prose space-y-4 flex-1 max-w-[650px]"
+            >
+              {blocks.map((block, idx) => {
+                if (block.type === 'heading') {
+                  return (
+                    <h2
+                      key={idx}
+                      className="text-[1.12em] font-semibold font-editorial pt-3"
+                    >
+                      {block.text}
+                    </h2>
+                  );
+                }
+                if (block.type === 'divider') {
+                  return (
+                    <div
+                      key={idx}
+                      aria-hidden="true"
+                      style={{ color: 'var(--accent-warm)' }}
+                      className="py-2 text-center text-sm select-none opacity-80"
+                    >
+                      &#10086;
+                    </div>
+                  );
+                }
+                if (block.type === 'image') {
+                  if (hasOwnEpisodeCover && block.url.trim() === ownCoverUrl) {
+                    return null;
+                  }
+                  return (
+                    <div key={idx} className="my-5">
+                      <button
+                        type="button"
+                        onClick={() => openIllustrationByUrl(block.url)}
+                        aria-label="Chạm để ngắm tranh toàn màn hình"
+                        style={{
+                          border: '1px solid var(--border-hairline)',
+                          backgroundColor: 'var(--bg-surface)'
+                        }}
+                        className="w-[min(100%,calc(78dvh*0.75))] md:w-full md:max-w-[460px] mx-auto rounded-[8px] overflow-hidden block shadow-sm transition active:scale-[0.995]"
+                      >
+                        <img
+                          src={block.url}
+                          alt={block.alt}
+                          loading="lazy"
+                          className="w-full h-auto block select-none"
+                        />
+                      </button>
+                    </div>
+                  );
+                }
+                return (
+                  <p key={idx} className="text-[1em]">
+                    {block.text}
+                  </p>
+                );
+              })}
+            </article>
           ) : (
-            <Link
-              href={`/books/${book.slug}`}
-              style={{ color: 'var(--text-secondary)' }}
-              className="h-10 inline-flex items-center gap-1 font-medium"
+            /* 4B. Gallery Mode when an episode has multiple uploaded illustrations */
+            <section
+              aria-label="Bộ tranh minh họa của tập truyện"
+              className="px-4 md:px-6 pt-3 pb-8 space-y-5 md:space-y-0 md:grid md:grid-cols-2 md:gap-5 flex-1 items-start"
             >
-              <span>&larr; Mục lục sách</span>
-            </Link>
+              {illustrations.map((ill, idx) => (
+                <button
+                  key={`${ill.url}-${idx}`}
+                  type="button"
+                  onClick={() => setLightboxIndex(idx)}
+                  aria-label={`Xem tranh ${idx + 1} toàn màn hình`}
+                  style={{
+                    border: '1px solid var(--border-hairline)',
+                    backgroundColor: 'var(--bg-surface)'
+                  }}
+                  className="w-[min(100%,calc(78dvh*0.75))] md:w-full mx-auto rounded-[8px] overflow-hidden block shadow-sm transition active:scale-[0.995]"
+                >
+                  <img
+                    src={ill.url}
+                    alt={ill.alt}
+                    loading="lazy"
+                    className="w-full h-auto block select-none"
+                  />
+                </button>
+              ))}
+            </section>
           )}
 
-          {nextEpisode ? (
-            <Link
-              href={`/episodes/${nextEpisode.id}`}
-              onClick={() => {
-                if (!isPreview) saveReadingProgress(book.id, episode.id, 100);
-              }}
-              style={{ color: 'var(--accent-primary)' }}
-              className="h-10 inline-flex items-center gap-1 font-semibold"
-            >
-              <span>Tập {nextEpisode.episodeCode} &rarr;</span>
-            </Link>
-          ) : (
-            <Link
-              href={`/books/${book.slug}`}
-              onClick={() => {
-                if (!isPreview) saveReadingProgress(book.id, episode.id, 100);
-              }}
-              style={{ color: 'var(--accent-primary)' }}
-              className="h-10 inline-flex items-center gap-1 font-semibold"
-            >
-              <span>Hoàn thành &rarr;</span>
-            </Link>
-          )}
+          {/* 5. Quiet Bottom Exit & Next/Prev Episode Navigation */}
+          <footer
+            style={{ borderTop: '1px solid var(--border-hairline)' }}
+            className="px-4 md:px-2 py-5 space-y-3 text-xs"
+          >
+            <div className="flex items-center justify-between gap-2">
+              {prevEpisode ? (
+                <Link
+                  href={`/episodes/${prevEpisode.id}`}
+                  style={{ color: 'var(--text-secondary)' }}
+                  className="h-10 inline-flex items-center gap-1 font-medium"
+                >
+                  <span>&larr; Tập {prevEpisode.episodeCode}</span>
+                </Link>
+              ) : (
+                <Link
+                  href={`/books/${book.slug}`}
+                  style={{ color: 'var(--text-secondary)' }}
+                  className="h-10 inline-flex items-center gap-1 font-medium"
+                >
+                  <span>&larr; Mục lục sách</span>
+                </Link>
+              )}
+
+              {nextEpisode ? (
+                <Link
+                  href={`/episodes/${nextEpisode.id}`}
+                  onClick={() => {
+                    if (!isPreview) saveReadingProgress(book.id, episode.id, 100);
+                  }}
+                  style={{ color: 'var(--accent-primary)' }}
+                  className="h-10 inline-flex items-center gap-1 font-semibold"
+                >
+                  <span>Tập {nextEpisode.episodeCode} &rarr;</span>
+                </Link>
+              ) : (
+                <Link
+                  href={`/books/${book.slug}`}
+                  onClick={() => {
+                    if (!isPreview) saveReadingProgress(book.id, episode.id, 100);
+                  }}
+                  style={{ color: 'var(--accent-primary)' }}
+                  className="h-10 inline-flex items-center gap-1 font-semibold"
+                >
+                  <span>Hoàn thành &rarr;</span>
+                </Link>
+              )}
+            </div>
+            <p className="text-center text-[11px]" style={{ color: 'var(--text-secondary)' }}>
+              Copyright &copy; Nancy &amp; Liti
+            </p>
+          </footer>
         </div>
-        <p className="text-center text-[11px]" style={{ color: 'var(--text-secondary)' }}>
-          Copyright &copy; Nancy &amp; Liti
-        </p>
-      </footer>
+      </div>
 
       {/* Fullscreen Portrait Lightbox Modal */}
       {lightboxIndex !== null && illustrations[lightboxIndex] && (

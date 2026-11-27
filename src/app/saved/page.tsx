@@ -57,7 +57,7 @@ export default function SavedArchivePage() {
           backgroundColor: 'var(--bg-canvas)',
           borderBottom: '1px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[44px] px-3 flex items-center justify-between gap-1.5"
+        className="sticky top-0 z-20 h-[44px] px-3 md:px-6 flex items-center justify-between gap-1.5"
       >
         <LibraryWayfinder currentStep="shelf" shelfBranch="saved" />
         <button
@@ -71,7 +71,7 @@ export default function SavedArchivePage() {
         </button>
       </header>
 
-      <div className="px-4 pt-4 space-y-5">
+      <div className="px-4 md:px-6 pt-4 md:pt-6 space-y-5 max-w-[740px] mx-auto w-full">
         <div>
           <h1 className="text-[21px] font-bold font-editorial">Lưu trữ</h1>
           <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>

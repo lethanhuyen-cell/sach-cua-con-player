@@ -117,8 +117,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     { key: 'continuous', label: 'Liên tiếp' }
   ];
 
+  const shellWidthClass = isAdminRoute
+    ? 'max-w-[480px]'
+    : isAtClosedGate
+      ? 'max-w-[480px] md:max-w-[960px]'
+      : 'max-w-[480px] md:max-w-[1040px] md:border-x md:border-[var(--border-hairline)]';
+
   return (
-    <div className="min-h-[100dvh] flex flex-col max-w-[480px] mx-auto relative bg-[var(--bg-canvas)] text-[var(--text-primary)]">
+    <div
+      className={`min-h-[100dvh] flex flex-col ${shellWidthClass} mx-auto relative bg-[var(--bg-canvas)] text-[var(--text-primary)]`}
+    >
       <main
         className={`flex-1 flex flex-col ${
           showMiniPlayer ? 'pb-[88px]' : isAtClosedGate ? 'pb-0' : 'pb-4'
@@ -136,7 +144,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Persistent Mini-Player Bar anchored directly at the bottom (58px freed by removing Bottom Tab Bar) */}
       {showMiniPlayer && activeEpisode && activeBook && (
-        <div className="fixed left-0 right-0 bottom-3 z-30 max-w-[480px] mx-auto px-4 pb-[env(safe-area-inset-bottom)]">
+        <div className="fixed left-0 right-0 bottom-3 z-30 max-w-[480px] md:max-w-[540px] mx-auto px-4 pb-[env(safe-area-inset-bottom)]">
           <div
             onClick={() => setFullPlayerOpen(true)}
             style={{
@@ -204,7 +212,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           aria-modal="true"
           aria-label="Trình phát sách nói toàn màn hình"
           style={{ backgroundColor: 'var(--bg-canvas)', color: 'var(--text-primary)' }}
-          className="fixed inset-0 z-50 flex flex-col justify-between max-w-[480px] mx-auto px-5 pt-3 pb-[max(28px,calc(env(safe-area-inset-bottom)+16px))] overflow-y-auto"
+          className="fixed inset-0 z-50 flex flex-col justify-between max-w-[480px] md:max-w-[820px] md:border-x md:border-[var(--border-hairline)] mx-auto px-5 md:px-8 pt-3 pb-[max(28px,calc(env(safe-area-inset-bottom)+16px))] overflow-y-auto"
         >
           {/* Top bar + Pinned 5-Step Wayfinder */}
           <div>
@@ -285,15 +293,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             )}
           </div>
 
-          {/* Center 3:4 Cover & Voice Selector */}
-          <div className="my-3 flex flex-col items-center text-center">
-            <div
-              className="w-[224px] aspect-[3/4] rounded-[8px] overflow-hidden"
-              style={{
-                border: '1px solid var(--border-hairline)',
-                backgroundColor: 'var(--bg-elevated)'
-              }}
-            >
+          {/* Open-Book Body on >= 768px: Left Cover Plate | Right Controls */}
+          <div className="flex-1 flex flex-col justify-between md:grid md:grid-cols-[276px_1fr] md:gap-10 md:items-center md:my-auto">
+            {/* Center 3:4 Cover & Voice Selector */}
+            <div className="my-3 md:my-0 flex flex-col items-center text-center">
+              <div
+                className="w-[224px] md:w-[268px] aspect-[3/4] rounded-[10px] overflow-hidden"
+                style={{
+                  border: '1px solid var(--border-hairline)',
+                  backgroundColor: 'var(--bg-elevated)'
+                }}
+              >
               <img
                 src={activeEpisode.effectiveCoverUrl}
                 alt={activeEpisode.title}
@@ -530,6 +540,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 </div>
               </>
             )}
+          </div>
           </div>
         </div>
       )}

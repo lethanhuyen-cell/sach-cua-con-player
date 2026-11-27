@@ -132,7 +132,7 @@ export function SearchAndSavedSheet() {
       role="dialog"
       aria-modal="true"
       aria-label="Tìm kiếm và Tủ đã lưu"
-      className="fixed inset-0 z-40 flex flex-col justify-end max-w-[480px] mx-auto"
+      className="fixed inset-0 z-40 flex flex-col justify-end max-w-[480px] md:max-w-[640px] mx-auto"
     >
       {/* Backdrop */}
       <div
