@@ -3,6 +3,62 @@ export type CoverFocalPoint = 'top' | 'center' | 'bottom';
 export type PublishStatus = 'draft' | 'published';
 export type TocMode = 'thematic' | 'sequential';
 
+export type PillarCode = 'I' | 'II' | 'III' | 'IV' | 'V' | 'VI';
+
+export type BookLineCode =
+  | 'I.1'
+  | 'I.2'
+  | 'I.3'
+  | 'I.4'
+  | 'II.1'
+  | 'II.2'
+  | 'II.3'
+  | 'III.1'
+  | 'III.2'
+  | 'III.3'
+  | 'IV.1'
+  | 'IV.2'
+  | 'IV.3'
+  | 'IV.4'
+  | 'V.1'
+  | 'V.2'
+  | 'V.3'
+  | 'VI.1'
+  | 'VI.2';
+
+export type AudienceBand = 'child_4_10' | 'bridge_8_12' | 'teen_11_15' | 'family_all';
+export type ListeningRhythm = 'wind_down' | 'curious_evening';
+export type CognitiveDensity = 'gentle' | 'balanced' | 'deep';
+
+export type NarrativeForm =
+  | 'du-ky-nhap-vai'
+  | 'lich-su-phat-kien'
+  | 'chan-dung-nghe-nghiep'
+  | 'doi-thoai-suy-tuong'
+  | 'giai-ma-doi-thuong'
+  | 'van-chuong-huyen-thoai';
+
+export interface CuriosityTrailLink {
+  targetEpisodeId: string;
+  bridgeQuestion: string;
+}
+
+export interface KnowledgeMetadata {
+  primaryPillar?: PillarCode;
+  primaryLine?: BookLineCode;
+  secondaryLines?: BookLineCode[];
+  audienceBand?: AudienceBand;
+  recommendedGrades?: number[];
+  listeningRhythm?: ListeningRhythm;
+  cognitiveDensity?: CognitiveDensity;
+  narrativeForm?: NarrativeForm;
+  crossCuttingConcepts?: string[];
+  liberalCompetencies?: string[];
+  curriculumAnchors?: string[];
+  topicKeywords?: string[];
+  curiosityTrails?: CuriosityTrailLink[];
+}
+
 export interface VoiceProfile {
   id: string;
   voiceKey: string;
@@ -62,6 +118,7 @@ export interface Episode {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  knowledgeMeta?: KnowledgeMetadata;
 }
 
 export interface Book {
@@ -86,6 +143,7 @@ export interface Book {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  knowledgeMeta?: KnowledgeMetadata;
 }
 
 export interface HydratedAudioTrack extends AudioTrack {

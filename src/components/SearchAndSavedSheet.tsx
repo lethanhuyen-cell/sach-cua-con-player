@@ -22,6 +22,14 @@ import {
   LibraryHallSlug,
   resolveBookHalls
 } from '@/lib/halls';
+import {
+  AUDIENCE_FILTER_PILLS,
+  AudienceFilterKey,
+  CROSS_CUTTING_CONCEPTS,
+  matchesAudienceFilter,
+  matchesBookKnowledgeQuery,
+  matchesEpisodeKnowledgeQuery
+} from '@/lib/knowledge';
 
 function normalizeSearch(s: string): string {
   return s.normalize('NFC').toLowerCase().trim();
@@ -43,6 +51,8 @@ export function SearchAndSavedSheet() {
 
   const [query, setQuery] = useState('');
   const [selectedHallSlug, setSelectedHallSlug] = useState<LibraryHallSlug | 'ALL'>('ALL');
+  const [audienceFilter, setAudienceFilter] = useState<AudienceFilterKey>('ALL');
+  const [selectedConceptSlug, setSelectedConceptSlug] = useState<string>('ALL');
 
   useEffect(() => {
     if (!utilitySheetTab) return;
@@ -61,37 +71,50 @@ export function SearchAndSavedSheet() {
     [books]
   );
 
+  const activeConcepts = useMemo(() => {
+    const present = new Set<string>();
+    for (const b of books) {
+      for (const c of b.knowledgeMeta?.crossCuttingConcepts || []) present.add(c);
+      for (const ep of b.episodes) {
+        for (const c of ep.knowledgeMeta?.crossCuttingConcepts || []) present.add(c);
+      }
+    }
+    return CROSS_CUTTING_CONCEPTS.filter((c) => present.has(c.slug));
+  }, [books]);
+
   const normalizedQuery = normalizeSearch(query);
 
   const filteredBooks = useMemo(() => {
     return books.filter((book) => {
+      if (!matchesAudienceFilter(book, audienceFilter)) return false;
       if (
         selectedHallSlug !== 'ALL' &&
         !resolveBookHalls(book).some((h) => h.slug === selectedHallSlug)
       ) {
         return false;
       }
+      if (selectedConceptSlug !== 'ALL') {
+        const bookHasConcept = (book.knowledgeMeta?.crossCuttingConcepts || []).includes(
+          selectedConceptSlug
+        );
+        const epHasConcept = book.episodes.some((ep) =>
+          (ep.knowledgeMeta?.crossCuttingConcepts || []).includes(selectedConceptSlug)
+        );
+        if (!bookHasConcept && !epHasConcept) return false;
+      }
       if (!normalizedQuery) return true;
-      const inBook =
-        normalizeSearch(book.title).includes(normalizedQuery) ||
-        normalizeSearch(book.subtitle).includes(normalizedQuery) ||
-        normalizeSearch(book.author).includes(normalizedQuery);
-      const inEps = book.episodes.some(
-        (ep) =>
-          normalizeSearch(ep.title).includes(normalizedQuery) ||
-          normalizeSearch(ep.episodeCode).includes(normalizedQuery)
-      );
-      return inBook || inEps;
+      return matchesBookKnowledgeQuery(book, normalizedQuery);
     });
-  }, [books, normalizedQuery, selectedHallSlug]);
+  }, [books, audienceFilter, normalizedQuery, selectedHallSlug, selectedConceptSlug]);
 
   const matchedEpisodes = useMemo(() => {
-    if (!normalizedQuery) return [];
+    if (!normalizedQuery && selectedConceptSlug === 'ALL') return [];
     const matches: {
       book: (typeof books)[number];
       episode: (typeof books)[number]['episodes'][number];
     }[] = [];
     for (const book of books) {
+      if (!matchesAudienceFilter(book, audienceFilter)) continue;
       if (
         selectedHallSlug !== 'ALL' &&
         !resolveBookHalls(book).some((h) => h.slug === selectedHallSlug)
@@ -100,15 +123,18 @@ export function SearchAndSavedSheet() {
       }
       for (const ep of book.episodes) {
         if (
-          normalizeSearch(ep.title).includes(normalizedQuery) ||
-          normalizeSearch(ep.episodeCode).includes(normalizedQuery)
+          selectedConceptSlug !== 'ALL' &&
+          !(ep.knowledgeMeta?.crossCuttingConcepts || []).includes(selectedConceptSlug)
         ) {
+          continue;
+        }
+        if (!normalizedQuery || matchesEpisodeKnowledgeQuery(ep, normalizedQuery)) {
           matches.push({ book, episode: ep });
         }
       }
     }
-    return matches.slice(0, 12);
-  }, [books, normalizedQuery, selectedHallSlug]);
+    return matches.slice(0, 14);
+  }, [books, audienceFilter, normalizedQuery, selectedHallSlug, selectedConceptSlug]);
 
   const savedList = useMemo(() => {
     const items: {
@@ -241,7 +267,7 @@ export function SearchAndSavedSheet() {
                   autoFocus
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Tìm tên sách, số tập hoặc tên tập..."
+                  placeholder="Tìm tên sách, tập, chủ đề hoặc khái niệm..."
                   className="flex-1 bg-transparent outline-none text-sm min-w-0"
                 />
                 {query && (
@@ -254,6 +280,30 @@ export function SearchAndSavedSheet() {
                     <CloseIcon size={14} />
                   </button>
                 )}
+              </div>
+
+              {/* Audience Filter Pills */}
+              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+                {AUDIENCE_FILTER_PILLS.map((pill) => {
+                  const active = audienceFilter === pill.key;
+                  return (
+                    <button
+                      key={pill.key}
+                      type="button"
+                      onClick={() => setAudienceFilter(pill.key)}
+                      style={{
+                        backgroundColor: active ? 'var(--bg-elevated)' : 'var(--bg-surface)',
+                        color: active ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                        border: active
+                          ? '1.5px solid var(--accent-primary)'
+                          : '1px solid var(--border-hairline)'
+                      }}
+                      className="h-8 px-3 rounded-full text-[11.5px] font-medium shrink-0"
+                    >
+                      {pill.label}
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Hall Filter Pills */}
@@ -302,11 +352,60 @@ export function SearchAndSavedSheet() {
                 </div>
               )}
 
+              {/* Cross-Cutting Concept Chips */}
+              {activeConcepts.length > 0 && (
+                <div className="space-y-1.5">
+                  <p className="vn-eyebrow" style={{ color: 'var(--text-secondary)' }}>
+                    Mạch khái niệm liên ngành
+                  </p>
+                  <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+                    {selectedConceptSlug !== 'ALL' && (
+                      <button
+                        type="button"
+                        onClick={() => setSelectedConceptSlug('ALL')}
+                        style={{
+                          backgroundColor: 'var(--bg-surface)',
+                          color: 'var(--accent-warm)',
+                          border: '1px solid var(--border-hairline)'
+                        }}
+                        className="h-8 px-2.5 rounded-[7px] text-[11.5px] font-semibold shrink-0"
+                      >
+                        Bỏ lọc
+                      </button>
+                    )}
+                    {activeConcepts.map((concept) => {
+                      const active = selectedConceptSlug === concept.slug;
+                      return (
+                        <button
+                          key={concept.slug}
+                          type="button"
+                          onClick={() =>
+                            setSelectedConceptSlug(active ? 'ALL' : concept.slug)
+                          }
+                          style={{
+                            backgroundColor: active
+                              ? 'var(--accent-warm)'
+                              : 'var(--bg-elevated)',
+                            color: active ? '#1B140A' : 'var(--text-secondary)',
+                            border: '1px solid var(--border-hairline)'
+                          }}
+                          className="h-8 px-2.5 rounded-[7px] text-[11.5px] font-medium shrink-0"
+                        >
+                          {concept.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* Matching Episodes */}
               {matchedEpisodes.length > 0 && (
                 <section className="space-y-2">
                   <h3 className="vn-eyebrow" style={{ color: 'var(--text-secondary)' }}>
-                    Tập truyện khớp từ khóa ({matchedEpisodes.length})
+                    {normalizedQuery
+                      ? `Tập truyện khớp từ khóa (${matchedEpisodes.length})`
+                      : `Tập truyện cùng mạch khái niệm (${matchedEpisodes.length})`}
                   </h3>
                   <div
                     style={{
@@ -414,7 +513,7 @@ export function SearchAndSavedSheet() {
                             className="text-xs truncate"
                             style={{ color: 'var(--text-secondary)' }}
                           >
-                            {book.author || formatBookDisplayGenre(book)} · {book.episodes.length} tập
+                            {formatBookDisplayGenre(book)} · {book.ageRange} · {book.episodes.length} tập
                           </p>
                         </div>
                       </Link>

@@ -1,10 +1,15 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { HydratedBook } from '@/lib/types';
 import { LIBRARY_HALLS, LibraryHallDefinition } from '@/lib/halls';
 import { BOOK_PRESETS, isEpisodeReadingOnly } from '@/lib/presets';
+import {
+  AUDIENCE_FILTER_PILLS,
+  AudienceFilterKey,
+  matchesAudienceFilter
+} from '@/lib/knowledge';
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { BookCover } from './BookCover';
 import { StorybookHeroStage } from './StorybookHeroStage';
@@ -13,29 +18,26 @@ import {
   BookmarkIcon,
   CompassIcon,
   FeatherIcon,
-  HearthCupIcon,
+  InventionSparkIcon,
   LanternIcon,
   LeafIcon,
   MoonIcon,
-  MusicSparkIcon,
   SearchIcon,
   SunIcon
 } from './Icons';
 
 function HallGlyph({ slug }: { slug: LibraryHallDefinition['slug'] }) {
   switch (slug) {
-    case 'khoa-hoc-tu-nhien':
+    case 'thien-nhien-ky-thu':
       return <LeafIcon size={15} />;
-    case 'am-thuc-nep-nha':
-      return <HearthCupIcon size={15} />;
-    case 'van-hoc-dong-thoai':
-      return <FeatherIcon size={15} />;
-    case 'lich-su-van-hoa':
+    case 'chuyen-xua-va-the-gioi':
       return <CompassIcon size={15} />;
-    case 'nghe-thuat-tho-nhac':
-      return <MusicSparkIcon size={15} />;
-    case 'ky-nang-lon-khon':
+    case 'the-gioi-hom-nay':
+      return <InventionSparkIcon size={15} />;
+    case 'lon-len-moi-ngay':
       return <LanternIcon size={15} />;
+    case 'vuon-tri-tue':
+      return <FeatherIcon size={15} />;
   }
 }
 
@@ -58,16 +60,22 @@ export function HallShelfClient({
     openUtilitySheet
   } = useLibraryPlayer();
 
+  const [audienceFilter, setAudienceFilter] = useState<AudienceFilterKey>('ALL');
   const preset = BOOK_PRESETS[hall.preset] || BOOK_PRESETS.moss;
   const washBg = isNight ? preset.nightWash : preset.dayWash;
 
+  const filteredBooksInHall = useMemo(
+    () => booksInHall.filter((b) => matchesAudienceFilter(b, audienceFilter)),
+    [booksInHall, audienceFilter]
+  );
+
   const shelfRows = useMemo(() => {
     const rows: HydratedBook[][] = [];
-    for (let i = 0; i < booksInHall.length; i += 2) {
-      rows.push(booksInHall.slice(i, i + 2));
+    for (let i = 0; i < filteredBooksInHall.length; i += 2) {
+      rows.push(filteredBooksInHall.slice(i, i + 2));
     }
     return rows;
-  }, [booksInHall]);
+  }, [filteredBooksInHall]);
 
   const oakShelfStyle: React.CSSProperties = isNight
     ? {
@@ -180,17 +188,54 @@ export function HallShelfClient({
           </StorybookHeroStage>
         </div>
 
-        <section aria-label="Kệ sách" className="px-4 md:px-0 pt-5 md:pt-1 space-y-7 min-w-0">
-        {booksInHall.length === 0 ? (
+        <section aria-label="Kệ sách" className="px-4 md:px-0 pt-5 md:pt-1 space-y-6 min-w-0">
+        {booksInHall.length > 0 && (
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+            {AUDIENCE_FILTER_PILLS.map((pill) => {
+              const active = audienceFilter === pill.key;
+              return (
+                <button
+                  key={pill.key}
+                  type="button"
+                  onClick={() => setAudienceFilter(pill.key)}
+                  style={{
+                    backgroundColor: active ? 'var(--bg-elevated)' : 'var(--bg-surface)',
+                    color: active ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                    border: active
+                      ? '1.5px solid var(--accent-primary)'
+                      : '1px solid var(--border-hairline)'
+                  }}
+                  className="h-8 px-3 rounded-full text-xs font-medium shrink-0"
+                >
+                  {pill.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {filteredBooksInHall.length === 0 ? (
           <div className="space-y-6">
             <div>
-              <div className="py-10 text-center">
+              <div className="py-10 text-center space-y-2">
                 <p
                   className="text-sm font-editorial"
                   style={{ color: 'var(--text-secondary)' }}
                 >
-                  Chưa có sách trên kệ này.
+                  {booksInHall.length === 0
+                    ? 'Chưa có sách trên kệ này.'
+                    : 'Chưa có bộ sách nào thuộc nhóm tuổi đang chọn trên kệ này.'}
                 </p>
+                {booksInHall.length > 0 && audienceFilter !== 'ALL' && (
+                  <button
+                    type="button"
+                    onClick={() => setAudienceFilter('ALL')}
+                    style={{ color: 'var(--accent-primary)' }}
+                    className="text-xs font-semibold underline"
+                  >
+                    Xem tất cả độ tuổi trên kệ
+                  </button>
+                )}
               </div>
               <div style={oakShelfStyle} className="h-[10px] rounded-[4px]" />
             </div>

@@ -10,11 +10,13 @@ import {
   HydratedBook,
   HydratedEpisode,
   Illustration,
+  KnowledgeMetadata,
   LibraryDatabase,
   Part,
   VoiceProfile
 } from './types';
 import { countWords } from './markdown';
+import { sanitizeKnowledgeMetadata } from './knowledge';
 
 const LOCAL_DB_PATH = path.join(process.cwd(), 'data', 'library_db.json');
 
@@ -194,7 +196,8 @@ async function fetchDatabaseFromSupabase(): Promise<LibraryDatabase> {
       status: r.status || 'draft',
       createdAt: r.created_at,
       updatedAt: r.updated_at,
-      deletedAt: r.deleted_at || null
+      deletedAt: r.deleted_at || null,
+      knowledgeMeta: sanitizeKnowledgeMetadata(r.knowledge_meta)
     })),
     parts: (pRes.data || []).map((r) => ({
       id: r.id,
@@ -222,7 +225,8 @@ async function fetchDatabaseFromSupabase(): Promise<LibraryDatabase> {
       publishedAt: r.published_at || null,
       createdAt: r.created_at,
       updatedAt: r.updated_at,
-      deletedAt: r.deleted_at || null
+      deletedAt: r.deleted_at || null,
+      knowledgeMeta: sanitizeKnowledgeMetadata(r.knowledge_meta)
     })),
     audioTracks: (atRes.data || []).map((r) => ({
       id: r.id,
@@ -412,12 +416,15 @@ export async function upsertBook(input: {
   showEpisodeNumbers?: boolean;
   sortOrder?: number;
   status?: Book['status'];
+  knowledgeMeta?: KnowledgeMetadata;
   parts?: { id?: string; title: string; sortOrder?: number }[];
 }): Promise<Book> {
   const title = (input.title || '').trim();
   if (!title) {
     throw new Error('Tên bộ sách không được để trống.');
   }
+
+  const cleanedBookKnowledgeMeta = sanitizeKnowledgeMetadata(input.knowledgeMeta);
 
   const db = await getRawDatabase();
   const targetStatus = input.status || 'draft';
@@ -462,6 +469,9 @@ export async function upsertBook(input: {
       show_episode_numbers: input.showEpisodeNumbers !== false,
       sort_order: input.sortOrder ?? db.books.length,
       status: targetStatus,
+      ...(input.knowledgeMeta !== undefined
+        ? { knowledge_meta: cleanedBookKnowledgeMeta || {} }
+        : {}),
       updated_at: now
     };
     const { data, error } = await sb.from('books').upsert(payload).select('*').single();
@@ -513,7 +523,8 @@ export async function upsertBook(input: {
       status: data.status,
       createdAt: data.created_at,
       updatedAt: data.updated_at,
-      deletedAt: data.deleted_at || null
+      deletedAt: data.deleted_at || null,
+      knowledgeMeta: sanitizeKnowledgeMetadata(data.knowledge_meta)
     };
   }
 
@@ -523,6 +534,10 @@ export async function upsertBook(input: {
   if (input.id) {
     const idx = localDb.books.findIndex((b) => b.id === input.id);
     if (idx === -1) throw new Error('Không tìm thấy Bộ sách.');
+    const nextKnowledgeMeta =
+      input.knowledgeMeta !== undefined
+        ? cleanedBookKnowledgeMeta
+        : localDb.books[idx].knowledgeMeta;
     bookRecord = {
       ...localDb.books[idx],
       slug: baseSlug,
@@ -542,8 +557,10 @@ export async function upsertBook(input: {
       showEpisodeNumbers: input.showEpisodeNumbers ?? localDb.books[idx].showEpisodeNumbers,
       sortOrder: input.sortOrder ?? localDb.books[idx].sortOrder,
       status: targetStatus,
-      updatedAt: now
+      updatedAt: now,
+      knowledgeMeta: nextKnowledgeMeta
     };
+    if (!bookRecord.knowledgeMeta) delete bookRecord.knowledgeMeta;
     localDb.books[idx] = bookRecord;
   } else {
     let uniqueSlug = baseSlug;
@@ -572,7 +589,8 @@ export async function upsertBook(input: {
       status: targetStatus,
       createdAt: now,
       updatedAt: now,
-      deletedAt: null
+      deletedAt: null,
+      ...(cleanedBookKnowledgeMeta ? { knowledgeMeta: cleanedBookKnowledgeMeta } : {})
     };
     localDb.books.push(bookRecord);
   }
@@ -621,6 +639,7 @@ export async function upsertEpisode(input: {
   isTextOnly: boolean;
   sortOrder?: number;
   status: Episode['status'];
+  knowledgeMeta?: KnowledgeMetadata;
   audioTracks: {
     id?: string;
     voiceProfileId: string;
@@ -672,6 +691,7 @@ export async function upsertEpisode(input: {
   }
 
   const now = new Date().toISOString();
+  const cleanedEpKnowledgeMeta = sanitizeKnowledgeMetadata(input.knowledgeMeta);
   const normalizedTracks = input.isTextOnly
     ? []
     : input.audioTracks
@@ -720,6 +740,9 @@ export async function upsertEpisode(input: {
         input.sortOrder ??
         db.episodes.filter((e) => e.bookId === input.bookId).length,
       status: input.status,
+      ...(input.knowledgeMeta !== undefined
+        ? { knowledge_meta: cleanedEpKnowledgeMeta || {} }
+        : {}),
       published_at: input.status === 'published' ? now : null,
       updated_at: now
     };
@@ -774,7 +797,8 @@ export async function upsertEpisode(input: {
       publishedAt: data.published_at || null,
       createdAt: data.created_at,
       updatedAt: data.updated_at,
-      deletedAt: data.deleted_at || null
+      deletedAt: data.deleted_at || null,
+      knowledgeMeta: sanitizeKnowledgeMetadata(data.knowledge_meta)
     };
   }
 
@@ -785,6 +809,8 @@ export async function upsertEpisode(input: {
     const idx = localDb.episodes.findIndex((e) => e.id === input.id);
     if (idx === -1) throw new Error('Không tìm thấy Tập truyện.');
     const prev = localDb.episodes[idx];
+    const nextEpKnowledgeMeta =
+      input.knowledgeMeta !== undefined ? cleanedEpKnowledgeMeta : prev.knowledgeMeta;
     epRecord = {
       ...prev,
       bookId: input.bookId,
@@ -801,8 +827,10 @@ export async function upsertEpisode(input: {
       status: input.status,
       publishedAt:
         input.status === 'published' ? prev.publishedAt || now : prev.publishedAt,
-      updatedAt: now
+      updatedAt: now,
+      knowledgeMeta: nextEpKnowledgeMeta
     };
+    if (!epRecord.knowledgeMeta) delete epRecord.knowledgeMeta;
     localDb.episodes[idx] = epRecord;
   } else {
     const bookEps = localDb.episodes.filter((e) => e.bookId === input.bookId);
@@ -823,7 +851,8 @@ export async function upsertEpisode(input: {
       publishedAt: input.status === 'published' ? now : null,
       createdAt: now,
       updatedAt: now,
-      deletedAt: null
+      deletedAt: null,
+      ...(cleanedEpKnowledgeMeta ? { knowledgeMeta: cleanedEpKnowledgeMeta } : {})
     };
     localDb.episodes.push(epRecord);
   }

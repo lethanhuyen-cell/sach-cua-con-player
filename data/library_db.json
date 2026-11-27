@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.3",
+  "schemaVersion": "2.0",
   "exportedAt": "2026-11-26T12:30:00.000Z",
   "adminSessionVersion": 1,
   "voiceProfiles": [
@@ -38,7 +38,7 @@
       "author": "Lê Thanh Uyên",
       "illustrator": "",
       "ageRange": "4–10 tuổi",
-      "genreTag": "Khoa học & Tự nhiên + Văn học · Đồng thoại thiên nhiên",
+      "genreTag": "Thiên nhiên kỳ thú + Vườn trí tuệ · Đồng thoại thiên nhiên",
       "rightsConfirmed": true,
       "coverUrl": "/images/books/lim-vacci-cover.jpg",
       "coverFocalPoint": "center",
@@ -50,7 +50,50 @@
       "status": "published",
       "createdAt": "2026-10-15T14:00:00.000Z",
       "updatedAt": "2026-11-26T12:30:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "I",
+        "primaryLine": "I.3",
+        "secondaryLines": [
+          "VI.1"
+        ],
+        "audienceBand": "child_4_10",
+        "recommendedGrades": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "gentle",
+        "narrativeForm": "van-chuong-huyen-thoai",
+        "crossCuttingConcepts": [
+          "bien-doi-tien-hoa",
+          "he-thong",
+          "quy-luat-mau-hinh",
+          "can-bang-ben-vung"
+        ],
+        "liberalCompetencies": [
+          "tu-duy-he-thong",
+          "thau-cam-nhan-van",
+          "cam-thu-tham-my"
+        ],
+        "curriculumAnchors": [
+          "KHTN-6:da-dang-the-gioi-song",
+          "KHTN-6:dong-vat",
+          "NV-6:truyen-dong-thoai"
+        ],
+        "topicKeywords": [
+          "động vật",
+          "giác quan muôn loài",
+          "thích nghi sinh học",
+          "tiến hóa",
+          "vi sinh vật",
+          "đồng thoại thiên nhiên"
+        ]
+      }
     },
     {
       "id": "book-tieu-hat-de",
@@ -60,8 +103,8 @@
       "description": "Theo bước chân êm của chú mèo lông nâu hạt dẻ có chiếc tai trái cụp đi qua những căn bếp gia đình ấm áp — nơi mỗi món ăn quen mà lạ mở ra một câu chuyện dịu dàng trước giờ đi ngủ.",
       "author": "Nancy & Liti",
       "illustrator": "",
-      "ageRange": "4–10 tuổi",
-      "genreTag": "Ẩm thực & Nếp nhà + Văn học · Đồng thoại căn bếp",
+      "ageRange": "7–13 tuổi",
+      "genreTag": "Lớn lên mỗi ngày + Vườn trí tuệ · Đồng thoại căn bếp",
       "rightsConfirmed": true,
       "coverUrl": "/images/books/mua-thu-hat-de-cover.jpg",
       "coverFocalPoint": "center",
@@ -73,7 +116,54 @@
       "status": "published",
       "createdAt": "2026-11-01T14:00:00.000Z",
       "updatedAt": "2026-11-26T09:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "II.3",
+          "I.4"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "bien-doi-tien-hoa",
+          "tuong-thuoc-ket-noi",
+          "ban-sac-coi-nguon",
+          "cai-dep-hai-hoa"
+        ],
+        "liberalCompetencies": [
+          "tu-chu-doi-song",
+          "thau-cam-nhan-van",
+          "tu-duy-phan-bien"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham",
+          "CN-6:bao-quan-thuc-pham",
+          "KHTN-6:bien-doi-cua-chat",
+          "LSDL-6:giao-luu-van-hoa",
+          "NV-6:truyen-dong-thoai"
+        ],
+        "topicKeywords": [
+          "ẩm thực thế giới",
+          "khoa học thực phẩm",
+          "tự lập căn bếp",
+          "nếp nhà",
+          "protein",
+          "tinh bột",
+          "lên men",
+          "an toàn thực phẩm"
+        ]
+      }
     }
   ],
   "parts": [],
@@ -95,7 +185,42 @@
       "publishedAt": "2026-10-15T14:00:00.000Z",
       "createdAt": "2026-10-15T14:00:00.000Z",
       "updatedAt": "2026-11-26T12:30:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "I",
+        "primaryLine": "I.3",
+        "secondaryLines": [
+          "VI.1",
+          "I.4"
+        ],
+        "audienceBand": "child_4_10",
+        "recommendedGrades": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "gentle",
+        "narrativeForm": "van-chuong-huyen-thoai",
+        "crossCuttingConcepts": [
+          "phat-kien-sang-tao",
+          "can-bang-ben-vung"
+        ],
+        "curriculumAnchors": [
+          "KHTN-6:gioi-thieu-khoa-hoc-tu-nhien",
+          "KHTN-6:kinh-lup-kinh-hien-vi"
+        ],
+        "topicKeywords": [
+          "đom đóm",
+          "ánh sáng sinh học",
+          "phát quang",
+          "khí cầu không khí nóng",
+          "thấu kính quan sát"
+        ]
+      }
     },
     {
       "id": "ep-lim-01",
@@ -114,7 +239,48 @@
       "publishedAt": "2026-10-18T14:00:00.000Z",
       "createdAt": "2026-10-18T14:00:00.000Z",
       "updatedAt": "2026-11-26T12:30:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "I",
+        "primaryLine": "I.3",
+        "secondaryLines": [
+          "V.1",
+          "I.4"
+        ],
+        "audienceBand": "child_4_10",
+        "recommendedGrades": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "gentle",
+        "narrativeForm": "van-chuong-huyen-thoai",
+        "crossCuttingConcepts": [
+          "su-that-bang-chung",
+          "bien-doi-tien-hoa"
+        ],
+        "curriculumAnchors": [
+          "KHTN-6:da-dang-dong-vat",
+          "KHTN-7:am-thanh"
+        ],
+        "topicKeywords": [
+          "loài chó",
+          "khứu giác",
+          "tế bào nón màu sắc",
+          "sóng siêu âm",
+          "thoát nhiệt"
+        ],
+        "curiosityTrails": [
+          {
+            "targetEpisodeId": "ep-lim-08",
+            "bridgeQuestion": "Loài vật nào trong nông trại còn có chiếc mũi nhạy bén hơn cả chó săn?"
+          }
+        ]
+      }
     },
     {
       "id": "ep-lim-02",
@@ -133,7 +299,47 @@
       "publishedAt": "2026-10-22T14:00:00.000Z",
       "createdAt": "2026-10-22T14:00:00.000Z",
       "updatedAt": "2026-11-26T12:30:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "I",
+        "primaryLine": "I.3",
+        "secondaryLines": [
+          "I.4"
+        ],
+        "audienceBand": "child_4_10",
+        "recommendedGrades": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "gentle",
+        "narrativeForm": "van-chuong-huyen-thoai",
+        "crossCuttingConcepts": [
+          "quy-luat-mau-hinh",
+          "nhan-qua"
+        ],
+        "curriculumAnchors": [
+          "KHTN-6:thuc-vat-phat-tan-hat",
+          "KHTN-6:dong-vat-co-vu"
+        ],
+        "topicKeywords": [
+          "loài mèo",
+          "ria xúc giác",
+          "phản xạ ánh sáng mắt mèo",
+          "quả đậu tự nứt vỏ",
+          "đường lactose"
+        ],
+        "curiosityTrails": [
+          {
+            "targetEpisodeId": "ep-thd-15",
+            "bridgeQuestion": "Vì sao mèo trưởng thành ngại sữa bò nhưng vi khuẩn hiền lành lại biến sữa thành sữa chua?"
+          }
+        ]
+      }
     },
     {
       "id": "ep-lim-03",
@@ -152,7 +358,49 @@
       "publishedAt": "2026-10-26T14:00:00.000Z",
       "createdAt": "2026-10-26T14:00:00.000Z",
       "updatedAt": "2026-11-26T12:30:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "I",
+        "primaryLine": "I.3",
+        "secondaryLines": [
+          "I.2"
+        ],
+        "audienceBand": "child_4_10",
+        "recommendedGrades": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "gentle",
+        "narrativeForm": "van-chuong-huyen-thoai",
+        "crossCuttingConcepts": [
+          "he-thong",
+          "can-bang-ben-vung",
+          "tuong-thuoc-ket-noi"
+        ],
+        "curriculumAnchors": [
+          "KHTN-6:vi-khuan-nguyen-sinh-vat",
+          "LSDL-6:bien-doi-khi-hau"
+        ],
+        "topicKeywords": [
+          "loài bò",
+          "động vật nhai lại",
+          "dạ dày bốn ngăn",
+          "vi sinh vật dạ cỏ",
+          "cellulose",
+          "khí nhà kính methane"
+        ],
+        "curiosityTrails": [
+          {
+            "targetEpisodeId": "ep-thd-15",
+            "bridgeQuestion": "Những vi khuẩn có lợi giúp lên men sữa chua trong căn bếp làm việc giống dạ cỏ ra sao?"
+          }
+        ]
+      }
     },
     {
       "id": "ep-lim-04",
@@ -171,7 +419,39 @@
       "publishedAt": "2026-10-30T14:00:00.000Z",
       "createdAt": "2026-10-30T14:00:00.000Z",
       "updatedAt": "2026-11-26T12:30:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "I",
+        "primaryLine": "I.3",
+        "secondaryLines": [
+          "I.2"
+        ],
+        "audienceBand": "child_4_10",
+        "recommendedGrades": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "gentle",
+        "narrativeForm": "van-chuong-huyen-thoai",
+        "crossCuttingConcepts": [
+          "bien-doi-tien-hoa",
+          "tuong-thuoc-ket-noi"
+        ],
+        "curriculumAnchors": [
+          "KHTN-6:da-dang-sinh-hoc"
+        ],
+        "topicKeywords": [
+          "trâu nước",
+          "tuyến mồ hôi",
+          "tắm bùn chống tia cực tím",
+          "cộng sinh chim cò"
+        ]
+      }
     },
     {
       "id": "ep-lim-05",
@@ -190,7 +470,41 @@
       "publishedAt": "2026-11-03T14:00:00.000Z",
       "createdAt": "2026-11-03T14:00:00.000Z",
       "updatedAt": "2026-11-26T12:30:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "I",
+        "primaryLine": "I.3",
+        "secondaryLines": [
+          "I.4"
+        ],
+        "audienceBand": "child_4_10",
+        "recommendedGrades": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "gentle",
+        "narrativeForm": "van-chuong-huyen-thoai",
+        "crossCuttingConcepts": [
+          "bien-doi-tien-hoa",
+          "quy-luat-mau-hinh"
+        ],
+        "curriculumAnchors": [
+          "KHTN-6:luc-ma-sat",
+          "KHTN-6:dong-vat-co-vu"
+        ],
+        "topicKeywords": [
+          "loài ngựa",
+          "tiến hóa một ngón chân",
+          "khóa khớp đứng ngủ",
+          "điểm mù thị giác",
+          "chất sừng keratin"
+        ]
+      }
     },
     {
       "id": "ep-lim-06",
@@ -209,7 +523,42 @@
       "publishedAt": "2026-11-06T14:00:00.000Z",
       "createdAt": "2026-11-06T14:00:00.000Z",
       "updatedAt": "2026-11-26T12:30:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "I",
+        "primaryLine": "I.3",
+        "secondaryLines": [
+          "I.4"
+        ],
+        "audienceBand": "child_4_10",
+        "recommendedGrades": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "gentle",
+        "narrativeForm": "van-chuong-huyen-thoai",
+        "crossCuttingConcepts": [
+          "bien-doi-tien-hoa",
+          "quy-luat-mau-hinh"
+        ],
+        "curriculumAnchors": [
+          "KHTN-6:luc-ma-sat",
+          "KHTN-6:da-dang-dong-vat"
+        ],
+        "topicKeywords": [
+          "loài dê",
+          "lực ma sát leo vách đá",
+          "đồng tử chữ nhật ngang",
+          "cân bằng đường chân trời",
+          "khoáng chất đá muối",
+          "tanin"
+        ]
+      }
     },
     {
       "id": "ep-lim-07",
@@ -228,7 +577,41 @@
       "publishedAt": "2026-11-09T14:00:00.000Z",
       "createdAt": "2026-11-09T14:00:00.000Z",
       "updatedAt": "2026-11-26T12:30:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "I",
+        "primaryLine": "I.3",
+        "secondaryLines": [
+          "I.4"
+        ],
+        "audienceBand": "child_4_10",
+        "recommendedGrades": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "gentle",
+        "narrativeForm": "van-chuong-huyen-thoai",
+        "crossCuttingConcepts": [
+          "quy-luat-mau-hinh",
+          "tuong-thuoc-ket-noi"
+        ],
+        "curriculumAnchors": [
+          "CN-6:trang-phuc-vai-soi-tu-nhien",
+          "KHTN-6:dong-vat-co-vu"
+        ],
+        "topicKeywords": [
+          "loài cừu",
+          "sáp lanolin chống thấm",
+          "cách nhiệt sợi len",
+          "nhận diện khuôn mặt",
+          "tuyến mùi"
+        ]
+      }
     },
     {
       "id": "ep-lim-08",
@@ -247,7 +630,41 @@
       "publishedAt": "2026-11-19T14:00:00.000Z",
       "createdAt": "2026-11-19T14:00:00.000Z",
       "updatedAt": "2026-11-26T12:30:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "I",
+        "primaryLine": "I.3",
+        "secondaryLines": [
+          "V.1"
+        ],
+        "audienceBand": "child_4_10",
+        "recommendedGrades": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "gentle",
+        "narrativeForm": "van-chuong-huyen-thoai",
+        "crossCuttingConcepts": [
+          "su-that-bang-chung",
+          "bien-doi-tien-hoa"
+        ],
+        "curriculumAnchors": [
+          "KHTN-6:nam",
+          "KHTN-6:dong-vat-co-vu"
+        ],
+        "topicKeywords": [
+          "loài lợn",
+          "xương mõm ủi đất",
+          "nấm cục truffle",
+          "giải nhiệt không tuyến mồ hôi",
+          "trí thông minh động vật"
+        ]
+      }
     },
     {
       "id": "ep-lim-09",
@@ -266,7 +683,40 @@
       "publishedAt": "2026-11-22T14:00:00.000Z",
       "createdAt": "2026-11-22T14:00:00.000Z",
       "updatedAt": "2026-11-26T12:30:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "I",
+        "primaryLine": "I.3",
+        "secondaryLines": [
+          "I.4"
+        ],
+        "audienceBand": "child_4_10",
+        "recommendedGrades": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "gentle",
+        "narrativeForm": "van-chuong-huyen-thoai",
+        "crossCuttingConcepts": [
+          "bien-doi-tien-hoa",
+          "he-thong"
+        ],
+        "curriculumAnchors": [
+          "KHTN-6:nang-luong-nhiet",
+          "KHTN-6:dong-vat-co-vu"
+        ],
+        "topicKeywords": [
+          "loài thỏ",
+          "truyền rung chấn mặt đất",
+          "tản nhiệt mạch máu tai",
+          "răng cửa mọc liên tục"
+        ]
+      }
     },
     {
       "id": "ep-lim-10",
@@ -285,7 +735,47 @@
       "publishedAt": "2026-11-24T15:00:00.000Z",
       "createdAt": "2026-11-24T15:00:00.000Z",
       "updatedAt": "2026-11-26T12:30:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "I",
+        "primaryLine": "I.3",
+        "secondaryLines": [
+          "I.4"
+        ],
+        "audienceBand": "child_4_10",
+        "recommendedGrades": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "gentle",
+        "narrativeForm": "van-chuong-huyen-thoai",
+        "crossCuttingConcepts": [
+          "quy-luat-mau-hinh",
+          "bien-doi-tien-hoa"
+        ],
+        "curriculumAnchors": [
+          "KHTN-6:vat-lieu-kim-loai",
+          "KHTN-6:dong-vat-co-vu"
+        ],
+        "topicKeywords": [
+          "loài chuột",
+          "gặm nhấm",
+          "men răng chứa sắt tự mài sắc",
+          "bản đồ xúc giác râu mép",
+          "cối xay lúa mì"
+        ],
+        "curiosityTrails": [
+          {
+            "targetEpisodeId": "ep-thd-14",
+            "bridgeQuestion": "Hạt lúa mì xay thành bột ở cối xay biến hóa thế nào trong món Gnocchi khoai tây?"
+          }
+        ]
+      }
     },
     {
       "id": "ep-thd-01",
@@ -304,7 +794,40 @@
       "publishedAt": "2026-11-26T08:51:00.000Z",
       "createdAt": "2026-11-01T13:00:00.000Z",
       "updatedAt": "2026-11-26T09:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "I.4"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "nhan-qua",
+          "cai-dep-hai-hoa"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham",
+          "KHTN-6:su-bien-doi-the-cua-chat"
+        ],
+        "topicKeywords": [
+          "trứng hấp xì dầu",
+          "đông tụ protein trứng",
+          "hơi nước ngưng tụ",
+          "lọc qua rây",
+          "ẩm thực Á Đông"
+        ]
+      }
     },
     {
       "id": "ep-thd-02",
@@ -323,7 +846,40 @@
       "publishedAt": "2026-11-26T08:52:00.000Z",
       "createdAt": "2026-11-02T13:00:00.000Z",
       "updatedAt": "2026-11-26T09:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "II.3"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "ban-sac-coi-nguon",
+          "cai-dep-hai-hoa"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham",
+          "LSDL-6:giao-luu-van-hoa"
+        ],
+        "topicKeywords": [
+          "Tamagoyaki",
+          "trứng cuộn Nhật Bản",
+          "thời Edo",
+          "nước dùng dashi",
+          "truyền nhiệt"
+        ]
+      }
     },
     {
       "id": "ep-thd-03",
@@ -342,7 +898,40 @@
       "publishedAt": "2026-11-26T08:53:00.000Z",
       "createdAt": "2026-11-02T13:00:00.000Z",
       "updatedAt": "2026-11-26T09:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "I.4"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "nhan-qua",
+          "quy-luat-mau-hinh"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham",
+          "GDCD-6:tu-lap"
+        ],
+        "topicKeywords": [
+          "trứng khuấy bơ",
+          "nhiệt độ thấp",
+          "co rút protein",
+          "tự chuẩn bị bữa sáng",
+          "quản lý thời gian"
+        ]
+      }
     },
     {
       "id": "ep-thd-04",
@@ -361,7 +950,39 @@
       "publishedAt": "2026-11-26T08:54:00.000Z",
       "createdAt": "2026-11-03T13:00:00.000Z",
       "updatedAt": "2026-11-26T09:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "II.1"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "tuong-thuoc-ket-noi",
+          "cai-dep-hai-hoa"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham",
+          "LSDL-7:dai-phat-kien-dia-li"
+        ],
+        "topicKeywords": [
+          "canh cà chua trứng",
+          "lịch sử cây cà chua châu Mỹ",
+          "sắc tố hòa tan trong dầu",
+          "bữa tối gia đình"
+        ]
+      }
     },
     {
       "id": "ep-thd-05",
@@ -380,7 +1001,39 @@
       "publishedAt": "2026-11-26T08:55:00.000Z",
       "createdAt": "2026-11-03T13:00:00.000Z",
       "updatedAt": "2026-11-26T09:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "II.3"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "can-bang-ben-vung",
+          "phat-kien-sang-tao"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham",
+          "GDCD-6:tiet-kiem"
+        ],
+        "topicKeywords": [
+          "Frittata rau củ",
+          "ẩm thực Ý",
+          "chống lãng phí thực phẩm",
+          "bay hơi độ ẩm nấm"
+        ]
+      }
     },
     {
       "id": "ep-thd-06",
@@ -399,7 +1052,38 @@
       "publishedAt": "2026-11-26T08:56:00.000Z",
       "createdAt": "2026-11-04T13:00:00.000Z",
       "updatedAt": "2026-11-26T09:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "II.3"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "ban-sac-coi-nguon",
+          "tuong-thuoc-ket-noi"
+        ],
+        "curriculumAnchors": [
+          "CN-6:an-toan-thuc-pham"
+        ],
+        "topicKeywords": [
+          "Gilgeori Toast",
+          "bánh mì đường phố Hàn Quốc",
+          "Seoul",
+          "tiệt trùng an toàn thực phẩm"
+        ]
+      }
     },
     {
       "id": "ep-thd-07",
@@ -418,7 +1102,41 @@
       "publishedAt": "2026-11-26T08:57:00.000Z",
       "createdAt": "2026-11-04T13:00:00.000Z",
       "updatedAt": "2026-11-26T09:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "II.3",
+          "II.1"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "tuong-thuoc-ket-noi",
+          "ban-sac-coi-nguon"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham",
+          "LSDL-6:giao-thuong-co-dai"
+        ],
+        "topicKeywords": [
+          "Shakshuka",
+          "ẩm thực Bắc Phi Maghreb",
+          "Trung Đông",
+          "gia vị thì là cumin",
+          "ớt ngọt paprika"
+        ]
+      }
     },
     {
       "id": "ep-thd-08",
@@ -437,7 +1155,40 @@
       "publishedAt": "2026-11-05T13:00:00.000Z",
       "createdAt": "2026-11-05T13:00:00.000Z",
       "updatedAt": "2026-11-05T13:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "I.3",
+          "I.4"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "nhan-qua",
+          "su-that-bang-chung"
+        ],
+        "curriculumAnchors": [
+          "CN-6:an-toan-thuc-pham",
+          "KHTN-6:thuc-vat"
+        ],
+        "topicKeywords": [
+          "khoai tây nghiền",
+          "độc tố mầm khoai tây xanh",
+          "hạt tinh bột",
+          "truyền nhiệt từ nước lạnh"
+        ]
+      }
     },
     {
       "id": "ep-thd-09",
@@ -456,7 +1207,39 @@
       "publishedAt": "2026-11-05T13:00:00.000Z",
       "createdAt": "2026-11-05T13:00:00.000Z",
       "updatedAt": "2026-11-05T13:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "I.4"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "nhan-qua",
+          "phat-kien-sang-tao"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham",
+          "KHTN-6:tach-chat-khoi-hon-hop"
+        ],
+        "topicKeywords": [
+          "khoai tây nướng múi cau",
+          "rửa tinh bột bề mặt",
+          "an toàn cầm dao",
+          "giữ nhiệt hơi nước"
+        ]
+      }
     },
     {
       "id": "ep-thd-10",
@@ -475,7 +1258,39 @@
       "publishedAt": "2026-11-06T13:00:00.000Z",
       "createdAt": "2026-11-06T13:00:00.000Z",
       "updatedAt": "2026-11-06T13:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "II.3",
+          "II.1"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "tuong-thuoc-ket-noi",
+          "phat-kien-sang-tao"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham"
+        ],
+        "topicKeywords": [
+          "Korokke",
+          "bánh khoai tây Nhật Bản",
+          "giao thoa Pháp - Nhật thời Minh Trị",
+          "vụn bánh mì panko"
+        ]
+      }
     },
     {
       "id": "ep-thd-11",
@@ -494,7 +1309,39 @@
       "publishedAt": "2026-11-06T13:00:00.000Z",
       "createdAt": "2026-11-06T13:00:00.000Z",
       "updatedAt": "2026-11-06T13:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "II.3"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "ban-sac-coi-nguon",
+          "quy-luat-mau-hinh"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham",
+          "LSDL-6:an-do"
+        ],
+        "topicKeywords": [
+          "Aloo Tikki",
+          "ẩm thực Bắc Ấn Độ",
+          "kết dính tinh bột bắp",
+          "đậu Hà Lan"
+        ]
+      }
     },
     {
       "id": "ep-thd-12",
@@ -513,7 +1360,38 @@
       "publishedAt": "2026-11-07T13:00:00.000Z",
       "createdAt": "2026-11-07T13:00:00.000Z",
       "updatedAt": "2026-11-07T13:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "I.4"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "nhan-qua",
+          "can-bang-ben-vung"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham"
+        ],
+        "topicKeywords": [
+          "súp khoai tây sữa",
+          "cấu trúc hạt tinh bột",
+          "tách váng sữa khi sôi",
+          "an toàn bếp núc"
+        ]
+      }
     },
     {
       "id": "ep-thd-13",
@@ -532,7 +1410,38 @@
       "publishedAt": "2026-11-07T13:00:00.000Z",
       "createdAt": "2026-11-07T13:00:00.000Z",
       "updatedAt": "2026-11-07T13:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "II.3"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "ban-sac-coi-nguon",
+          "quy-luat-mau-hinh"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham"
+        ],
+        "topicKeywords": [
+          "Tortilla Española",
+          "bánh trứng khoai tây Tây Ban Nha",
+          "dầu ô liu",
+          "thẩm thấu nhiệt"
+        ]
+      }
     },
     {
       "id": "ep-thd-14",
@@ -551,7 +1460,40 @@
       "publishedAt": "2026-11-08T13:00:00.000Z",
       "createdAt": "2026-11-08T13:00:00.000Z",
       "updatedAt": "2026-11-08T13:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "I.4",
+          "II.3"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "quy-luat-mau-hinh",
+          "tuong-thuoc-ket-noi"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham",
+          "KHTN-6:luc-day-khoi-luong-rieng"
+        ],
+        "topicKeywords": [
+          "Gnocchi khoai tây",
+          "ẩm thực Ý",
+          "mạng protein gluten bột mì",
+          "nổi trên mặt nước sôi"
+        ]
+      }
     },
     {
       "id": "ep-thd-15",
@@ -570,7 +1512,46 @@
       "publishedAt": "2026-11-08T13:00:00.000Z",
       "createdAt": "2026-11-08T13:00:00.000Z",
       "updatedAt": "2026-11-08T13:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "I.3"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "bien-doi-tien-hoa",
+          "he-thong"
+        ],
+        "curriculumAnchors": [
+          "KHTN-6:vi-khuan-co-ich",
+          "CN-6:bao-quan-thuc-pham"
+        ],
+        "topicKeywords": [
+          "sữa chua trái cây",
+          "parfait",
+          "vi khuẩn lên men sữa chua",
+          "bảo quản lạnh",
+          "hút ẩm"
+        ],
+        "curiosityTrails": [
+          {
+            "targetEpisodeId": "ep-lim-03",
+            "bridgeQuestion": "Ngoài hũ sữa chua, cộng đồng vi sinh vật còn làm việc kỳ diệu thế nào trong bụng bác bò Bruno?"
+          }
+        ]
+      }
     },
     {
       "id": "ep-thd-16",
@@ -589,7 +1570,39 @@
       "publishedAt": "2026-11-09T13:00:00.000Z",
       "createdAt": "2026-11-09T13:00:00.000Z",
       "updatedAt": "2026-11-09T13:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "II.3"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "ban-sac-coi-nguon",
+          "phat-kien-sang-tao"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham",
+          "LSDL-6:an-do"
+        ],
+        "topicKeywords": [
+          "Mango Lassi",
+          "vùng Punjab Ấn Độ",
+          "thảo quả xanh",
+          "chế biến không cần máy điện"
+        ]
+      }
     },
     {
       "id": "ep-thd-17",
@@ -608,7 +1621,40 @@
       "publishedAt": "2026-11-09T13:00:00.000Z",
       "createdAt": "2026-11-09T13:00:00.000Z",
       "updatedAt": "2026-11-09T13:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "I.4",
+          "II.3"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "nhan-qua",
+          "bien-doi-tien-hoa"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham",
+          "KHTN-6:bien-doi-cua-chat"
+        ],
+        "topicKeywords": [
+          "Panna Cotta",
+          "kem nấu Ý",
+          "mạng liên kết gelatin",
+          "biến tính bởi nhiệt sôi"
+        ]
+      }
     },
     {
       "id": "ep-thd-18",
@@ -627,7 +1673,45 @@
       "publishedAt": "2026-11-10T13:00:00.000Z",
       "createdAt": "2026-11-10T13:00:00.000Z",
       "updatedAt": "2026-11-10T13:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "I.4",
+          "II.3"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "da-goc-nhin",
+          "nhan-qua"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham"
+        ],
+        "topicKeywords": [
+          "Pudding sữa",
+          "Purin Nhật Bản",
+          "thắng đường caramel an toàn",
+          "trứng hấp ngọt"
+        ],
+        "curiosityTrails": [
+          {
+            "targetEpisodeId": "ep-thd-01",
+            "bridgeQuestion": "Cùng đi qua chiếc rây lọc và xửng hấp, món trứng hấp mặn của bà ngoại khác Purin ngọt ở điểm nào?"
+          }
+        ]
+      }
     },
     {
       "id": "ep-thd-19",
@@ -646,7 +1730,39 @@
       "publishedAt": "2026-11-10T13:00:00.000Z",
       "createdAt": "2026-11-10T13:00:00.000Z",
       "updatedAt": "2026-11-10T13:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "II.3",
+          "I.4"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "ban-sac-coi-nguon",
+          "quy-luat-mau-hinh"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham"
+        ],
+        "topicKeywords": [
+          "Quesadilla phô mai",
+          "ẩm thực Mexico",
+          "tortilla",
+          "mạng sợi đạm mozzarella nóng chảy"
+        ]
+      }
     },
     {
       "id": "ep-thd-20",
@@ -665,7 +1781,39 @@
       "publishedAt": "2026-11-25T11:00:00.000Z",
       "createdAt": "2026-11-25T11:00:00.000Z",
       "updatedAt": "2026-11-25T11:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "I.4"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "nhan-qua",
+          "he-thong"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham",
+          "KHTN-6:hon-hop-nhu-tuong"
+        ],
+        "topicKeywords": [
+          "Mac and Cheese",
+          "nền sốt roux bơ bột mì",
+          "phô mai cheddar",
+          "chống tách dầu ở nhiệt cao"
+        ]
+      }
     },
     {
       "id": "ep-thd-21",
@@ -684,7 +1832,41 @@
       "publishedAt": "2026-11-25T14:00:00.000Z",
       "createdAt": "2026-11-25T14:00:00.000Z",
       "updatedAt": "2026-11-25T14:00:00.000Z",
-      "deletedAt": null
+      "deletedAt": null,
+      "knowledgeMeta": {
+        "primaryPillar": "IV",
+        "primaryLine": "IV.4",
+        "secondaryLines": [
+          "II.3",
+          "I.4"
+        ],
+        "audienceBand": "bridge_8_12",
+        "recommendedGrades": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "listeningRhythm": "wind_down",
+        "cognitiveDensity": "balanced",
+        "narrativeForm": "giai-ma-doi-thuong",
+        "crossCuttingConcepts": [
+          "tuong-thuoc-ket-noi",
+          "ban-sac-coi-nguon"
+        ],
+        "curriculumAnchors": [
+          "CN-6:che-bien-thuc-pham",
+          "LSDL-6:giao-luu-van-hoa"
+        ],
+        "topicKeywords": [
+          "Sütlaç",
+          "chè gạo sữa Thổ Nhĩ Kỳ",
+          "tinh bột gạo",
+          "vỏ quế khô",
+          "giao thoa văn hóa"
+        ]
+      }
     }
   ],
   "audioTracks": [

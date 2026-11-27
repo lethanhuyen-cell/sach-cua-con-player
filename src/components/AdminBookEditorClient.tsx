@@ -4,22 +4,47 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
+  AudienceBand,
+  BookLineCode,
   BookPreset,
+  CognitiveDensity,
   CoverFocalPoint,
   HydratedBook,
+  KnowledgeMetadata,
+  ListeningRhythm,
+  NarrativeForm,
   PublishStatus,
   TocMode
 } from '@/lib/types';
 import { BOOK_PRESETS } from '@/lib/presets';
 import {
   formatAdminHallGenre,
+  getHallBySlug,
   LIBRARY_HALLS,
   LibraryHallSlug,
   parseAdminHallGenre
 } from '@/lib/halls';
+import {
+  ACTIVE_BOOK_LINES,
+  AUDIENCE_BAND_OPTIONS,
+  COGNITIVE_DENSITY_OPTIONS,
+  CROSS_CUTTING_CONCEPTS,
+  KNOWLEDGE_PILLARS,
+  LIBERAL_COMPETENCIES,
+  LISTENING_RHYTHM_OPTIONS,
+  NARRATIVE_FORM_OPTIONS,
+  getBookLineByCode,
+  inferBookAudienceBand
+} from '@/lib/knowledge';
 import { uploadMediaWithProgress } from '@/lib/uploadClient';
 import { BookCover } from './BookCover';
-import { ChevronLeftIcon, PlusIcon, TrashIcon, UploadIcon } from './Icons';
+import {
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  PlusIcon,
+  TrashIcon,
+  UploadIcon
+} from './Icons';
 
 export function AdminBookEditorClient({
   initialBook
@@ -73,6 +98,66 @@ export function AdminBookEditorClient({
     (initialBook?.parts || []).map((p) => ({ id: p.id, title: p.title }))
   );
 
+  // Knowledge Architecture v2.0 (7-Facet Interdisciplinary Metadata)
+  const [knowledgeOpen, setKnowledgeOpen] = useState<boolean>(() =>
+    Boolean(initialBook?.knowledgeMeta?.primaryLine || isNew)
+  );
+  const [primaryLine, setPrimaryLine] = useState<BookLineCode | ''>(
+    initialBook?.knowledgeMeta?.primaryLine || ''
+  );
+  const [secondaryLines, setSecondaryLines] = useState<BookLineCode[]>(
+    initialBook?.knowledgeMeta?.secondaryLines || []
+  );
+  const [audienceBand, setAudienceBand] = useState<AudienceBand>(() =>
+    initialBook ? inferBookAudienceBand(initialBook) : 'teen_11_15'
+  );
+  const [listeningRhythm, setListeningRhythm] = useState<ListeningRhythm | ''>(
+    initialBook?.knowledgeMeta?.listeningRhythm || ''
+  );
+  const [cognitiveDensity, setCognitiveDensity] = useState<CognitiveDensity | ''>(
+    initialBook?.knowledgeMeta?.cognitiveDensity || ''
+  );
+  const [narrativeForm, setNarrativeForm] = useState<NarrativeForm | ''>(
+    initialBook?.knowledgeMeta?.narrativeForm || ''
+  );
+  const [crossCuttingConcepts, setCrossCuttingConcepts] = useState<string[]>(
+    initialBook?.knowledgeMeta?.crossCuttingConcepts || []
+  );
+  const [liberalCompetencies, setLiberalCompetencies] = useState<string[]>(
+    initialBook?.knowledgeMeta?.liberalCompetencies || []
+  );
+  const [recommendedGradesInput, setRecommendedGradesInput] = useState<string>(
+    (initialBook?.knowledgeMeta?.recommendedGrades || []).join(', ')
+  );
+  const [topicKeywordsInput, setTopicKeywordsInput] = useState<string>(
+    (initialBook?.knowledgeMeta?.topicKeywords || []).join(', ')
+  );
+  const [curriculumAnchorsInput, setCurriculumAnchorsInput] = useState<string>(
+    (initialBook?.knowledgeMeta?.curriculumAnchors || []).join(', ')
+  );
+
+  const toggleSecondaryLine = (code: BookLineCode) => {
+    setSecondaryLines((prev) => {
+      if (prev.includes(code)) return prev.filter((item) => item !== code);
+      if (prev.length >= 2) return [...prev.slice(1), code];
+      return [...prev, code];
+    });
+  };
+
+  const toggleConcept = (conceptSlug: string) => {
+    setCrossCuttingConcepts((prev) => {
+      if (prev.includes(conceptSlug)) return prev.filter((s) => s !== conceptSlug);
+      if (prev.length >= 6) return prev;
+      return [...prev, conceptSlug];
+    });
+  };
+
+  const toggleCompetency = (compSlug: string) => {
+    setLiberalCompetencies((prev) =>
+      prev.includes(compSlug) ? prev.filter((s) => s !== compSlug) : [...prev, compSlug]
+    );
+  };
+
   const [uploadPct, setUploadPct] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -102,6 +187,31 @@ export function AdminBookEditorClient({
     setSaving(true);
     setError(null);
     setSuccessMsg(null);
+    const parsedGrades = recommendedGradesInput
+      .split(/[,;\s]+/)
+      .map((s) => Number(s.trim()))
+      .filter((n) => Number.isInteger(n) && n >= 1 && n <= 12);
+    const parsedKeywords = topicKeywordsInput
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const parsedAnchors = curriculumAnchorsInput
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const knowledgeMetaPayload: KnowledgeMetadata = {
+      ...(primaryLine ? { primaryLine } : {}),
+      ...(secondaryLines.length > 0 ? { secondaryLines } : {}),
+      audienceBand,
+      ...(parsedGrades.length > 0 ? { recommendedGrades: parsedGrades } : {}),
+      ...(listeningRhythm ? { listeningRhythm } : {}),
+      ...(cognitiveDensity ? { cognitiveDensity } : {}),
+      ...(narrativeForm ? { narrativeForm } : {}),
+      ...(crossCuttingConcepts.length > 0 ? { crossCuttingConcepts } : {}),
+      ...(liberalCompetencies.length > 0 ? { liberalCompetencies } : {}),
+      ...(parsedKeywords.length > 0 ? { topicKeywords: parsedKeywords } : {}),
+      ...(parsedAnchors.length > 0 ? { curriculumAnchors: parsedAnchors } : {})
+    };
     try {
       const res = await fetch('/api/admin/books', {
         method: 'POST',
@@ -124,6 +234,7 @@ export function AdminBookEditorClient({
           showEpisodeNumbers,
           rightsConfirmed,
           status: targetStatus,
+          knowledgeMeta: knowledgeMetaPayload,
           parts: parts
             .filter((p) => p.title.trim())
             .map((p, idx) => ({ id: p.id, title: p.title.trim(), sortOrder: idx }))
@@ -540,6 +651,333 @@ export function AdminBookEditorClient({
             className="w-full p-3 rounded-[7px] outline-none leading-relaxed"
           />
         </div>
+      </section>
+
+      {/* Knowledge Architecture v2.0 (7-Facet Interdisciplinary Metadata) */}
+      <section
+        style={{
+          backgroundColor: 'var(--bg-elevated)',
+          border: '1px solid var(--border-hairline)'
+        }}
+        className="rounded-[10px] p-4 space-y-3.5 text-xs"
+      >
+        <button
+          type="button"
+          onClick={() => setKnowledgeOpen((prev) => !prev)}
+          className="w-full flex items-center justify-between gap-2 text-left"
+        >
+          <div>
+            <h2 className="text-sm font-semibold font-editorial">
+              Kiến trúc Tri thức &amp; Nhãn Liên ngành (v2.0)
+            </h2>
+            <p className="mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+              Định vị Dòng sách 6 trụ cột, dải độ tuổi chuẩn, nhịp nghe và khái niệm xuyên ngành.
+            </p>
+          </div>
+          <span
+            style={{ color: 'var(--text-secondary)' }}
+            className={`shrink-0 transition-transform ${knowledgeOpen ? 'rotate-180' : ''}`}
+          >
+            <ChevronDownIcon size={16} />
+          </span>
+        </button>
+
+        {knowledgeOpen && (
+          <div className="pt-2 border-t border-[var(--border-hairline)] space-y-3.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block font-medium mb-1">Dải độc giả mục tiêu</label>
+                <select
+                  value={audienceBand}
+                  onChange={(e) => {
+                    const nextBand = e.target.value as AudienceBand;
+                    setAudienceBand(nextBand);
+                    const matchedOpt = AUDIENCE_BAND_OPTIONS.find(
+                      (o) => o.value === nextBand
+                    );
+                    const isDefaultAgeText =
+                      !ageRange.trim() ||
+                      ageRange === '3–9 tuổi' ||
+                      AUDIENCE_BAND_OPTIONS.some((o) => o.defaultAgeRange === ageRange.trim());
+                    if (matchedOpt && isDefaultAgeText) {
+                      setAgeRange(matchedOpt.defaultAgeRange);
+                    }
+                  }}
+                  style={{
+                    backgroundColor: 'var(--bg-canvas)',
+                    border: '1px solid var(--border-hairline)'
+                  }}
+                  className="w-full h-10 px-3 rounded-[7px] outline-none"
+                >
+                  {AUDIENCE_BAND_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block font-medium mb-1">
+                  Khối lớp tham chiếu (tùy chọn)
+                </label>
+                <input
+                  type="text"
+                  value={recommendedGradesInput}
+                  onChange={(e) => setRecommendedGradesInput(e.target.value)}
+                  placeholder="vd: 6, 7"
+                  style={{
+                    backgroundColor: 'var(--bg-canvas)',
+                    border: '1px solid var(--border-hairline)'
+                  }}
+                  className="w-full h-10 px-3 rounded-[7px] outline-none tabular-nums"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-medium mb-1">
+                Dòng sách chính (18 Dòng xuất bản khai phóng)
+              </label>
+              <select
+                value={primaryLine}
+                onChange={(e) => {
+                  const nextCode = e.target.value as BookLineCode | '';
+                  setPrimaryLine(nextCode);
+                  if (nextCode) {
+                    setSecondaryLines((prev) => prev.filter((c) => c !== nextCode));
+                    const lineDef = getBookLineByCode(nextCode);
+                    if (lineDef && isNew) {
+                      setSelectedHallSlug(lineDef.defaultHallSlug);
+                    }
+                  }
+                }}
+                style={{
+                  backgroundColor: 'var(--bg-canvas)',
+                  border: '1px solid var(--border-hairline)'
+                }}
+                className="w-full h-10 px-3 rounded-[7px] outline-none"
+              >
+                <option value="">-- Chưa chọn dòng sách --</option>
+                {KNOWLEDGE_PILLARS.map((pillar) => (
+                  <optgroup key={pillar.code} label={pillar.title}>
+                    {ACTIVE_BOOK_LINES.filter((l) => l.pillar === pillar.code).map((line) => (
+                      <option key={line.code} value={line.code}>
+                        {line.code} · {line.title}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+              {primaryLine && (() => {
+                const lineDef = getBookLineByCode(primaryLine);
+                const mappedHall = lineDef ? getHallBySlug(lineDef.defaultHallSlug) : undefined;
+                if (!lineDef) return null;
+                return (
+                  <div
+                    className="mt-1.5 flex flex-wrap items-center justify-between gap-2 text-[11px]"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span>{lineDef.scopeSummary}</span>
+                    {mappedHall && selectedHallSlug !== mappedHall.slug && (
+                      <button
+                        type="button"
+                        onClick={() => setSelectedHallSlug(mappedHall.slug)}
+                        style={{ color: 'var(--accent-primary)' }}
+                        className="font-medium underline shrink-0"
+                      >
+                        Đồng bộ sang {mappedHall.title}
+                      </button>
+                    )}
+                  </div>
+                );
+              })()}
+            </div>
+
+            <div>
+              <label className="block font-medium mb-1.5">
+                Dòng sách giao thoa (tối đa 2 dòng)
+              </label>
+              <div className="flex flex-wrap gap-1.5">
+                {ACTIVE_BOOK_LINES.filter((l) => l.code !== primaryLine).map((line) => {
+                  const active = secondaryLines.includes(line.code);
+                  return (
+                    <button
+                      key={line.code}
+                      type="button"
+                      onClick={() => toggleSecondaryLine(line.code)}
+                      style={{
+                        backgroundColor: active ? 'var(--accent-warm)' : 'var(--bg-canvas)',
+                        color: active ? 'var(--accent-primary-fg)' : 'var(--text-primary)',
+                        border: '1px solid var(--border-hairline)'
+                      }}
+                      className="h-7 px-2.5 rounded-[6px] text-[11px] font-medium py-0.5"
+                    >
+                      {line.code} · {line.title}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label className="block font-medium mb-1">Nhịp nghe gợi ý</label>
+                <select
+                  value={listeningRhythm}
+                  onChange={(e) => setListeningRhythm(e.target.value as ListeningRhythm | '')}
+                  style={{
+                    backgroundColor: 'var(--bg-canvas)',
+                    border: '1px solid var(--border-hairline)'
+                  }}
+                  className="w-full h-10 px-2.5 rounded-[7px] outline-none"
+                >
+                  <option value="">-- Tự động --</option>
+                  {LISTENING_RHYTHM_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block font-medium mb-1">Độ sâu nhận thức</label>
+                <select
+                  value={cognitiveDensity}
+                  onChange={(e) =>
+                    setCognitiveDensity(e.target.value as CognitiveDensity | '')
+                  }
+                  style={{
+                    backgroundColor: 'var(--bg-canvas)',
+                    border: '1px solid var(--border-hairline)'
+                  }}
+                  className="w-full h-10 px-2.5 rounded-[7px] outline-none"
+                >
+                  <option value="">-- Tự động --</option>
+                  {COGNITIVE_DENSITY_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block font-medium mb-1">Hình thái tự sự</label>
+                <select
+                  value={narrativeForm}
+                  onChange={(e) => setNarrativeForm(e.target.value as NarrativeForm | '')}
+                  style={{
+                    backgroundColor: 'var(--bg-canvas)',
+                    border: '1px solid var(--border-hairline)'
+                  }}
+                  className="w-full h-10 px-2.5 rounded-[7px] outline-none"
+                >
+                  <option value="">-- Tự động --</option>
+                  {NARRATIVE_FORM_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-medium mb-1.5">
+                Khái niệm xuyên ngành ({crossCuttingConcepts.length}/6)
+              </label>
+              <div className="flex flex-wrap gap-1.5">
+                {CROSS_CUTTING_CONCEPTS.map((concept) => {
+                  const active = crossCuttingConcepts.includes(concept.slug);
+                  return (
+                    <button
+                      key={concept.slug}
+                      type="button"
+                      title={concept.hint}
+                      onClick={() => toggleConcept(concept.slug)}
+                      style={{
+                        backgroundColor: active
+                          ? 'var(--accent-primary)'
+                          : 'var(--bg-canvas)',
+                        color: active
+                          ? 'var(--accent-primary-fg)'
+                          : 'var(--text-primary)',
+                        border: '1px solid var(--border-hairline)'
+                      }}
+                      className="h-7 px-2.5 rounded-[6px] text-[11px] font-medium py-0.5"
+                    >
+                      {concept.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-medium mb-1.5">Năng lực khai phóng</label>
+              <div className="flex flex-wrap gap-1.5">
+                {LIBERAL_COMPETENCIES.map((comp) => {
+                  const active = liberalCompetencies.includes(comp.slug);
+                  return (
+                    <button
+                      key={comp.slug}
+                      type="button"
+                      onClick={() => toggleCompetency(comp.slug)}
+                      style={{
+                        backgroundColor: active ? 'var(--accent-warm)' : 'var(--bg-canvas)',
+                        color: active
+                          ? 'var(--accent-primary-fg)'
+                          : 'var(--text-primary)',
+                        border: '1px solid var(--border-hairline)'
+                      }}
+                      className="h-7 px-2.5 rounded-[6px] text-[11px] font-medium py-0.5"
+                    >
+                      {comp.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block font-medium mb-1">
+                  Từ khóa chủ đề tìm kiếm (phân tách dấu phẩy)
+                </label>
+                <input
+                  type="text"
+                  value={topicKeywordsInput}
+                  onChange={(e) => setTopicKeywordsInput(e.target.value)}
+                  placeholder="vd: tế bào, đom đóm, hóa học bếp núc"
+                  style={{
+                    backgroundColor: 'var(--bg-canvas)',
+                    border: '1px solid var(--border-hairline)'
+                  }}
+                  className="w-full h-10 px-3 rounded-[7px] outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block font-medium mb-1">
+                  Neo chương trình phổ thông ẩn (phân tách dấu phẩy)
+                </label>
+                <input
+                  type="text"
+                  value={curriculumAnchorsInput}
+                  onChange={(e) => setCurriculumAnchorsInput(e.target.value)}
+                  placeholder="vd: KHTN-6:da-dang-the-gioi-song, CN-6:bao-quan-thuc-pham"
+                  style={{
+                    backgroundColor: 'var(--bg-canvas)',
+                    border: '1px solid var(--border-hairline)'
+                  }}
+                  className="w-full h-10 px-3 rounded-[7px] outline-none"
+                />
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Preset Watercolor Wash & Playback Defaults */}

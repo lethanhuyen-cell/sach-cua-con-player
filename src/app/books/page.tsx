@@ -25,6 +25,13 @@ import {
   getEpisodeDurationLabel,
   isEpisodeReadingOnly
 } from '@/lib/presets';
+import {
+  AUDIENCE_FILTER_PILLS,
+  AudienceFilterKey,
+  matchesAudienceFilter,
+  matchesBookKnowledgeQuery,
+  matchesEpisodeKnowledgeQuery
+} from '@/lib/knowledge';
 
 function normalizeSearch(s: string): string {
   return s
@@ -45,6 +52,7 @@ export default function BooksShelfPage() {
   } = useLibraryPlayer();
   const [query, setQuery] = useState('');
   const [selectedHallSlug, setSelectedHallSlug] = useState<LibraryHallSlug | 'ALL'>('ALL');
+  const [audienceFilter, setAudienceFilter] = useState<AudienceFilterKey>('ALL');
 
   const activeHalls = useMemo(
     () =>
@@ -58,6 +66,7 @@ export default function BooksShelfPage() {
 
   const filteredBooks = useMemo(() => {
     return books.filter((book) => {
+      if (!matchesAudienceFilter(book, audienceFilter)) return false;
       if (
         selectedHallSlug !== 'ALL' &&
         !resolveBookHalls(book).some((h) => h.slug === selectedHallSlug)
@@ -65,16 +74,9 @@ export default function BooksShelfPage() {
         return false;
       }
       if (!normalizedQuery) return true;
-      const inBook =
-        normalizeSearch(book.title).includes(normalizedQuery) ||
-        normalizeSearch(book.subtitle).includes(normalizedQuery) ||
-        normalizeSearch(book.author).includes(normalizedQuery);
-      const inEpisodes = book.episodes.some((ep) =>
-        normalizeSearch(ep.title).includes(normalizedQuery)
-      );
-      return inBook || inEpisodes;
+      return matchesBookKnowledgeQuery(book, normalizedQuery);
     });
-  }, [books, normalizedQuery, selectedHallSlug]);
+  }, [books, audienceFilter, normalizedQuery, selectedHallSlug]);
 
   const matchedEpisodes = useMemo(() => {
     if (!normalizedQuery) return [];
@@ -83,6 +85,7 @@ export default function BooksShelfPage() {
       episode: (typeof books)[number]['episodes'][number];
     }[] = [];
     for (const book of books) {
+      if (!matchesAudienceFilter(book, audienceFilter)) continue;
       if (
         selectedHallSlug !== 'ALL' &&
         !resolveBookHalls(book).some((h) => h.slug === selectedHallSlug)
@@ -90,16 +93,13 @@ export default function BooksShelfPage() {
         continue;
       }
       for (const ep of book.episodes) {
-        if (
-          normalizeSearch(ep.title).includes(normalizedQuery) ||
-          normalizeSearch(ep.episodeCode).includes(normalizedQuery)
-        ) {
+        if (matchesEpisodeKnowledgeQuery(ep, normalizedQuery)) {
           matches.push({ book, episode: ep });
         }
       }
     }
-    return matches.slice(0, 8);
-  }, [books, normalizedQuery, selectedHallSlug]);
+    return matches.slice(0, 10);
+  }, [books, audienceFilter, normalizedQuery, selectedHallSlug]);
 
   const washBg = isNight ? BOOK_PRESETS.moss.nightWash : BOOK_PRESETS.moss.dayWash;
 
@@ -168,7 +168,7 @@ export default function BooksShelfPage() {
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Tìm tên bộ sách hoặc tên tập truyện..."
+          placeholder="Tìm tên sách, tập, chủ đề hoặc khái niệm..."
           className="flex-1 bg-transparent outline-none text-sm"
         />
         {query && (
@@ -181,6 +181,30 @@ export default function BooksShelfPage() {
             <CloseIcon size={15} />
           </button>
         )}
+      </div>
+
+      {/* Audience Filter Pills */}
+      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+        {AUDIENCE_FILTER_PILLS.map((pill) => {
+          const active = audienceFilter === pill.key;
+          return (
+            <button
+              key={pill.key}
+              type="button"
+              onClick={() => setAudienceFilter(pill.key)}
+              style={{
+                backgroundColor: active ? 'var(--bg-elevated)' : 'var(--bg-surface)',
+                color: active ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                border: active
+                  ? '1.5px solid var(--accent-primary)'
+                  : '1px solid var(--border-hairline)'
+              }}
+              className="h-8 px-3 rounded-full text-xs font-medium shrink-0"
+            >
+              {pill.label}
+            </button>
+          );
+        })}
       </div>
 
       {/* Hall Filter Pills */}
@@ -239,6 +263,7 @@ export default function BooksShelfPage() {
             onClick={() => {
               setQuery('');
               setSelectedHallSlug('ALL');
+              setAudienceFilter('ALL');
             }}
             style={{ color: 'var(--accent-primary)' }}
             className="text-xs font-semibold underline"

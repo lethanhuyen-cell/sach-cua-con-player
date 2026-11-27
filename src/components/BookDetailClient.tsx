@@ -10,6 +10,11 @@ import {
   getEpisodeDurationLabel,
   isEpisodeReadingOnly
 } from '@/lib/presets';
+import {
+  getBookLineByCode,
+  getConceptBySlug,
+  matchesEpisodeKnowledgeQuery
+} from '@/lib/knowledge';
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
 import { BookCover } from './BookCover';
 import { StorybookHeroStage } from './StorybookHeroStage';
@@ -38,6 +43,7 @@ interface CollectionGroup {
 
 export function BookDetailClient({ book }: { book: HydratedBook }) {
   const {
+    books,
     isNight,
     toggleNight,
     favorites,
@@ -186,12 +192,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
     const q = searchQuery.normalize('NFC').trim().toLowerCase();
 
     if (q) {
-      return book.episodes.filter(
-        (ep) =>
-          ep.episodeCode.toLowerCase().includes(q) ||
-          ep.title.normalize('NFC').toLowerCase().includes(q) ||
-          (ep.categoryTag || '').normalize('NFC').toLowerCase().includes(q)
-      );
+      return book.episodes.filter((ep) => matchesEpisodeKnowledgeQuery(ep, q));
     }
 
     if (quickFilter === 'new') {
@@ -266,6 +267,51 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
     }
     return list;
   }, [filteredEpisodes, searchQuery, totalChunks]);
+
+  const bookKnowledgeSummary = useMemo(() => {
+    const primaryLine = getBookLineByCode(book.knowledgeMeta?.primaryLine);
+    const secondaryLines = (book.knowledgeMeta?.secondaryLines || [])
+      .map((code) => getBookLineByCode(code))
+      .filter((x): x is NonNullable<typeof x> => Boolean(x));
+    const concepts = (book.knowledgeMeta?.crossCuttingConcepts || [])
+      .map((slug) => getConceptBySlug(slug)?.label || slug)
+      .filter(Boolean);
+    return { primaryLine, secondaryLines, concepts };
+  }, [book.knowledgeMeta]);
+
+  const resolvedCuriosityTrails = useMemo(() => {
+    const episodeLookup = new Map<
+      string,
+      { targetBook: HydratedBook; targetEpisode: HydratedEpisode }
+    >();
+    for (const b of books) {
+      for (const ep of b.episodes) {
+        episodeLookup.set(ep.id, { targetBook: b, targetEpisode: ep });
+      }
+    }
+
+    const items: {
+      sourceEpisode: HydratedEpisode;
+      bridgeQuestion: string;
+      targetBook: HydratedBook;
+      targetEpisode: HydratedEpisode;
+    }[] = [];
+
+    for (const ep of book.episodes) {
+      for (const trail of ep.knowledgeMeta?.curiosityTrails || []) {
+        const found = episodeLookup.get(trail.targetEpisodeId);
+        if (found) {
+          items.push({
+            sourceEpisode: ep,
+            bridgeQuestion: trail.bridgeQuestion,
+            targetBook: found.targetBook,
+            targetEpisode: found.targetEpisode
+          });
+        }
+      }
+    }
+    return items.slice(0, 4);
+  }, [book.episodes, books]);
 
   const hasAudioBook = Boolean(primaryAudioTarget);
   const summaryStats = hasAudioBook
@@ -451,13 +497,40 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
           {showIntro && book.description && (
             <div
               style={{ borderTop: '1px solid var(--border-hairline)' }}
-              className="mt-3 pt-2.5 text-xs leading-relaxed space-y-1"
+              className="mt-3 pt-2.5 text-xs leading-relaxed space-y-1.5"
             >
               <p>{book.description}</p>
               {book.author && (
                 <p style={{ color: 'var(--text-secondary)' }}>
                   Tác giả: {book.author} · Độ tuổi: {book.ageRange}
                 </p>
+              )}
+              {bookKnowledgeSummary.primaryLine && (
+                <p style={{ color: 'var(--text-secondary)' }}>
+                  Dòng sách: {bookKnowledgeSummary.primaryLine.title}
+                  {bookKnowledgeSummary.secondaryLines.length > 0
+                    ? ` · Giao thoa: ${bookKnowledgeSummary.secondaryLines
+                        .map((l) => l.title)
+                        .join(', ')}`
+                    : ''}
+                </p>
+              )}
+              {bookKnowledgeSummary.concepts.length > 0 && (
+                <div className="pt-0.5 flex flex-wrap gap-1">
+                  {bookKnowledgeSummary.concepts.map((label) => (
+                    <span
+                      key={label}
+                      style={{
+                        backgroundColor: 'var(--bg-surface)',
+                        border: '1px solid var(--border-hairline)',
+                        color: 'var(--text-secondary)'
+                      }}
+                      className="px-2 py-0.5 rounded-[5px] text-[11px]"
+                    >
+                      {label}
+                    </span>
+                  ))}
+                </div>
               )}
             </div>
           )}
@@ -483,7 +556,7 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
                   type="search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Tìm số tập hoặc tên tập..."
+                  placeholder="Tìm số tập, tên tập hoặc chủ đề..."
                   className="flex-1 bg-transparent outline-none text-xs min-w-0"
                 />
                 {searchQuery && (
@@ -824,6 +897,39 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
             >
               Chặng tiếp &rarr;
             </button>
+          </div>
+        )}
+
+        {/* 5. Cross-Disciplinary Curiosity Trails (Only on Book TOC, never on Episode Reader) */}
+        {resolvedCuriosityTrails.length > 0 && !searchQuery.trim() && quickFilter === 'none' && (
+          <div className="pt-3 space-y-2">
+            <h2 className="vn-eyebrow" style={{ color: 'var(--text-secondary)' }}>
+              Mạch kết nối liên ngành
+            </h2>
+            <div className="space-y-2">
+              {resolvedCuriosityTrails.map((trail, idx) => (
+                <Link
+                  key={`${trail.sourceEpisode.id}-${trail.targetEpisode.id}-${idx}`}
+                  href={`/episodes/${trail.targetEpisode.id}`}
+                  style={{
+                    backgroundColor: 'var(--bg-elevated)',
+                    border: '1px solid var(--border-hairline)'
+                  }}
+                  className="block rounded-[10px] p-3 space-y-1 transition hover:opacity-90"
+                >
+                  <p className="text-xs font-editorial leading-relaxed">
+                    {trail.bridgeQuestion}
+                  </p>
+                  <p
+                    className="text-[11px] font-medium truncate tabular-nums"
+                    style={{ color: accentColor }}
+                  >
+                    Từ Tập {trail.sourceEpisode.episodeCode} &rarr; {trail.targetBook.title} · Tập{' '}
+                    {trail.targetEpisode.episodeCode}: {trail.targetEpisode.title}
+                  </p>
+                </Link>
+              ))}
+            </div>
           </div>
         )}
         </section>

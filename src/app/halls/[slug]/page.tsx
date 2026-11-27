@@ -1,7 +1,12 @@
 import React from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { getPublishedLibrary } from '@/lib/repository';
-import { getHallBySlug, LIBRARY_HALLS, resolveBookHalls } from '@/lib/halls';
+import {
+  getHallBySlug,
+  LIBRARY_HALLS,
+  resolveBookHalls,
+  resolveLegacyHallSlug
+} from '@/lib/halls';
 import { HallShelfClient } from '@/components/HallShelfClient';
 
 export const dynamic = 'force-dynamic';
@@ -14,6 +19,10 @@ export default async function HallDetailPage({
   const { slug } = await params;
   const hall = getHallBySlug(slug);
   if (!hall) {
+    const legacyTarget = resolveLegacyHallSlug(slug);
+    if (legacyTarget) {
+      redirect(`/halls/${legacyTarget}`);
+    }
     notFound();
   }
 

@@ -434,7 +434,7 @@ export function LibraryWayfinder({
                         : `Đang ở: ${targetHall.title}`}
                   </p>
                   <div className="flex flex-wrap gap-1.5">
-                    {(litHalls.length > 0 ? litHalls : LIBRARY_HALLS).map((h) => {
+                    {LIBRARY_HALLS.map((h) => {
                       const isActiveHall =
                         shelfBranch === 'hall' && h.slug === targetHall.slug;
                       return (

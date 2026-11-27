@@ -13,11 +13,10 @@ import {
   CloseIcon,
   CompassIcon,
   FeatherIcon,
-  HearthCupIcon,
+  InventionSparkIcon,
   LanternIcon,
   LeafIcon,
   MoonIcon,
-  MusicSparkIcon,
   PauseIcon,
   PlayIcon,
   SearchIcon,
@@ -37,6 +36,11 @@ import {
   getEpisodeDurationLabel,
   isEpisodeReadingOnly
 } from '@/lib/presets';
+import {
+  AUDIENCE_FILTER_PILLS,
+  AudienceFilterKey,
+  matchesAudienceFilter
+} from '@/lib/knowledge';
 
 function getContinuePercent(item: ContinueSuggestion): number {
   if (item.mode === 'reading') {
@@ -53,18 +57,16 @@ function getContinuePercent(item: ContinueSuggestion): number {
 
 function HallIcon({ slug, size = 16 }: { slug: LibraryHallSlug; size?: number }) {
   switch (slug) {
-    case 'khoa-hoc-tu-nhien':
+    case 'thien-nhien-ky-thu':
       return <LeafIcon size={size} />;
-    case 'am-thuc-nep-nha':
-      return <HearthCupIcon size={size} />;
-    case 'van-hoc-dong-thoai':
-      return <FeatherIcon size={size} />;
-    case 'lich-su-van-hoa':
+    case 'chuyen-xua-va-the-gioi':
       return <CompassIcon size={size} />;
-    case 'nghe-thuat-tho-nhac':
-      return <MusicSparkIcon size={size} />;
-    case 'ky-nang-lon-khon':
+    case 'the-gioi-hom-nay':
+      return <InventionSparkIcon size={size} />;
+    case 'lon-len-moi-ngay':
       return <LanternIcon size={size} />;
+    case 'vuon-tri-tue':
+      return <FeatherIcon size={size} />;
   }
 }
 
@@ -90,6 +92,23 @@ export default function HomeLibraryPage() {
   const [isOpeningGate, setIsOpeningGate] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [isHeroZoomOpen, setIsHeroZoomOpen] = useState(false);
+  const [audienceFilter, setAudienceFilter] = useState<AudienceFilterKey>('ALL');
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('litibook_audience_filter_v1');
+      if (saved === 'ALL' || saved === 'CHILD' || saved === 'TEEN') {
+        setAudienceFilter(saved);
+      }
+    } catch {}
+  }, []);
+
+  const handleAudienceChange = (next: AudienceFilterKey) => {
+    setAudienceFilter(next);
+    try {
+      localStorage.setItem('litibook_audience_filter_v1', next);
+    } catch {}
+  };
 
   useEffect(() => {
     if (!isHeroZoomOpen) return;
@@ -100,19 +119,31 @@ export default function HomeLibraryPage() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [isHeroZoomOpen]);
 
-  const activeResumes = useMemo(() => continueItems.slice(0, 2), [continueItems]);
-  const recentArrivals = useMemo(
-    () => newEpisodesAcrossLibrary.slice(0, 4),
-    [newEpisodesAcrossLibrary]
+  const visibleBooks = useMemo(
+    () => books.filter((b) => matchesAudienceFilter(b, audienceFilter)),
+    [books, audienceFilter]
   );
 
-  // Group published books into the 6 Halls (supporting primary + cross-disciplinary halls)
+  const activeResumes = useMemo(() => continueItems.slice(0, 2), [continueItems]);
+  const visibleNewEpisodes = useMemo(
+    () =>
+      newEpisodesAcrossLibrary.filter(({ book }) =>
+        matchesAudienceFilter(book, audienceFilter)
+      ),
+    [newEpisodesAcrossLibrary, audienceFilter]
+  );
+  const recentArrivals = useMemo(
+    () => visibleNewEpisodes.slice(0, 4),
+    [visibleNewEpisodes]
+  );
+
+  // Group visible published books into the 5 Halls (supporting primary + cross-disciplinary halls)
   const booksByHall = useMemo(() => {
     const map = new Map<LibraryHallSlug, typeof books>();
     for (const h of LIBRARY_HALLS) {
       map.set(h.slug, []);
     }
-    for (const b of books) {
+    for (const b of visibleBooks) {
       for (const hall of resolveBookHalls(b)) {
         const list = map.get(hall.slug) || [];
         if (!list.some((existing) => existing.id === b.id)) {
@@ -122,7 +153,7 @@ export default function HomeLibraryPage() {
       }
     }
     return map;
-  }, [books]);
+  }, [visibleBooks]);
 
   const handleOpenGate = () => {
     if (isOpeningGate) return;
@@ -251,7 +282,7 @@ export default function HomeLibraryPage() {
   // ============================================================================
   const foyerArtSrc = isNight ? FOYER_HERO_ART.night : FOYER_HERO_ART.day;
   const foyerWashBg = isNight ? BOOK_PRESETS.moss.nightWash : BOOK_PRESETS.moss.dayWash;
-  const totalPublishedEpisodes = books.reduce((sum, b) => sum + b.episodes.length, 0);
+  const totalPublishedEpisodes = visibleBooks.reduce((sum, b) => sum + b.episodes.length, 0);
 
   const resumeSummaryLabel = (() => {
     if (activeResumes.length === 0) return '';
@@ -373,8 +404,40 @@ export default function HomeLibraryPage() {
             className="text-xs md:text-[13px] mt-0.5 tabular-nums"
             style={{ color: 'var(--text-secondary)' }}
           >
-            {books.length} bộ sách · {LIBRARY_HALLS.length} kệ chủ đề · {totalPublishedEpisodes} tập
+            {visibleBooks.length} bộ sách · {LIBRARY_HALLS.length} kệ chủ đề · {totalPublishedEpisodes} tập
           </p>
+
+          {/* Subtle Age-Tier Filter Bar (4–10 vs 11–15) */}
+          <div
+            role="group"
+            aria-label="Lọc tủ sách theo độ tuổi"
+            style={{
+              backgroundColor: 'var(--bg-surface)',
+              border: '1px solid var(--border-hairline)'
+            }}
+            className="mt-3 p-0.5 rounded-full inline-flex items-center gap-0.5 max-w-full overflow-x-auto no-scrollbar"
+          >
+            {AUDIENCE_FILTER_PILLS.map((pill) => {
+              const active = audienceFilter === pill.key;
+              return (
+                <button
+                  key={pill.key}
+                  type="button"
+                  onClick={() => handleAudienceChange(pill.key)}
+                  style={{
+                    backgroundColor: active ? 'var(--bg-elevated)' : 'transparent',
+                    color: active ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                    border: active ? '1px solid var(--border-hairline)' : '1px solid transparent'
+                  }}
+                  className={`h-7 px-3 rounded-full text-[11.5px] whitespace-nowrap transition ${
+                    active ? 'font-semibold shadow-sm' : 'font-medium hover:opacity-85'
+                  }`}
+                >
+                  {pill.label}
+                </button>
+              );
+            })}
+          </div>
 
           {/* Ultra-Minimalist 1-Line Collapsible "Đang đọc / Đang nghe" Trigger */}
           {activeResumes.length > 0 && (
@@ -505,7 +568,7 @@ export default function HomeLibraryPage() {
       {/* Main Rich Visual Body (Full 1040px Editorial Spread) */}
       <div className="px-4 md:px-7 mt-6 md:mt-8 space-y-8 md:space-y-10">
         {/* TẦNG 1: TỦ SÁCH NỔI BẬT (Trưng bày Bìa Bộ Sách 3:4 cỡ lớn) */}
-        {books.length > 0 && (
+        {visibleBooks.length > 0 && (
           <section aria-label="Tủ sách nổi bật">
             <div className="flex items-baseline justify-between gap-2 mb-3.5">
               <div>
@@ -522,13 +585,13 @@ export default function HomeLibraryPage() {
                 style={{ color: 'var(--accent-primary)' }}
                 className="text-xs font-semibold inline-flex items-center gap-1 shrink-0 hover:underline"
               >
-                <span>Tất cả ({books.length})</span>
+                <span>Tất cả ({visibleBooks.length})</span>
                 <ChevronRightIcon size={14} />
               </Link>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-              {books.map((book) => {
+              {visibleBooks.map((book) => {
                 const audioEps = book.episodes.filter((ep) => !isEpisodeReadingOnly(ep));
                 const isAudioBook = audioEps.length > 0;
 
@@ -614,6 +677,7 @@ export default function HomeLibraryPage() {
                         className="text-[11.5px] font-medium tabular-nums"
                         style={{ color: 'var(--text-secondary)' }}
                       >
+                        {book.ageRange ? `${book.ageRange} · ` : ''}
                         {statsLabel}
                       </p>
 
@@ -674,18 +738,18 @@ export default function HomeLibraryPage() {
           </section>
         )}
 
-        {/* TẦNG 2: KHÁM PHÁ 6 KỆ SÁCH BẰNG TRANH MÀU NƯỚC THẬT (Ngày / Đêm) */}
+        {/* TẦNG 2: CÁC KỆ SÁCH (5 Thể loại chuẩn + Bộ tranh màu nước Ngày / Đêm độc bản) */}
         <section aria-label="Các kệ sách">
           <div className="mb-3.5">
             <h2 className="text-[18.5px] md:text-[22px] font-bold font-editorial">
-              Khám phá các kệ sách
+              Các kệ sách
             </h2>
             <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-              Mỗi kệ là một không gian tranh màu nước riêng theo từng chủ đề
+              5 không gian tri thức và câu chuyện theo từng chủ đề
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+          <div className="flex flex-wrap justify-center gap-3 md:gap-4">
             {LIBRARY_HALLS.map((hall) => {
               const hallBooks = booksByHall.get(hall.slug) || [];
               const isLit = hallBooks.length > 0;
@@ -694,14 +758,22 @@ export default function HomeLibraryPage() {
               const accentColor = isNight ? preset.nightAccent : preset.dayAccent;
               const hallArtSrc = isNight ? hall.nightHeroUrl : hall.dayHeroUrl;
 
-              const cardContent = (
-                <>
+              return (
+                <Link
+                  key={hall.slug}
+                  href={`/halls/${hall.slug}`}
+                  style={{
+                    backgroundColor: 'var(--bg-elevated)',
+                    border: '1px solid var(--border-hairline)'
+                  }}
+                  className="group w-[calc(50%-6px)] md:w-[calc(33.333%-11px)] rounded-[12px] overflow-hidden flex flex-col shadow-sm transition hover:shadow-md active:scale-[0.99]"
+                >
                   <div
                     style={{
                       backgroundColor: isNight ? preset.nightWash : preset.dayWash,
                       borderBottom: '1px solid var(--border-hairline)'
                     }}
-                    className="w-full aspect-[4/3] overflow-hidden relative"
+                    className="w-full aspect-[3/4] overflow-hidden relative"
                   >
                     <img
                       src={hallArtSrc}
@@ -713,25 +785,25 @@ export default function HomeLibraryPage() {
 
                   <div className="p-3 md:p-3.5 flex-1 flex flex-col justify-between">
                     <div>
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-start gap-1.5">
                         <span
                           style={{
                             color: isLit ? accentColor : 'var(--text-secondary)'
                           }}
-                          className="shrink-0"
+                          className="shrink-0 mt-0.5"
                         >
                           <HallIcon slug={hall.slug} size={15} />
                         </span>
-                        <h3 className="text-[14.5px] md:text-[16px] font-bold font-editorial leading-snug truncate">
+                        <h3 className="text-[14.5px] md:text-[16.5px] font-bold font-editorial leading-snug">
                           {hall.shortTitle}
                         </h3>
                       </div>
 
                       <p
-                        className="text-[11.5px] mt-1 line-clamp-2 leading-relaxed"
+                        className="text-[11.5px] md:text-xs mt-1 line-clamp-2 leading-relaxed"
                         style={{ color: 'var(--text-secondary)' }}
                       >
-                        {hall.epigraph}
+                        ({hall.epigraph})
                       </p>
                     </div>
 
@@ -748,48 +820,15 @@ export default function HomeLibraryPage() {
                         {isLit ? `${hallBooks.length} bộ · ${totalEps} tập` : 'Sắp có sách'}
                       </span>
 
-                      {isLit && (
-                        <span
-                          style={{ color: 'var(--accent-warm)' }}
-                          className="font-semibold inline-flex items-center gap-0.5 shrink-0"
-                        >
-                          <span>Mở kệ</span>
-                          <ChevronRightIcon size={12} />
-                        </span>
-                      )}
+                      <span
+                        style={{ color: isLit ? 'var(--accent-warm)' : 'var(--text-secondary)' }}
+                        className="font-semibold inline-flex items-center gap-0.5 shrink-0"
+                      >
+                        <span>{isLit ? 'Mở kệ' : 'Xem kệ'}</span>
+                        <ChevronRightIcon size={12} />
+                      </span>
                     </div>
                   </div>
-                </>
-              );
-
-              if (!isLit) {
-                return (
-                  <div
-                    key={hall.slug}
-                    aria-disabled="true"
-                    style={{
-                      backgroundColor: 'var(--bg-surface)',
-                      border: '1px solid var(--border-hairline)',
-                      opacity: 0.78
-                    }}
-                    className="rounded-[12px] overflow-hidden flex flex-col select-none"
-                  >
-                    {cardContent}
-                  </div>
-                );
-              }
-
-              return (
-                <Link
-                  key={hall.slug}
-                  href={`/halls/${hall.slug}`}
-                  style={{
-                    backgroundColor: 'var(--bg-elevated)',
-                    border: '1px solid var(--border-hairline)'
-                  }}
-                  className="group rounded-[12px] overflow-hidden flex flex-col shadow-sm transition hover:shadow-md active:scale-[0.99]"
-                >
-                  {cardContent}
                 </Link>
               );
             })}
@@ -812,7 +851,7 @@ export default function HomeLibraryPage() {
                 className="text-xs font-semibold tabular-nums shrink-0"
                 style={{ color: 'var(--accent-warm)' }}
               >
-                {newEpisodesAcrossLibrary.length} tập mới
+                {visibleNewEpisodes.length} tập mới
               </span>
             </div>
 

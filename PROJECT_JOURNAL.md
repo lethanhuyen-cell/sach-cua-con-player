@@ -1,6 +1,6 @@
 # NHẬT KÝ & SỔ TAY BÀN GIAO DỰ ÁN THƯ VIỆN ĐỒI MƠ (`PROJECT_JOURNAL.md`)
 
-**Cập nhật lần cuối:** `2026-11-26 20:55 (GMT+7)`  
+**Cập nhật lần cuối:** `2026-11-27 19:35 (GMT+7)`  
 **Định danh chính thức:** **Thư viện Đồi Mơ** (*Sách đọc và nghe trước giờ ngủ · Copyright © Nancy & Liti*)  
 **Ranh giới dự án:** Thư viện chỉ đảm nhận lưu trữ, phân loại, trình bày sách đọc/sách nói gia đình và quản trị xuất bản qua `/admin` — **tách biệt hoàn toàn** với khâu sáng tác nội dung gốc hay vẽ tranh minh họa bên ngoài.
 
@@ -43,6 +43,7 @@
 | **Tối 26/11/2026** | **Chặng 8: Đồng bộ Bản văn Mới & 7 Track Audio 48kHz Chặng 1 Tiểu Hạt Dẻ** | Cập nhật bản văn đã biên tập khử lỗi AI và gắn đủ `7` file MP3 `48kHz` giọng `Nam · Thiền Tâm Đức` (`01..07_THD_001..007_Thien_Tam_Duc_48kHz.mp3`, tổng `1h 24m 05s`) cho `ep-thd-01` → `ep-thd-07` trong `data/library_db.json`, dọn bỏ 2 file thu nháp cũ lệch bản văn và đẩy lên GitHub/Vercel (`commit 312e642`). |
 | **Tối 26/11/2026** | **Chặng 9: Đồng bộ Trọn Bộ Bìa & 72 Tranh Minh Họa Dọc `3:4` *Miền Dâu Dại* (`v3.0`) Cho *Lim và Vacci*** | Cập nhật bìa đại diện bộ sách `lim-vacci-cover.jpg` (nhà hốc sồi ấm cúng `v3.0`), toàn bộ `11` bìa tập (`00`–`10`) và **`72` tranh minh họa cuộn dọc `3:4`** (`scene_01..08.jpg`, điểm nhìn nhân vật `30–50 cm` đan nét bút sắt màu nước không ám vàng, bỏ giỏ mây & bỏ đom đóm) neo chuẩn theo đoạn văn vào `data/library_db.json` (tự động mở khóa chế độ `[Đọc truyện | Xem tranh]` & Lightbox cho cả 10 tập `01`–`10`, bảo toàn nguyên vẹn 21 tập *Tiểu Hạt Dẻ* và 29 bản thu 48kHz). |
 | **Đêm 26/11/2026** | **Chặng 10: Hoàn thiện Định vị 5 Nấc (`LibraryWayfinder`), Chuẩn hóa Kệ Sách & Đóng Gói Bộ Quy Trình Chuẩn Cuối** | Phát triển và tích hợp toàn diện thành phần `LibraryWayfinder` 5 nấc (`Cổng` ➔ `Sảnh` ➔ `Kệ` ➔ `Bộ` ➔ `Tập`) kèm khay chuyển đổi không gian thông minh trên toàn bộ các trang và bên trong Trình phát ru ngủ; chuẩn hóa thống nhất thuật ngữ "Kệ sách" (`Kệ Khoa học & Tự nhiên`, `Kệ Ẩm thực & Nếp nhà`, v.v.); cập nhật hàm điều hướng mượt mà `navigateToGate` / `navigateToFoyer` không gián đoạn âm thanh; lưu trữ và đóng gói toàn diện Cẩm nang & Quy trình vận hành chuẩn cuối. |
+| **Tối 27/11/2026** | **Chặng 11: Chuẩn hóa 5 Kệ Sách Mới, Kiến trúc Tri thức v2.0 (11–15 tuổi) & Metadata Liên ngành** | Tinh gọn hệ thống Kệ giao diện thành `5` Kệ chủ đạo kèm `10` tranh Ngày/Đêm đồng bộ (`Thiên nhiên kỳ thú`, `Chuyện xưa và thế giới`, `Thế giới hôm nay`, `Lớn lên mỗi ngày`, `Vườn trí tuệ`); ban hành [KIEN_TRUC_TRI_THUC_DOI_MO.md](./KIEN_TRUC_TRI_THUC_DOI_MO.md) (`6` Trụ cột, `18` Dòng sách + `V.3` dự phòng Toán học, Danh mục ưu tiên Lớp 6); nâng cấp `data/library_db.json` lên `schemaVersion: "2.0"`, gắn nhãn tri thức liên ngành & mạch kết nối (`curiosityTrails`) cho `2` bộ / `32` tập (chuyển *Tiểu Hạt Dẻ* sang `7–13 tuổi`), bổ sung bộ lọc độ tuổi, tìm kiếm khái niệm xuyên ngành và trình gắn nhãn CMS v2.0. |
 
 ---
 
@@ -50,10 +51,11 @@
 
 ### Tài liệu Cốt lõi (Đọc theo thứ tự ưu tiên)
 1. [GEMINI.md](./GEMINI.md) — **Hiến pháp bất khả xâm phạm** (Điều 1–3).
-2. [QUY_TRINH_THU_VIEN_DOI_MO.md](./QUY_TRINH_THU_VIEN_DOI_MO.md) — **Bộ Quy trình Vận hành Chuẩn cuối** (4 quy trình cốt lõi).
-3. [CAM_NANG_THU_VIEN_DOI_MO.md](./CAM_NANG_THU_VIEN_DOI_MO.md) — **Cẩm nang Thiết kế & Vận hành Chuẩn cuối** (Bảng màu, Typography, Wayfinder 5 nấc, 6 Kệ sách, Khóa Storage).
-4. [PROJECT_JOURNAL.md](./PROJECT_JOURNAL.md) — **Nhật ký & Sổ tay Bàn giao Toàn diện**.
-5. [OPTIMAL_UX_DESIGN_BRIEF.md](./OPTIMAL_UX_DESIGN_BRIEF.md) — **Hồ sơ Đặc tả Trải nghiệm & Thiết kế Không gian 6 Lớp**.
+2. [KIEN_TRUC_TRI_THUC_DOI_MO.md](./KIEN_TRUC_TRI_THUC_DOI_MO.md) — **Kiến trúc Tri thức v2.0 & Danh mục Xuất bản Khai phóng (11–15 tuổi, trọng tâm Lớp 6)**.
+3. [QUY_TRINH_THU_VIEN_DOI_MO.md](./QUY_TRINH_THU_VIEN_DOI_MO.md) — **Bộ Quy trình Vận hành Chuẩn cuối** (4 quy trình cốt lõi).
+4. [CAM_NANG_THU_VIEN_DOI_MO.md](./CAM_NANG_THU_VIEN_DOI_MO.md) — **Cẩm nang Thiết kế & Vận hành Chuẩn cuối**.
+5. [PROJECT_JOURNAL.md](./PROJECT_JOURNAL.md) — **Nhật ký & Sổ tay Bàn giao Toàn diện**.
+6. [OPTIMAL_UX_DESIGN_BRIEF.md](./OPTIMAL_UX_DESIGN_BRIEF.md) — **Hồ sơ Đặc tả Trải nghiệm & Thiết kế Không gian 6 Lớp**.
 
 ### Tài liệu Kiến trúc & Mockup Tham chiếu
 - [ARCHITECTURE.md](./ARCHITECTURE.md) — Kiến trúc hệ thống Next.js + Supabase + Cloudflare R2.

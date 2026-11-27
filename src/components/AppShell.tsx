@@ -11,6 +11,7 @@ import {
   BookmarkIcon,
   BookOpenIcon,
   ChevronDownIcon,
+  CloseIcon,
   Forward15Icon,
   LockIcon,
   MicIcon,
@@ -39,6 +40,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     sleepRemainingSeconds,
     isFullPlayerOpen,
     isKidLocked,
+    showInAppBrowserAudioHint,
     favorites,
     hasPassedGate,
     toggleFavorite,
@@ -52,6 +54,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     selectSleepChoice,
     setFullPlayerOpen,
     setKidLocked,
+    dismissInAppBrowserAudioHint,
     retryPlayback
   } = useLibraryPlayer();
 
@@ -159,6 +162,29 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 style={{ width: `${progressPct}%`, backgroundColor: 'var(--accent-warm)' }}
               />
             </div>
+            {showInAppBrowserAudioHint && (
+              <div
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  backgroundColor: 'var(--bg-surface)',
+                  borderBottom: '1px solid var(--border-hairline)',
+                  color: 'var(--text-secondary)'
+                }}
+                className="px-3 py-1 flex items-center justify-between gap-2 text-[11px] leading-[1.45]"
+              >
+                <span className="truncate">
+                  Mở bằng Safari hoặc Chrome để tắt màn hình không ngắt tiếng
+                </span>
+                <button
+                  type="button"
+                  aria-label="Đóng nhắc nhở trình duyệt"
+                  onClick={dismissInAppBrowserAudioHint}
+                  className="w-5 h-5 flex items-center justify-center shrink-0 opacity-75 hover:opacity-100"
+                >
+                  <CloseIcon size={12} />
+                </button>
+              </div>
+            )}
             <div className="px-3 py-2 flex items-center gap-3 h-[58px]">
               <div
                 className="w-9 h-12 rounded-[5px] overflow-hidden shrink-0"
@@ -358,6 +384,29 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               >
                 <MicIcon size={13} />
                 <span>{activeTrack.voiceProfile.displayName}</span>
+              </div>
+            )}
+
+            {showInAppBrowserAudioHint && !isKidLocked && (
+              <div
+                style={{
+                  backgroundColor: 'var(--bg-surface)',
+                  border: '1px solid var(--border-hairline)',
+                  color: 'var(--text-secondary)'
+                }}
+                className="mt-3 px-3 py-1.5 rounded-[8px] text-[11.5px] leading-[1.45] inline-flex items-center gap-2 max-w-full"
+              >
+                <span className="truncate">
+                  Mở bằng Safari hoặc Chrome để tắt màn hình không ngắt tiếng
+                </span>
+                <button
+                  type="button"
+                  aria-label="Đóng nhắc nhở trình duyệt"
+                  onClick={dismissInAppBrowserAudioHint}
+                  className="w-5 h-5 flex items-center justify-center shrink-0 opacity-75 hover:opacity-100"
+                >
+                  <CloseIcon size={13} />
+                </button>
               </div>
             )}
 

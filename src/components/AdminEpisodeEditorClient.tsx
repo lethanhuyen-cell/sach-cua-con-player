@@ -4,11 +4,20 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
+  BookLineCode,
+  CuriosityTrailLink,
   HydratedBook,
   HydratedEpisode,
+  KnowledgeMetadata,
   PublishStatus,
   VoiceProfile
 } from '@/lib/types';
+import {
+  ACTIVE_BOOK_LINES,
+  CROSS_CUTTING_CONCEPTS,
+  KNOWLEDGE_PILLARS,
+  getBookLineByCode
+} from '@/lib/knowledge';
 import { countWords, parseStoryMarkdown } from '@/lib/markdown';
 import { formatDurationShort, isEpisodeReadingOnly } from '@/lib/presets';
 import {
@@ -18,6 +27,7 @@ import {
 import { BookCover } from './BookCover';
 import {
   CheckIcon,
+  ChevronDownIcon,
   ChevronLeftIcon,
   CloseIcon,
   EyeIcon,
@@ -131,6 +141,55 @@ export function AdminEpisodeEditorClient({
   );
   const [status, setStatus] = useState<PublishStatus>(initialEpisode?.status || 'draft');
 
+  // Knowledge Architecture v2.0 (Episode-level Interdisciplinary Metadata & Curiosity Trails)
+  const [knowledgeOpen, setKnowledgeOpen] = useState<boolean>(() =>
+    Boolean(
+      initialEpisode?.knowledgeMeta?.primaryLine ||
+        initialEpisode?.knowledgeMeta?.curiosityTrails?.length ||
+        isNew
+    )
+  );
+  const [primaryLine, setPrimaryLine] = useState<BookLineCode | ''>(
+    initialEpisode?.knowledgeMeta?.primaryLine ||
+      selectedBook?.knowledgeMeta?.primaryLine ||
+      ''
+  );
+  const [secondaryLines, setSecondaryLines] = useState<BookLineCode[]>(
+    initialEpisode?.knowledgeMeta?.secondaryLines || []
+  );
+  const [crossCuttingConcepts, setCrossCuttingConcepts] = useState<string[]>(
+    initialEpisode?.knowledgeMeta?.crossCuttingConcepts ||
+      selectedBook?.knowledgeMeta?.crossCuttingConcepts?.slice(0, 2) ||
+      []
+  );
+  const [topicKeywordsInput, setTopicKeywordsInput] = useState<string>(
+    (initialEpisode?.knowledgeMeta?.topicKeywords || []).join(', ')
+  );
+  const [curriculumAnchorsInput, setCurriculumAnchorsInput] = useState<string>(
+    (initialEpisode?.knowledgeMeta?.curriculumAnchors || []).join(', ')
+  );
+  const [curiosityTrails, setCuriosityTrails] = useState<CuriosityTrailLink[]>(
+    initialEpisode?.knowledgeMeta?.curiosityTrails || []
+  );
+
+  const toggleSecondaryLine = (code: BookLineCode) => {
+    setSecondaryLines((prev) => {
+      if (prev.includes(code)) return prev.filter((item) => item !== code);
+      if (prev.length >= 2) return [...prev.slice(1), code];
+      return [...prev, code];
+    });
+    setIsDirty(true);
+  };
+
+  const toggleConcept = (conceptSlug: string) => {
+    setCrossCuttingConcepts((prev) => {
+      if (prev.includes(conceptSlug)) return prev.filter((s) => s !== conceptSlug);
+      if (prev.length >= 6) return prev;
+      return [...prev, conceptSlug];
+    });
+    setIsDirty(true);
+  };
+
   const [isDirty, setIsDirty] = useState(false);
   const [autoSavedAt, setAutoSavedAt] = useState<string | null>(null);
   const [hasRestorableLocalDraft, setHasRestorableLocalDraft] = useState(false);
@@ -173,6 +232,16 @@ export function AdminEpisodeEditorClient({
       if (d.coverUrl !== undefined) setCoverUrl(d.coverUrl);
       if (d.isTextOnly !== undefined) setIsTextOnly(d.isTextOnly);
       if (d.contentMarkdown !== undefined) setContentMarkdown(d.contentMarkdown);
+      if (d.primaryLine !== undefined) setPrimaryLine(d.primaryLine);
+      if (Array.isArray(d.secondaryLines)) setSecondaryLines(d.secondaryLines);
+      if (Array.isArray(d.crossCuttingConcepts)) {
+        setCrossCuttingConcepts(d.crossCuttingConcepts);
+      }
+      if (d.topicKeywordsInput !== undefined) setTopicKeywordsInput(d.topicKeywordsInput);
+      if (d.curriculumAnchorsInput !== undefined) {
+        setCurriculumAnchorsInput(d.curriculumAnchorsInput);
+      }
+      if (Array.isArray(d.curiosityTrails)) setCuriosityTrails(d.curiosityTrails);
       setHasRestorableLocalDraft(false);
       setSuccessMsg('Đã khôi phục bản nháp tự lưu gần nhất trên trình duyệt.');
     } catch {}
@@ -193,7 +262,13 @@ export function AdminEpisodeEditorClient({
             summary,
             coverUrl,
             isTextOnly,
-            contentMarkdown
+            contentMarkdown,
+            primaryLine,
+            secondaryLines,
+            crossCuttingConcepts,
+            topicKeywordsInput,
+            curriculumAnchorsInput,
+            curiosityTrails
           })
         );
         const now = new Date();
@@ -212,7 +287,13 @@ export function AdminEpisodeEditorClient({
     summary,
     coverUrl,
     isTextOnly,
-    contentMarkdown
+    contentMarkdown,
+    primaryLine,
+    secondaryLines,
+    crossCuttingConcepts,
+    topicKeywordsInput,
+    curriculumAnchorsInput,
+    curiosityTrails
   ]);
 
   // Warn before closing browser tab when dirty
@@ -428,6 +509,26 @@ export function AdminEpisodeEditorClient({
     setSaving(true);
     setError(null);
     setSuccessMsg(null);
+    const parsedKeywords = topicKeywordsInput
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const parsedAnchors = curriculumAnchorsInput
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const knowledgeMetaPayload: KnowledgeMetadata = {
+      ...(initialEpisode?.knowledgeMeta || {}),
+      primaryPillar: undefined,
+      primaryLine: primaryLine || undefined,
+      secondaryLines,
+      crossCuttingConcepts,
+      topicKeywords: parsedKeywords,
+      curriculumAnchors: parsedAnchors,
+      curiosityTrails: curiosityTrails.filter(
+        (item) => item.targetEpisodeId.trim() && item.bridgeQuestion.trim()
+      )
+    };
     try {
       const res = await fetch('/api/admin/episodes', {
         method: 'POST',
@@ -444,6 +545,7 @@ export function AdminEpisodeEditorClient({
           contentMarkdown,
           isTextOnly,
           status: targetStatus,
+          knowledgeMeta: knowledgeMetaPayload,
           audioTracks: tracks
             .filter((t) => t.audioUrl.trim())
             .map((t) => ({
@@ -871,6 +973,292 @@ export function AdminEpisodeEditorClient({
                 )}
               </div>
             </div>
+          </div>
+
+          {/* Collapsible Knowledge Metadata v2.0 & Curiosity Trails */}
+          <div className="pt-3 border-t border-[var(--border-hairline)] space-y-3">
+            <button
+              type="button"
+              onClick={() => setKnowledgeOpen((prev) => !prev)}
+              className="w-full flex items-center justify-between gap-2 text-left"
+            >
+              <div>
+                <span className="block text-sm font-semibold font-editorial">
+                  Nhãn Tri thức Liên ngành &amp; Mạch kết nối (v2.0)
+                </span>
+                <span style={{ color: 'var(--text-secondary)' }}>
+                  Gắn dòng sách, khái niệm xuyên ngành và tối đa 2 cầu nối sang tập khác trên Mục lục Bộ sách.
+                </span>
+              </div>
+              <span
+                style={{ color: 'var(--text-secondary)' }}
+                className={`shrink-0 transition-transform ${knowledgeOpen ? 'rotate-180' : ''}`}
+              >
+                <ChevronDownIcon size={16} />
+              </span>
+            </button>
+
+            {knowledgeOpen && (
+              <div className="space-y-3.5 pt-1">
+                <div>
+                  <label className="block font-medium mb-1">Dòng sách chính của tập</label>
+                  <select
+                    value={primaryLine}
+                    onChange={(e) => {
+                      const nextCode = e.target.value as BookLineCode | '';
+                      setPrimaryLine(nextCode);
+                      if (nextCode) {
+                        setSecondaryLines((prev) => prev.filter((c) => c !== nextCode));
+                      }
+                      setIsDirty(true);
+                    }}
+                    style={{
+                      backgroundColor: 'var(--bg-canvas)',
+                      border: '1px solid var(--border-hairline)'
+                    }}
+                    className="w-full h-10 px-3 rounded-[7px] outline-none"
+                  >
+                    <option value="">-- Kế thừa từ Bộ sách --</option>
+                    {KNOWLEDGE_PILLARS.map((pillar) => (
+                      <optgroup key={pillar.code} label={pillar.title}>
+                        {ACTIVE_BOOK_LINES.filter((l) => l.pillar === pillar.code).map(
+                          (line) => (
+                            <option key={line.code} value={line.code}>
+                              {line.code} · {line.title}
+                            </option>
+                          )
+                        )}
+                      </optgroup>
+                    ))}
+                  </select>
+                  {primaryLine && (
+                    <p
+                      className="text-[11px] mt-1"
+                      style={{ color: 'var(--text-secondary)' }}
+                    >
+                      {getBookLineByCode(primaryLine)?.scopeSummary}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block font-medium mb-1.5">
+                    Dòng sách giao thoa (tối đa 2 dòng)
+                  </label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {ACTIVE_BOOK_LINES.filter((l) => l.code !== primaryLine).map((line) => {
+                      const active = secondaryLines.includes(line.code);
+                      return (
+                        <button
+                          key={line.code}
+                          type="button"
+                          onClick={() => toggleSecondaryLine(line.code)}
+                          style={{
+                            backgroundColor: active
+                              ? 'var(--accent-warm)'
+                              : 'var(--bg-canvas)',
+                            color: active
+                              ? 'var(--accent-primary-fg)'
+                              : 'var(--text-primary)',
+                            border: '1px solid var(--border-hairline)'
+                          }}
+                          className="h-7 px-2.5 rounded-[6px] text-[11px] font-medium py-0.5"
+                        >
+                          {line.code} · {line.title}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block font-medium mb-1.5">
+                    Khái niệm xuyên ngành ({crossCuttingConcepts.length}/6)
+                  </label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {CROSS_CUTTING_CONCEPTS.map((concept) => {
+                      const active = crossCuttingConcepts.includes(concept.slug);
+                      return (
+                        <button
+                          key={concept.slug}
+                          type="button"
+                          title={concept.hint}
+                          onClick={() => toggleConcept(concept.slug)}
+                          style={{
+                            backgroundColor: active
+                              ? 'var(--accent-primary)'
+                              : 'var(--bg-canvas)',
+                            color: active
+                              ? 'var(--accent-primary-fg)'
+                              : 'var(--text-primary)',
+                            border: '1px solid var(--border-hairline)'
+                          }}
+                          className="h-7 px-2.5 rounded-[6px] text-[11px] font-medium py-0.5"
+                        >
+                          {concept.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-medium mb-1">
+                      Từ khóa hạt nhân (phân tách dấu phẩy)
+                    </label>
+                    <input
+                      type="text"
+                      value={topicKeywordsInput}
+                      onChange={(e) => {
+                        setTopicKeywordsInput(e.target.value);
+                        setIsDirty(true);
+                      }}
+                      placeholder="vd: phát quang sinh học, enzyme luciferin"
+                      style={{
+                        backgroundColor: 'var(--bg-canvas)',
+                        border: '1px solid var(--border-hairline)'
+                      }}
+                      className="w-full h-10 px-3 rounded-[7px] outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medium mb-1">
+                      Neo chương trình phổ thông ẩn (tùy chọn)
+                    </label>
+                    <input
+                      type="text"
+                      value={curriculumAnchorsInput}
+                      onChange={(e) => {
+                        setCurriculumAnchorsInput(e.target.value);
+                        setIsDirty(true);
+                      }}
+                      placeholder="vd: KHTN-6:te-bao, CN-6:che-bien-thuc-pham"
+                      style={{
+                        backgroundColor: 'var(--bg-canvas)',
+                        border: '1px solid var(--border-hairline)'
+                      }}
+                      className="w-full h-10 px-3 rounded-[7px] outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Curiosity Trails (max 2, rendered only on Book Detail TOC, never on Episode Reader) */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <div>
+                      <span className="block font-medium">
+                        Mạch kết nối liên ngành ({curiosityTrails.length}/2)
+                      </span>
+                      <span
+                        className="text-[11px]"
+                        style={{ color: 'var(--text-secondary)' }}
+                      >
+                        Hiển thị dưới Mục lục Bộ sách (không bao giờ chèn hộp cuối trang đọc chữ).
+                      </span>
+                    </div>
+                    {curiosityTrails.length < 2 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCuriosityTrails((prev) => [
+                            ...prev,
+                            { targetEpisodeId: '', bridgeQuestion: '' }
+                          ]);
+                          setIsDirty(true);
+                        }}
+                        style={{
+                          backgroundColor: 'var(--bg-surface)',
+                          border: '1px solid var(--border-hairline)'
+                        }}
+                        className="h-8 px-2.5 rounded-[6px] inline-flex items-center gap-1 font-medium shrink-0"
+                      >
+                        <PlusIcon size={13} />
+                        <span>Thêm kết nối</span>
+                      </button>
+                    )}
+                  </div>
+
+                  {curiosityTrails.map((trail, tIdx) => (
+                    <div
+                      key={tIdx}
+                      style={{
+                        backgroundColor: 'var(--bg-canvas)',
+                        border: '1px solid var(--border-hairline)'
+                      }}
+                      className="rounded-[8px] p-2.5 space-y-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        <select
+                          value={trail.targetEpisodeId}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setCuriosityTrails((prev) =>
+                              prev.map((item, i) =>
+                                i === tIdx ? { ...item, targetEpisodeId: val } : item
+                              )
+                            );
+                            setIsDirty(true);
+                          }}
+                          style={{
+                            backgroundColor: 'var(--bg-elevated)',
+                            border: '1px solid var(--border-hairline)'
+                          }}
+                          className="flex-1 h-9 px-2.5 rounded-[6px] outline-none min-w-0"
+                        >
+                          <option value="">-- Chọn tập truyện đích --</option>
+                          {books.map((b) => (
+                            <optgroup key={b.id} label={b.title}>
+                              {b.episodes
+                                .filter((ep) => ep.id !== initialEpisode?.id)
+                                .map((ep) => (
+                                  <option key={ep.id} value={ep.id}>
+                                    Tập {ep.episodeCode} · {ep.title}
+                                  </option>
+                                ))}
+                            </optgroup>
+                          ))}
+                        </select>
+                        <button
+                          type="button"
+                          aria-label="Xóa kết nối này"
+                          onClick={() => {
+                            setCuriosityTrails((prev) =>
+                              prev.filter((_, i) => i !== tIdx)
+                            );
+                            setIsDirty(true);
+                          }}
+                          style={{ color: 'var(--accent-berry)' }}
+                          className="w-8 h-8 flex items-center justify-center shrink-0"
+                        >
+                          <TrashIcon size={14} />
+                        </button>
+                      </div>
+                      <input
+                        type="text"
+                        value={trail.bridgeQuestion}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setCuriosityTrails((prev) =>
+                            prev.map((item, i) =>
+                              i === tIdx ? { ...item, bridgeQuestion: val } : item
+                            )
+                          );
+                          setIsDirty(true);
+                        }}
+                        placeholder="Câu hỏi gợi mở tò mò sang tập đích..."
+                        style={{
+                          backgroundColor: 'var(--bg-elevated)',
+                          border: '1px solid var(--border-hairline)'
+                        }}
+                        className="w-full h-9 px-2.5 rounded-[6px] outline-none"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </section>
       )}

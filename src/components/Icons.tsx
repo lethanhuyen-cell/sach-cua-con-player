@@ -340,13 +340,24 @@ export function MusicSparkIcon({ size = 16, className }: IconProps) {
   );
 }
 
-export function LanternIcon({ size = 16, className }: IconProps) {
+export function LanternIcon({ size = 16, strokeWidth, className }: IconProps) {
   return (
-    <svg {...baseProps(size)} className={className}>
+    <svg {...baseProps(size, false, strokeWidth)} className={className}>
       <path d="M12 2v3" />
       <path d="M8 7h8l1 10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L8 7Z" />
       <path d="M9.5 7V6a2.5 2.5 0 0 1 5 0v1" />
       <line x1="12" y1="10.5" x2="12" y2="14.5" />
+    </svg>
+  );
+}
+
+export function InventionSparkIcon({ size = 16, strokeWidth, className }: IconProps) {
+  return (
+    <svg {...baseProps(size, false, strokeWidth)} className={className}>
+      <path d="M9 18h6" />
+      <path d="M10 21h4" />
+      <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A6 6 0 1 0 7.5 11.5c.76.76 1.23 1.52 1.41 2.5" />
+      <path d="M12 8v3" />
     </svg>
   );
 }

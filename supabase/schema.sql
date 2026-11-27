@@ -35,6 +35,7 @@ create table if not exists public.books (
   show_episode_numbers boolean not null default true,
   sort_order integer not null default 0,
   status text not null default 'draft' check (status in ('draft', 'published')),
+  knowledge_meta jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   deleted_at timestamptz default null
@@ -66,6 +67,7 @@ create table if not exists public.episodes (
   is_text_only boolean not null default false,
   sort_order integer not null default 0,
   status text not null default 'draft' check (status in ('draft', 'published')),
+  knowledge_meta jsonb not null default '{}'::jsonb,
   published_at timestamptz default null,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
@@ -96,9 +98,15 @@ create table if not exists public.illustrations (
   created_at timestamptz not null default now()
 );
 
--- Indexes for fast mobile queries (< 2.5s on 4G)
+-- Safe non-destructive migration for existing deployments (Knowledge Architecture v2.0)
+alter table public.books add column if not exists knowledge_meta jsonb not null default '{}'::jsonb;
+alter table public.episodes add column if not exists knowledge_meta jsonb not null default '{}'::jsonb;
+
+-- Indexes for fast mobile queries (< 2.5s on 4G) & faceted knowledge discovery
 create index if not exists idx_books_status on public.books(status, deleted_at, sort_order);
+create index if not exists idx_books_knowledge_meta on public.books using gin (knowledge_meta);
 create index if not exists idx_episodes_book on public.episodes(book_id, status, deleted_at, sort_order);
+create index if not exists idx_episodes_knowledge_meta on public.episodes using gin (knowledge_meta);
 create index if not exists idx_audio_episode on public.audio_tracks(episode_id, sort_order);
 create index if not exists idx_illustrations_episode on public.illustrations(episode_id, sort_order);
 
