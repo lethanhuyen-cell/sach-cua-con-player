@@ -55,9 +55,9 @@ export default function SavedArchivePage() {
       <header
         style={{
           backgroundColor: 'var(--bg-canvas)',
-          borderBottom: '1px solid var(--border-hairline)'
+          borderBottom: '1.5px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[44px] px-3 md:px-6 flex items-center justify-between gap-1.5"
+        className="sticky top-0 z-20 h-[72px] md:h-[86px] px-2.5 sm:px-3.5 md:px-7 flex items-center justify-between gap-1.5"
       >
         <LibraryWayfinder currentStep="shelf" shelfBranch="saved" />
         <button
@@ -65,9 +65,21 @@ export default function SavedArchivePage() {
           onClick={toggleNight}
           aria-label={isNight ? 'Giao diện sáng' : 'Giao diện đêm'}
           style={{ color: 'var(--text-primary)' }}
-          className="w-8 h-8 rounded-[7px] flex items-center justify-center shrink-0"
+          className="w-[38px] h-[38px] md:w-[46px] md:h-[46px] rounded-[10px] hover:bg-[var(--bg-surface)] flex items-center justify-center shrink-0 transition"
         >
-          {isNight ? <SunIcon size={16} /> : <MoonIcon size={16} />}
+          {isNight ? (
+            <SunIcon
+              size={24}
+              strokeWidth={1.85}
+              className="w-[23px] h-[23px] md:w-[28px] md:h-[28px]"
+            />
+          ) : (
+            <MoonIcon
+              size={24}
+              strokeWidth={1.85}
+              className="w-[23px] h-[23px] md:w-[28px] md:h-[28px]"
+            />
+          )}
         </button>
       </header>
 

@@ -3,65 +3,66 @@ import React from 'react';
 interface IconProps {
   size?: number;
   filled?: boolean;
+  strokeWidth?: number;
   className?: string;
 }
 
-const baseProps = (size: number, filled?: boolean) => ({
+const baseProps = (size: number, filled?: boolean, strokeWidth = 1.4) => ({
   width: size,
   height: size,
   viewBox: '0 0 24 24',
   fill: filled ? 'currentColor' : 'none',
   stroke: 'currentColor',
-  strokeWidth: 1.4,
+  strokeWidth,
   strokeLinecap: 'round' as const,
   strokeLinejoin: 'round' as const,
   'aria-hidden': true
 });
 
-export function HomeIcon({ size = 18, className }: IconProps) {
+export function HomeIcon({ size = 18, strokeWidth, className }: IconProps) {
   return (
-    <svg {...baseProps(size)} className={className}>
+    <svg {...baseProps(size, false, strokeWidth)} className={className}>
       <path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" />
     </svg>
   );
 }
 
-export function LibraryIcon({ size = 18, className }: IconProps) {
+export function LibraryIcon({ size = 18, strokeWidth, className }: IconProps) {
   return (
-    <svg {...baseProps(size)} className={className}>
+    <svg {...baseProps(size, false, strokeWidth)} className={className}>
       <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
     </svg>
   );
 }
 
-export function BookmarkIcon({ size = 18, filled = false, className }: IconProps) {
+export function BookmarkIcon({ size = 18, filled = false, strokeWidth, className }: IconProps) {
   return (
-    <svg {...baseProps(size, filled)} className={className}>
+    <svg {...baseProps(size, filled, strokeWidth)} className={className}>
       <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
     </svg>
   );
 }
 
-export function SunIcon({ size = 18, className }: IconProps) {
+export function SunIcon({ size = 18, strokeWidth, className }: IconProps) {
   return (
-    <svg {...baseProps(size)} className={className}>
+    <svg {...baseProps(size, false, strokeWidth)} className={className}>
       <circle cx="12" cy="12" r="4" />
       <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
     </svg>
   );
 }
 
-export function MoonIcon({ size = 18, className }: IconProps) {
+export function MoonIcon({ size = 18, strokeWidth, className }: IconProps) {
   return (
-    <svg {...baseProps(size)} className={className}>
+    <svg {...baseProps(size, false, strokeWidth)} className={className}>
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
     </svg>
   );
 }
 
-export function SearchIcon({ size = 18, className }: IconProps) {
+export function SearchIcon({ size = 18, strokeWidth, className }: IconProps) {
   return (
-    <svg {...baseProps(size)} className={className}>
+    <svg {...baseProps(size, false, strokeWidth)} className={className}>
       <circle cx="11" cy="11" r="7" />
       <path d="m20 20-3.5-3.5" />
     </svg>
@@ -85,17 +86,17 @@ export function PauseIcon({ size = 18, className }: IconProps) {
   );
 }
 
-export function ChevronLeftIcon({ size = 18, className }: IconProps) {
+export function ChevronLeftIcon({ size = 18, strokeWidth, className }: IconProps) {
   return (
-    <svg {...baseProps(size)} className={className}>
+    <svg {...baseProps(size, false, strokeWidth)} className={className}>
       <path d="m15 18-6-6 6-6" />
     </svg>
   );
 }
 
-export function ChevronDownIcon({ size = 18, className }: IconProps) {
+export function ChevronDownIcon({ size = 18, strokeWidth, className }: IconProps) {
   return (
-    <svg {...baseProps(size)} className={className}>
+    <svg {...baseProps(size, false, strokeWidth)} className={className}>
       <path d="m6 9 6 6 6-6" />
     </svg>
   );
@@ -350,9 +351,9 @@ export function LanternIcon({ size = 16, className }: IconProps) {
   );
 }
 
-export function ChevronRightIcon({ size = 16, className }: IconProps) {
+export function ChevronRightIcon({ size = 16, strokeWidth, className }: IconProps) {
   return (
-    <svg {...baseProps(size)} className={className}>
+    <svg {...baseProps(size, false, strokeWidth)} className={className}>
       <path d="m9 18 6-6-6-6" />
     </svg>
   );

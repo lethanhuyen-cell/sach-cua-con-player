@@ -278,17 +278,17 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
 
   return (
     <div className="pb-6">
-      {/* Top Sticky 44px 5-Step Pinned Wayfinder */}
+      {/* Top Sticky Doubled Pinned Wayfinder (72px Mobile / 86px Desktop) */}
       <header
         style={{
           backgroundColor: 'var(--bg-canvas)',
-          borderBottom: '1px solid var(--border-hairline)'
+          borderBottom: '1.5px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[44px] px-3 md:px-6 flex items-center justify-between gap-1.5"
+        className="sticky top-0 z-20 h-[72px] md:h-[86px] px-2.5 sm:px-3.5 md:px-7 flex items-center justify-between gap-1.5"
       >
         <LibraryWayfinder currentStep="book" currentHall={hall} currentBook={book} />
 
-        <div className="flex items-center gap-0.5 shrink-0">
+        <div className="flex items-center gap-0.5 md:gap-1.5 shrink-0">
           {book.episodes.length <= 15 && (
             <button
               type="button"
@@ -301,9 +301,13 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
                 backgroundColor: isSearchOpen ? 'var(--text-primary)' : 'transparent',
                 color: isSearchOpen ? 'var(--bg-canvas)' : 'var(--text-primary)'
               }}
-              className="w-8 h-8 rounded-[7px] flex items-center justify-center"
+              className="w-[38px] h-[38px] md:w-[46px] md:h-[46px] rounded-[10px] hover:bg-[var(--bg-surface)] flex items-center justify-center transition"
             >
-              <SearchIcon size={15} />
+              <SearchIcon
+                size={24}
+                strokeWidth={1.85}
+                className="w-[23px] h-[23px] md:w-[28px] md:h-[28px]"
+              />
             </button>
           )}
           <button
@@ -311,16 +315,28 @@ export function BookDetailClient({ book }: { book: HydratedBook }) {
             onClick={toggleNight}
             aria-label={isNight ? 'Giao diện sáng' : 'Giao diện đêm'}
             style={{ color: 'var(--text-primary)' }}
-            className="w-8 h-8 rounded-[7px] flex items-center justify-center"
+            className="w-[38px] h-[38px] md:w-[46px] md:h-[46px] rounded-[10px] hover:bg-[var(--bg-surface)] flex items-center justify-center transition"
           >
-            {isNight ? <SunIcon size={15} /> : <MoonIcon size={15} />}
+            {isNight ? (
+              <SunIcon
+                size={24}
+                strokeWidth={1.85}
+                className="w-[23px] h-[23px] md:w-[28px] md:h-[28px]"
+              />
+            ) : (
+              <MoonIcon
+                size={24}
+                strokeWidth={1.85}
+                className="w-[23px] h-[23px] md:w-[28px] md:h-[28px]"
+              />
+            )}
           </button>
         </div>
       </header>
 
       <div className="md:grid md:grid-cols-[390px_1fr] lg:grid-cols-[424px_1fr] md:gap-8 md:px-6 md:pt-5 md:items-start">
         {/* Gallery Bookplate Stage (Left Page on >= 768px) */}
-        <div className="md:sticky md:top-[62px]">
+        <div className="md:sticky md:top-[104px]">
           <StorybookHeroStage
             src={book.coverUrl}
             alt={book.title}

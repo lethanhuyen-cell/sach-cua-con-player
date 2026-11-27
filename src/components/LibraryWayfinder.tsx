@@ -184,14 +184,14 @@ export function LibraryWayfinder({
 
   const episodeLabel =
     currentStep === 'episode' && currentEpisode
-      ? `Tập ${currentEpisode.episodeCode}`
-      : 'Tập';
+      ? `TẬP ${currentEpisode.episodeCode.toUpperCase()}`
+      : 'TẬP';
 
   const steps: { id: WayfinderStep; label: string; isUnavailable?: boolean }[] = [
-    { id: 'gate', label: 'Cổng' },
-    { id: 'foyer', label: 'Sảnh' },
-    { id: 'shelf', label: 'Kệ' },
-    { id: 'book', label: 'Bộ', isUnavailable: !targetBook },
+    { id: 'gate', label: 'CỔNG' },
+    { id: 'foyer', label: 'SẢNH' },
+    { id: 'shelf', label: 'KỆ' },
+    { id: 'book', label: 'BỘ', isUnavailable: !targetBook },
     { id: 'episode', label: episodeLabel, isUnavailable: !targetEpisode }
   ];
 
@@ -227,7 +227,9 @@ export function LibraryWayfinder({
 
   const backdropZ = elevateZIndex ? 'z-[55]' : 'z-30';
   const popoverZ = elevateZIndex ? 'z-[60]' : 'z-40';
-  const popoverTop = elevateZIndex ? 'top-[102px]' : 'top-[46px]';
+  const popoverTop = elevateZIndex
+    ? 'top-[122px] md:top-[136px]'
+    : 'top-[74px] md:top-[88px]';
 
   return (
     <div
@@ -248,7 +250,7 @@ export function LibraryWayfinder({
                 <span
                   aria-hidden="true"
                   style={{ color: 'var(--border-hairline)' }}
-                  className="px-[1px] text-xs select-none shrink-0"
+                  className="px-[2px] min-[410px]:px-1 md:px-2 text-[13.5px] min-[390px]:text-[14.5px] md:text-[19px] font-semibold select-none shrink-0"
                 >
                   /
                 </span>
@@ -262,21 +264,31 @@ export function LibraryWayfinder({
                 style={{
                   color: isCurrent ? 'var(--accent-primary)' : 'var(--text-secondary)',
                   borderBottom: isCurrent
-                    ? '1.5px solid var(--accent-warm)'
-                    : '1.5px solid transparent',
-                  opacity: isDisabledStep && !disabled ? 0.4 : 1
+                    ? '3px solid var(--accent-warm)'
+                    : '3px solid transparent',
+                  opacity: isDisabledStep && !disabled ? 0.4 : 1,
+                  lineHeight: 1.45
                 }}
-                className={`h-[34px] px-1 inline-flex items-center gap-0.5 text-xs whitespace-nowrap shrink-0 transition ${
-                  isCurrent ? 'font-semibold' : 'font-medium'
+                className={`h-[48px] md:h-[58px] px-[3px] min-[400px]:px-1 md:px-2 inline-flex items-center gap-0.5 md:gap-1 text-[13.5px] min-[385px]:text-[14.5px] min-[415px]:text-[15px] md:text-[20.5px] uppercase tracking-[0.02em] md:tracking-[0.04em] whitespace-nowrap shrink-0 transition hover:opacity-85 ${
+                  isCurrent ? 'font-extrabold' : 'font-bold'
                 }`}
               >
-                <span className={st.id === 'episode' ? 'truncate max-w-[68px]' : ''}>
+                <span
+                  className={
+                    st.id === 'episode'
+                      ? 'truncate max-w-[82px] md:max-w-[150px] py-0.5'
+                      : 'py-0.5'
+                  }
+                >
                   {st.label}
                 </span>
                 {isCurrent && (
                   <ChevronDownIcon
-                    size={11}
-                    className={`shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                    size={14}
+                    strokeWidth={2}
+                    className={`shrink-0 md:w-[18px] md:h-[18px] transition-transform ${
+                      isOpen ? 'rotate-180' : ''
+                    }`}
                   />
                 )}
               </button>
@@ -318,7 +330,7 @@ export function LibraryWayfinder({
                     className="text-[11px] font-medium uppercase tracking-wider"
                     style={{ color: 'var(--text-secondary)' }}
                   >
-                    Lối tắt từ Sảnh sách
+                    Lối tắt từ Không gian chung
                   </p>
                   {targetBook && targetEpisode && (
                     <button
@@ -679,7 +691,7 @@ export function LibraryWayfinder({
                     }}
                     className="h-9 px-3 rounded-[8px] text-xs font-semibold inline-flex items-center gap-1"
                   >
-                    <span>Bước vào Sảnh sách</span>
+                    <span>Bước vào Không gian chung</span>
                     <ChevronRightIcon size={13} />
                   </button>
                   {targetBook && targetEpisode && (

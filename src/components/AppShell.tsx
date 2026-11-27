@@ -120,7 +120,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const shellWidthClass = isAdminRoute
     ? 'max-w-[480px]'
     : isAtClosedGate
-      ? 'max-w-[480px] md:max-w-[960px]'
+      ? 'w-full max-w-none'
       : 'max-w-[480px] md:max-w-[1040px] md:border-x md:border-[var(--border-hairline)]';
 
   return (

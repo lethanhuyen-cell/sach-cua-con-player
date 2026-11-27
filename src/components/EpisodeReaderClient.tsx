@@ -121,7 +121,7 @@ export function EpisodeReaderClient({
           setIsAudioStripVisible(entries[0].isIntersecting);
         }
       },
-      { threshold: 0.05, rootMargin: '-42px 0px 0px 0px' }
+      { threshold: 0.05, rootMargin: '-80px 0px 0px 0px' }
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -357,13 +357,13 @@ export function EpisodeReaderClient({
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* 1. Sticky 42px 5-Step Wayfinder, 0px Micro-Audio Control & Typography Bar */}
+      {/* 1. Sticky Doubled 5-Step Wayfinder (72px Mobile / 86px Desktop), Micro-Audio & Typography Bar */}
       <header
         style={{
           backgroundColor: 'var(--bg-canvas)',
-          borderBottom: '1px solid var(--border-hairline)'
+          borderBottom: '1.5px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[42px] px-2.5 md:px-6 flex items-center justify-between gap-1"
+        className="sticky top-0 z-20 h-[72px] md:h-[86px] px-2 sm:px-3 md:px-7 flex items-center justify-between gap-1"
       >
         <LibraryWayfinder
           currentStep="episode"
@@ -372,7 +372,7 @@ export function EpisodeReaderClient({
           currentEpisode={episode}
         />
 
-        <div className="flex items-center gap-0.5 shrink-0">
+        <div className="flex items-center gap-0.5 md:gap-1.5 shrink-0">
           {showStickyMicroControl && (
             <button
               type="button"
@@ -387,11 +387,11 @@ export function EpisodeReaderClient({
                   : 'var(--accent-primary)',
                 border: '1px solid var(--border-hairline)'
               }}
-              className="h-7 px-2 rounded-full inline-flex items-center gap-1 text-[11px] font-semibold tabular-nums"
+              className="h-[34px] md:h-[40px] px-2.5 md:px-3.5 rounded-full inline-flex items-center gap-1.5 text-xs md:text-sm font-semibold tabular-nums"
             >
-              {isThisEpisodePlaying ? <PauseIcon size={11} /> : <PlayIcon size={11} />}
+              {isThisEpisodePlaying ? <PauseIcon size={13} /> : <PlayIcon size={13} />}
               {isThisEpisodeActive && duration > 0 && (
-                <span className="hidden min-[380px]:inline">{formatClock(currentTime)}</span>
+                <span className="hidden sm:inline">{formatClock(currentTime)}</span>
               )}
             </button>
           )}
@@ -403,7 +403,7 @@ export function EpisodeReaderClient({
                 aria-label="Giảm cỡ chữ"
                 onClick={() => adjustReaderFontSize(-1)}
                 style={{ color: 'var(--text-secondary)' }}
-                className="w-7 h-7 rounded-[6px] text-xs font-medium flex items-center justify-center"
+                className="w-[34px] h-[36px] md:w-[44px] md:h-[44px] rounded-[9px] hover:bg-[var(--bg-surface)] text-[14px] md:text-[18px] font-bold flex items-center justify-center transition"
               >
                 A-
               </button>
@@ -412,7 +412,7 @@ export function EpisodeReaderClient({
                 aria-label="Tăng cỡ chữ"
                 onClick={() => adjustReaderFontSize(1)}
                 style={{ color: 'var(--text-primary)' }}
-                className="w-7 h-7 rounded-[6px] text-xs font-semibold flex items-center justify-center"
+                className="w-[34px] h-[36px] md:w-[44px] md:h-[44px] rounded-[9px] hover:bg-[var(--bg-surface)] text-[14.5px] md:text-[18.5px] font-extrabold flex items-center justify-center transition"
               >
                 A+
               </button>
@@ -423,9 +423,21 @@ export function EpisodeReaderClient({
             aria-label={isNight ? 'Giao diện giấy sáng' : 'Giao diện ban đêm'}
             onClick={toggleNight}
             style={{ color: 'var(--text-primary)' }}
-            className="w-7 h-7 rounded-[6px] flex items-center justify-center"
+            className="w-[36px] h-[36px] md:w-[46px] md:h-[46px] rounded-[10px] hover:bg-[var(--bg-surface)] flex items-center justify-center transition"
           >
-            {isNight ? <SunIcon size={15} /> : <MoonIcon size={15} />}
+            {isNight ? (
+              <SunIcon
+                size={24}
+                strokeWidth={1.85}
+                className="w-[22px] h-[22px] md:w-[28px] md:h-[28px]"
+              />
+            ) : (
+              <MoonIcon
+                size={24}
+                strokeWidth={1.85}
+                className="w-[22px] h-[22px] md:w-[28px] md:h-[28px]"
+              />
+            )}
           </button>
         </div>
       </header>
@@ -454,7 +466,7 @@ export function EpisodeReaderClient({
         }
       >
         {hasOwnEpisodeCover && viewMode === 'story' ? (
-          <div className="md:sticky md:top-[58px]">
+          <div className="md:sticky md:top-[104px]">
             <StorybookHeroStage
               src={ownCoverUrl}
               alt={episode.title}
