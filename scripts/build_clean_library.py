@@ -306,7 +306,7 @@ def main():
                 "ageRange": "4–10 tuổi",
                 "genreTag": "Ẩm thực & Nếp nhà + Văn học · Đồng thoại căn bếp",
                 "rightsConfirmed": True,
-                "coverUrl": "/images/books/mua-thu-hat-de-cover.jpg",
+                "coverUrl": "/images/books/tieu-hat-de-cover.jpg",
                 "coverFocalPoint": "center",
                 "themePreset": "ochre",
                 "tocMode": "sequential",
