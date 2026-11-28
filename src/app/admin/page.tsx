@@ -2,7 +2,7 @@ import React from 'react';
 import { redirect } from 'next/navigation';
 import { isAdminAuthenticated } from '@/lib/auth';
 import { getAdminLibrary } from '@/lib/repository';
-import { AdminDashboardClient } from '@/components/AdminDashboardClient';
+import { AdminDashboardClient } from '@/components/admin/AdminDashboardClient';
 
 export const dynamic = 'force-dynamic';
 

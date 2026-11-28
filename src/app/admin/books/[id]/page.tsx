@@ -2,7 +2,7 @@ import React from 'react';
 import { notFound, redirect } from 'next/navigation';
 import { isAdminAuthenticated } from '@/lib/auth';
 import { getAdminLibrary } from '@/lib/repository';
-import { AdminBookEditorClient } from '@/components/AdminBookEditorClient';
+import { AdminBookEditorClient } from '@/components/admin/AdminBookEditorClient';
 
 export const dynamic = 'force-dynamic';
 

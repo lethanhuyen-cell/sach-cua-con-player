@@ -1,12 +1,16 @@
 import { Book, BookPreset } from './types';
 import { getBookLineByCode } from './knowledge';
 
-export type LibraryHallSlug =
+export type ThematicHallSlug =
   | 'thien-nhien-ky-thu'
   | 'chuyen-xua-va-the-gioi'
   | 'the-gioi-hom-nay'
   | 'lon-len-moi-ngay'
   | 'vuon-tri-tue';
+
+export const CURATED_HALL_SLUG = 'co-the-ban-se-thich' as const;
+
+export type LibraryHallSlug = ThematicHallSlug | typeof CURATED_HALL_SLUG;
 
 export interface LibraryHallDefinition {
   slug: LibraryHallSlug;
@@ -16,6 +20,12 @@ export interface LibraryHallDefinition {
   preset: BookPreset;
   dayHeroUrl: string;
   nightHeroUrl: string;
+  kind: 'thematic' | 'curated';
+}
+
+export interface ThematicHallDefinition extends LibraryHallDefinition {
+  slug: ThematicHallSlug;
+  kind: 'thematic';
 }
 
 export const FOYER_HERO_ART = {
@@ -23,7 +33,7 @@ export const FOYER_HERO_ART = {
   night: '/images/home/foyer-night.jpg'
 } as const;
 
-export const LIBRARY_HALLS: LibraryHallDefinition[] = [
+export const THEMATIC_HALLS: ThematicHallDefinition[] = [
   {
     slug: 'thien-nhien-ky-thu',
     title: 'Kệ Thiên nhiên kỳ thú',
@@ -31,7 +41,8 @@ export const LIBRARY_HALLS: LibraryHallDefinition[] = [
     epigraph: 'Vũ trụ, Trái Đất, muôn loài, khoa học',
     preset: 'moss',
     dayHeroUrl: '/images/halls/thien-nhien-ky-thu-day.jpg',
-    nightHeroUrl: '/images/halls/thien-nhien-ky-thu-night.jpg'
+    nightHeroUrl: '/images/halls/thien-nhien-ky-thu-night.jpg',
+    kind: 'thematic'
   },
   {
     slug: 'chuyen-xua-va-the-gioi',
@@ -40,7 +51,8 @@ export const LIBRARY_HALLS: LibraryHallDefinition[] = [
     epigraph: 'Lịch sử, Việt Nam, các nền văn hóa',
     preset: 'ochre',
     dayHeroUrl: '/images/halls/chuyen-xua-va-the-gioi-day.jpg',
-    nightHeroUrl: '/images/halls/chuyen-xua-va-the-gioi-night.jpg'
+    nightHeroUrl: '/images/halls/chuyen-xua-va-the-gioi-night.jpg',
+    kind: 'thematic'
   },
   {
     slug: 'the-gioi-hom-nay',
@@ -49,7 +61,8 @@ export const LIBRARY_HALLS: LibraryHallDefinition[] = [
     epigraph: 'Kinh tế, xã hội, phát minh, công nghệ',
     preset: 'ochre',
     dayHeroUrl: '/images/halls/the-gioi-hom-nay-day.jpg',
-    nightHeroUrl: '/images/halls/the-gioi-hom-nay-night.jpg'
+    nightHeroUrl: '/images/halls/the-gioi-hom-nay-night.jpg',
+    kind: 'thematic'
   },
   {
     slug: 'lon-len-moi-ngay',
@@ -58,7 +71,8 @@ export const LIBRARY_HALLS: LibraryHallDefinition[] = [
     epigraph: 'Cơ thể, cảm xúc, tình bạn, kỹ năng sống',
     preset: 'rosewood',
     dayHeroUrl: '/images/halls/lon-len-moi-ngay-day.jpg',
-    nightHeroUrl: '/images/halls/lon-len-moi-ngay-night.jpg'
+    nightHeroUrl: '/images/halls/lon-len-moi-ngay-night.jpg',
+    kind: 'thematic'
   },
   {
     slug: 'vuon-tri-tue',
@@ -67,11 +81,29 @@ export const LIBRARY_HALLS: LibraryHallDefinition[] = [
     epigraph: 'Văn học, nghệ thuật, triết học, tư duy',
     preset: 'lavender',
     dayHeroUrl: '/images/halls/vuon-tri-tue-day.jpg',
-    nightHeroUrl: '/images/halls/vuon-tri-tue-night.jpg'
+    nightHeroUrl: '/images/halls/vuon-tri-tue-night.jpg',
+    kind: 'thematic'
   }
 ];
 
-const LEGACY_SLUG_MAP: Record<string, LibraryHallSlug> = {
+export const CURATED_HALL: LibraryHallDefinition = {
+  slug: CURATED_HALL_SLUG,
+  title: 'Kệ Có thể bạn sẽ thích',
+  shortTitle: 'Có thể bạn sẽ thích',
+  epigraph: 'Gợi ý theo mạch đọc & tuyển chọn',
+  preset: 'ochre',
+  dayHeroUrl: '/images/halls/van-hoc-dong-thoai-day.jpg',
+  nightHeroUrl: '/images/halls/van-hoc-dong-thoai-night.jpg',
+  kind: 'curated'
+};
+
+export const LIBRARY_HALLS: LibraryHallDefinition[] = [...THEMATIC_HALLS, CURATED_HALL];
+
+export function isCuratedHallSlug(slug: string): boolean {
+  return slug === CURATED_HALL_SLUG;
+}
+
+const LEGACY_SLUG_MAP: Record<string, ThematicHallSlug> = {
   'khoa-hoc-tu-nhien': 'thien-nhien-ky-thu',
   'lich-su-van-hoa': 'chuyen-xua-va-the-gioi',
   'am-thuc-nep-nha': 'lon-len-moi-ngay',
@@ -84,11 +116,15 @@ export function getHallBySlug(slug: string): LibraryHallDefinition | undefined {
   return LIBRARY_HALLS.find((h) => h.slug === slug);
 }
 
-export function resolveLegacyHallSlug(slug: string): LibraryHallSlug | undefined {
+export function getThematicHallBySlug(slug: string): ThematicHallDefinition | undefined {
+  return THEMATIC_HALLS.find((h) => h.slug === slug);
+}
+
+export function resolveLegacyHallSlug(slug: string): ThematicHallSlug | undefined {
   return LEGACY_SLUG_MAP[slug];
 }
 
-const LEGACY_HALL_PREFIXES: Record<LibraryHallSlug, string[]> = {
+const LEGACY_HALL_PREFIXES: Record<ThematicHallSlug, string[]> = {
   'thien-nhien-ky-thu': [
     'thiên nhiên kỳ thú',
     'kệ thiên nhiên kỳ thú',
@@ -139,10 +175,10 @@ const LEGACY_HALL_PREFIXES: Record<LibraryHallSlug, string[]> = {
   ]
 };
 
-function matchHallPrefix(raw: string): LibraryHallDefinition | undefined {
+function matchHallPrefix(raw: string): ThematicHallDefinition | undefined {
   const norm = raw.normalize('NFC').trim().toLowerCase();
   if (!norm) return undefined;
-  for (const h of LIBRARY_HALLS) {
+  for (const h of THEMATIC_HALLS) {
     const aliases = LEGACY_HALL_PREFIXES[h.slug] || [];
     if (
       norm === h.shortTitle.toLowerCase() ||
@@ -156,11 +192,11 @@ function matchHallPrefix(raw: string): LibraryHallDefinition | undefined {
 }
 
 /**
- * Tự động ánh xạ mỗi Bộ sách (tương thích cả nhãn cũ và 5 kệ mới) vào Kệ chính.
+ * Tự động ánh xạ mỗi Bộ sách (tương thích cả nhãn cũ và 5 kệ chủ đề) vào Kệ chính.
  */
 export function resolveBookHall(
   book: Pick<Book, 'genreTag' | 'title' | 'subtitle'> & Partial<Pick<Book, 'knowledgeMeta'>>
-): LibraryHallDefinition {
+): ThematicHallDefinition {
   const genreNorm = (book.genreTag || '').normalize('NFC').trim();
   const mainSegment = genreNorm.split('·')[0].split('+')[0].trim();
   const matchedMain = matchHallPrefix(mainSegment);
@@ -168,12 +204,14 @@ export function resolveBookHall(
 
   if (book.knowledgeMeta?.primaryLine) {
     const lineDef = getBookLineByCode(book.knowledgeMeta.primaryLine);
-    const hallFromLine = lineDef ? getHallBySlug(lineDef.defaultHallSlug) : undefined;
+    const hallFromLine = lineDef
+      ? THEMATIC_HALLS.find((h) => h.slug === lineDef.defaultHallSlug)
+      : undefined;
     if (hallFromLine) return hallFromLine;
   }
 
   const genreLower = genreNorm.toLowerCase();
-  for (const h of LIBRARY_HALLS) {
+  for (const h of THEMATIC_HALLS) {
     if (genreLower.startsWith(h.shortTitle.toLowerCase())) {
       return h;
     }
@@ -192,7 +230,7 @@ export function resolveBookHall(
     hay.includes('trái đất') ||
     hay.includes('muôn loài')
   ) {
-    return LIBRARY_HALLS[0];
+    return THEMATIC_HALLS[0];
   }
 
   if (
@@ -202,7 +240,7 @@ export function resolveBookHall(
     hay.includes('việt nam') ||
     hay.includes('danh nhân')
   ) {
-    return LIBRARY_HALLS[1];
+    return THEMATIC_HALLS[1];
   }
 
   if (
@@ -212,7 +250,7 @@ export function resolveBookHall(
     hay.includes('phát minh') ||
     hay.includes('công nghệ')
   ) {
-    return LIBRARY_HALLS[2];
+    return THEMATIC_HALLS[2];
   }
 
   if (
@@ -230,7 +268,7 @@ export function resolveBookHall(
     hay.includes('món ăn') ||
     hay.includes('đời sống')
   ) {
-    return LIBRARY_HALLS[3];
+    return THEMATIC_HALLS[3];
   }
 
   if (
@@ -244,15 +282,15 @@ export function resolveBookHall(
     hay.includes('hội họa') ||
     hay.includes('đồng thoại')
   ) {
-    return LIBRARY_HALLS[4];
+    return THEMATIC_HALLS[4];
   }
 
-  return LIBRARY_HALLS[4];
+  return THEMATIC_HALLS[4];
 }
 
 export function parseAdminHallGenre(genreTag: string): {
-  hallSlug: LibraryHallSlug;
-  secondaryHallSlug: LibraryHallSlug | null;
+  hallSlug: ThematicHallSlug;
+  secondaryHallSlug: ThematicHallSlug | null;
   subTag: string;
 } {
   const norm = (genreTag || '').normalize('NFC').trim();
@@ -271,7 +309,7 @@ export function parseAdminHallGenre(genreTag: string): {
     subtitle: ''
   });
 
-  let secondaryHall: LibraryHallDefinition | undefined;
+  let secondaryHall: ThematicHallDefinition | undefined;
   if (plusSegments.length > 1) {
     const candidate = matchHallPrefix(plusSegments[1]);
     if (candidate && candidate.slug !== primaryHall.slug) {
@@ -294,10 +332,10 @@ export function formatAdminHallGenre(
   subTag: string,
   secondaryHallSlug?: LibraryHallSlug | null
 ): string {
-  const hall = getHallBySlug(hallSlug) || LIBRARY_HALLS[0];
+  const hall = THEMATIC_HALLS.find((h) => h.slug === hallSlug) || THEMATIC_HALLS[0];
   const secondary =
     secondaryHallSlug && secondaryHallSlug !== hall.slug
-      ? getHallBySlug(secondaryHallSlug)
+      ? THEMATIC_HALLS.find((h) => h.slug === secondaryHallSlug)
       : undefined;
   const baseLabel = secondary ? `${hall.shortTitle} + ${secondary.shortTitle}` : hall.shortTitle;
 
@@ -311,18 +349,20 @@ export function formatAdminHallGenre(
 
 export function resolveBookHalls(
   book: Pick<Book, 'genreTag' | 'title' | 'subtitle'> & Partial<Pick<Book, 'knowledgeMeta'>>
-): LibraryHallDefinition[] {
+): ThematicHallDefinition[] {
   const parsed = parseAdminHallGenre(book.genreTag || '');
   const primary = resolveBookHall(book);
-  const halls: LibraryHallDefinition[] = [primary];
+  const halls: ThematicHallDefinition[] = [primary];
 
   if (parsed.secondaryHallSlug && parsed.secondaryHallSlug !== primary.slug) {
-    const secondary = getHallBySlug(parsed.secondaryHallSlug);
+    const secondary = THEMATIC_HALLS.find((h) => h.slug === parsed.secondaryHallSlug);
     if (secondary) halls.push(secondary);
   } else if (book.knowledgeMeta?.secondaryLines && book.knowledgeMeta.secondaryLines.length > 0) {
     for (const secCode of book.knowledgeMeta.secondaryLines) {
       const lineDef = getBookLineByCode(secCode);
-      const secHall = lineDef ? getHallBySlug(lineDef.defaultHallSlug) : undefined;
+      const secHall = lineDef
+        ? THEMATIC_HALLS.find((h) => h.slug === lineDef.defaultHallSlug)
+        : undefined;
       if (secHall && !halls.some((h) => h.slug === secHall.slug)) {
         halls.push(secHall);
         break;

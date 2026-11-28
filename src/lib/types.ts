@@ -57,6 +57,9 @@ export interface KnowledgeMetadata {
   curriculumAnchors?: string[];
   topicKeywords?: string[];
   curiosityTrails?: CuriosityTrailLink[];
+  isRecommended?: boolean;
+  recommendedNote?: string;
+  recommendedOrder?: number;
 }
 
 export interface VoiceProfile {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { getPublishedLibrary } from '@/lib/repository';
-import { BookDetailClient } from '@/components/BookDetailClient';
+import { BookDetailClient } from '@/components/library/BookDetailClient';
 
 export const dynamic = 'force-dynamic';
 

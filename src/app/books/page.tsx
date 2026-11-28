@@ -3,16 +3,16 @@
 import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
-import { BookCover } from '@/components/BookCover';
-import { StorybookHeroStage } from '@/components/StorybookHeroStage';
-import { LibraryWayfinder } from '@/components/LibraryWayfinder';
+import { BookCover } from '@/components/ui/BookCover';
+import { StorybookHeroStage } from '@/components/ui/StorybookHeroStage';
+import { LibraryWayfinder } from '@/components/layout/LibraryWayfinder';
 import {
   CloseIcon,
   MoonIcon,
   PlayIcon,
   SearchIcon,
   SunIcon
-} from '@/components/Icons';
+} from '@/components/ui/Icons';
 import {
   formatBookDisplayGenre,
   FOYER_HERO_ART,
@@ -105,13 +105,13 @@ export default function BooksShelfPage() {
 
   return (
     <div className="pb-6">
-      {/* Sticky Doubled Pinned Wayfinder (72px Mobile / 86px Desktop) */}
+      {/* Compact Sticky Pinned Wayfinder (48px Mobile / 54px Desktop) */}
       <header
         style={{
           backgroundColor: 'var(--bg-canvas)',
           borderBottom: '1.5px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[72px] md:h-[86px] px-2.5 sm:px-3.5 md:px-7 flex items-center justify-between gap-1.5"
+        className="sticky top-0 z-20 h-[48px] md:h-[54px] px-2.5 sm:px-3.5 md:px-6 flex items-center justify-between gap-1.5"
       >
         <LibraryWayfinder currentStep="shelf" shelfBranch="all_books" />
         <button
@@ -119,26 +119,26 @@ export default function BooksShelfPage() {
           onClick={toggleNight}
           aria-label={isNight ? 'Giao diện ban ngày' : 'Giao diện ban đêm'}
           style={{ color: 'var(--text-primary)' }}
-          className="w-[38px] h-[38px] md:w-[46px] md:h-[46px] rounded-[10px] hover:bg-[var(--bg-surface)] flex items-center justify-center shrink-0 transition"
+          className="w-[34px] h-[34px] md:w-[36px] md:h-[36px] rounded-[8px] hover:bg-[var(--bg-surface)] flex items-center justify-center shrink-0 transition"
         >
           {isNight ? (
             <SunIcon
-              size={24}
+              size={19}
               strokeWidth={1.85}
-              className="w-[23px] h-[23px] md:w-[28px] md:h-[28px]"
+              className="w-[18px] h-[18px] md:w-[20px] md:h-[20px]"
             />
           ) : (
             <MoonIcon
-              size={24}
+              size={19}
               strokeWidth={1.85}
-              className="w-[23px] h-[23px] md:w-[28px] md:h-[28px]"
+              className="w-[18px] h-[18px] md:w-[20px] md:h-[20px]"
             />
           )}
         </button>
       </header>
 
-      <div className="md:grid md:grid-cols-[380px_1fr] lg:grid-cols-[416px_1fr] md:gap-8 md:px-6 md:pt-5 md:items-start">
-        <div className="md:sticky md:top-[104px]">
+      <div className="md:grid md:grid-cols-[212px_1fr] lg:grid-cols-[232px_1fr] md:gap-6 md:px-6 md:pt-4 md:items-start">
+        <div className="md:sticky md:top-[68px]">
           <StorybookHeroStage
             src={isNight ? FOYER_HERO_ART.night : FOYER_HERO_ART.day}
             alt="Tủ sách Thư viện Đồi Mơ"
@@ -146,39 +146,39 @@ export default function BooksShelfPage() {
             variant="immersive"
           >
             <div className="flex items-baseline justify-between gap-2">
-              <h1 className="text-[20px] font-bold font-editorial leading-snug">Tủ sách</h1>
-              <span className="text-xs tabular-nums" style={{ color: 'var(--text-secondary)' }}>
-                {books.length} bộ sách đã xuất bản
+              <h1 className="text-[17px] font-bold font-editorial leading-snug">Tủ sách</h1>
+              <span className="text-[11.5px] tabular-nums" style={{ color: 'var(--text-secondary)' }}>
+                {books.length} bộ
               </span>
             </div>
           </StorybookHeroStage>
         </div>
 
-        <div className="px-4 md:px-0 pt-4 md:pt-0 space-y-5 min-w-0">
+        <div className="px-3.5 md:px-0 pt-3.5 md:pt-0 space-y-3.5 min-w-0">
         {/* Search Bar */}
       <div
         style={{
           backgroundColor: 'var(--bg-elevated)',
           border: '1px solid var(--border-hairline)'
         }}
-        className="h-11 px-3.5 rounded-[8px] flex items-center gap-2.5"
+        className="h-9 px-3 rounded-[8px] flex items-center gap-2"
       >
-        <SearchIcon size={16} className="shrink-0 opacity-70" />
+        <SearchIcon size={14} className="shrink-0 opacity-70" />
         <input
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Tìm tên sách, tập, chủ đề hoặc khái niệm..."
-          className="flex-1 bg-transparent outline-none text-sm"
+          className="flex-1 bg-transparent outline-none text-xs"
         />
         {query && (
           <button
             type="button"
             aria-label="Xóa từ khóa"
             onClick={() => setQuery('')}
-            className="w-8 h-8 flex items-center justify-center opacity-70"
+            className="w-7 h-7 flex items-center justify-center opacity-70"
           >
-            <CloseIcon size={15} />
+            <CloseIcon size={14} />
           </button>
         )}
       </div>
@@ -199,7 +199,7 @@ export default function BooksShelfPage() {
                   ? '1.5px solid var(--accent-primary)'
                   : '1px solid var(--border-hairline)'
               }}
-              className="h-8 px-3 rounded-full text-xs font-medium shrink-0"
+              className="h-7 px-2.5 rounded-full text-[11.5px] font-medium shrink-0"
             >
               {pill.label}
             </button>
@@ -209,7 +209,7 @@ export default function BooksShelfPage() {
 
       {/* Hall Filter Pills */}
       {activeHalls.length > 1 && (
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
           <button
             type="button"
             onClick={() => setSelectedHallSlug('ALL')}
@@ -220,7 +220,7 @@ export default function BooksShelfPage() {
                 selectedHallSlug === 'ALL' ? 'var(--accent-primary-fg)' : 'var(--text-secondary)',
               border: '1px solid var(--border-hairline)'
             }}
-            className="h-9 px-3.5 rounded-[8px] text-xs font-medium shrink-0"
+            className="h-7 px-2.5 rounded-[7px] text-[11.5px] font-medium shrink-0"
           >
             Tất cả
           </button>
@@ -236,7 +236,7 @@ export default function BooksShelfPage() {
                   color: active ? 'var(--accent-primary-fg)' : 'var(--text-secondary)',
                   border: '1px solid var(--border-hairline)'
                 }}
-                className="h-9 px-3.5 rounded-[8px] text-xs font-medium shrink-0"
+                className="h-7 px-2.5 rounded-[7px] text-[11.5px] font-medium shrink-0"
               >
                 {hall.shortTitle}
               </button>
@@ -272,7 +272,7 @@ export default function BooksShelfPage() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 md:gap-3.5">
           {filteredBooks.map((book) => {
             const isAudioBook = book.episodes.some((ep) => !isEpisodeReadingOnly(ep));
             const completedAudioCount = book.episodes.filter(
@@ -288,7 +288,7 @@ export default function BooksShelfPage() {
               <Link
                 key={book.id}
                 href={`/books/${book.slug}`}
-                className="block space-y-2"
+                className="block space-y-1.5"
               >
                 <BookCover
                   src={book.coverUrl}
@@ -297,16 +297,16 @@ export default function BooksShelfPage() {
                 />
                 <div>
                   <span
-                    className="vn-eyebrow block truncate"
+                    className="text-[10px] font-semibold uppercase tracking-[0.05em] block truncate"
                     style={{ color: 'var(--accent-primary)' }}
                   >
                     {formatBookDisplayGenre(book)} · {book.ageRange}
                   </span>
-                  <h2 className="text-[15px] font-semibold font-editorial line-clamp-2 mt-0.5">
+                  <h2 className="text-[13.5px] md:text-[14px] font-semibold font-editorial line-clamp-2 mt-0.5">
                     {book.title}
                   </h2>
                   <p
-                    className="text-xs mt-0.5 tabular-nums"
+                    className="text-[11px] mt-0.5 tabular-nums truncate"
                     style={{ color: 'var(--text-secondary)' }}
                   >
                     {isAudioBook
@@ -319,7 +319,7 @@ export default function BooksShelfPage() {
                   </p>
                   {latestNewEp && (
                     <p
-                      className="text-[11.5px] font-medium mt-0.5 truncate tabular-nums"
+                      className="text-[10.5px] font-medium mt-0.5 truncate tabular-nums"
                       style={{ color: 'var(--accent-warm)' }}
                     >
                       {unreadNewEps.length > 1

@@ -3,8 +3,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ContinueSuggestion, useLibraryPlayer } from '@/context/LibraryPlayerContext';
-import { BookCover } from '@/components/BookCover';
-import { LibraryWayfinder } from '@/components/LibraryWayfinder';
+import { BookCover } from '@/components/ui/BookCover';
+import { LibraryWayfinder } from '@/components/layout/LibraryWayfinder';
 import {
   BookmarkIcon,
   BookOpenIcon,
@@ -12,6 +12,7 @@ import {
   ChevronRightIcon,
   CloseIcon,
   CompassIcon,
+  CuratedSparkIcon,
   FeatherIcon,
   InventionSparkIcon,
   LanternIcon,
@@ -21,7 +22,7 @@ import {
   PlayIcon,
   SearchIcon,
   SunIcon
-} from '@/components/Icons';
+} from '@/components/ui/Icons';
 import {
   formatBookDisplayGenre,
   FOYER_HERO_ART,
@@ -29,6 +30,7 @@ import {
   LibraryHallSlug,
   resolveBookHalls
 } from '@/lib/halls';
+import { buildLibraryRecommendations } from '@/lib/recommendations';
 import {
   BOOK_PRESETS,
   formatClock,
@@ -67,6 +69,8 @@ function HallIcon({ slug, size = 16 }: { slug: LibraryHallSlug; size?: number })
       return <LanternIcon size={size} />;
     case 'vuon-tri-tue':
       return <FeatherIcon size={size} />;
+    case 'co-the-ban-se-thich':
+      return <CuratedSparkIcon size={size} />;
   }
 }
 
@@ -79,6 +83,7 @@ export default function HomeLibraryPage() {
     favorites,
     progressMap,
     readingProgressMap,
+    openedEpisodeIds,
     newEpisodesAcrossLibrary,
     activeEpisode,
     isPlaying,
@@ -137,7 +142,7 @@ export default function HomeLibraryPage() {
     [visibleNewEpisodes]
   );
 
-  // Group visible published books into the 5 Halls (supporting primary + cross-disciplinary halls)
+  // Group visible published books into the 5 thematic Halls
   const booksByHall = useMemo(() => {
     const map = new Map<LibraryHallSlug, typeof books>();
     for (const h of LIBRARY_HALLS) {
@@ -155,6 +160,28 @@ export default function HomeLibraryPage() {
     return map;
   }, [visibleBooks]);
 
+  const curatedShelfData = useMemo(
+    () =>
+      buildLibraryRecommendations({
+        books,
+        progressMap,
+        readingProgressMap,
+        favorites,
+        openedEpisodeIds,
+        audienceFilter,
+        isNight
+      }),
+    [
+      books,
+      progressMap,
+      readingProgressMap,
+      favorites,
+      openedEpisodeIds,
+      audienceFilter,
+      isNight
+    ]
+  );
+
   const handleOpenGate = () => {
     if (isOpeningGate) return;
     setIsOpeningGate(true);
@@ -169,7 +196,7 @@ export default function HomeLibraryPage() {
   }
 
   // ============================================================================
-  // LỚP 1: CỔNG ĐỒI MƠ (Full-bleed 100vw × 100dvh, chữ & nút "Bước vào" đè lên đáy tranh)
+  // LỚP 1: CỔNG ĐỒI MƠ (Full-bleed 100vw × 100dvh, chữ & nút "Mời vào!" đè lên đáy tranh)
   // ============================================================================
   if (!hasPassedGate) {
     const gateArtSrc = isNight ? '/images/home/doi-mo-night.jpg' : '/images/home/doi-mo-day.jpg';
@@ -203,12 +230,12 @@ export default function HomeLibraryPage() {
             border: '1px solid rgba(248, 245, 238, 0.30)',
             color: '#F8F5EE'
           }}
-          className="w-11 h-11 md:w-12 md:h-12 rounded-full backdrop-blur-md flex items-center justify-center absolute top-[max(14px,env(safe-area-inset-top))] right-4 md:top-6 md:right-7 z-20 shadow-sm transition hover:scale-105"
+          className="w-9 h-9 md:w-10 md:h-10 rounded-full backdrop-blur-md flex items-center justify-center absolute top-[max(14px,env(safe-area-inset-top))] right-4 md:top-5 md:right-6 z-20 shadow-sm transition hover:scale-105"
         >
           {isNight ? (
-            <SunIcon size={22} strokeWidth={1.85} />
+            <SunIcon size={18} strokeWidth={1.85} />
           ) : (
-            <MoonIcon size={22} strokeWidth={1.85} />
+            <MoonIcon size={18} strokeWidth={1.85} />
           )}
         </button>
 
@@ -244,18 +271,18 @@ export default function HomeLibraryPage() {
           </>
         )}
 
-        {/* Bottom 1/3 Cinematic Scrim + Centered Title, Subtitle & "Bước vào" CTA */}
+        {/* Bottom 1/3 Cinematic Scrim + Centered Title, Subtitle & "Mời vào!" CTA */}
         <div
           style={{
             background:
               'linear-gradient(180deg, rgba(10,14,11,0) 0%, rgba(10,14,11,0.58) 44%, rgba(9,13,10,0.90) 100%)'
           }}
-          className="absolute inset-x-0 bottom-0 pt-24 md:pt-32 pb-[max(30px,calc(env(safe-area-inset-bottom)+20px))] md:pb-12 px-6 flex flex-col items-center text-center z-10"
+          className="absolute inset-x-0 bottom-0 pt-16 md:pt-20 pb-[max(24px,calc(env(safe-area-inset-bottom)+16px))] md:pb-9 px-6 flex flex-col items-center text-center z-10"
         >
-          <h1 className="text-[30px] sm:text-[36px] md:text-[46px] font-bold font-editorial text-[#F8F5EE] leading-snug tracking-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]">
+          <h1 className="text-[24px] sm:text-[28px] md:text-[34px] font-bold font-editorial text-[#F8F5EE] leading-snug tracking-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]">
             Thư viện Đồi Mơ
           </h1>
-          <p className="text-[14px] sm:text-[15.5px] md:text-[18px] mt-1 md:mt-1.5 text-[#EFE9DC]/90 font-medium tracking-wide drop-shadow-[0_1px_8px_rgba(0,0,0,0.45)]">
+          <p className="text-[13px] sm:text-[14px] md:text-[15.5px] mt-1 text-[#EFE9DC]/90 font-medium tracking-wide drop-shadow-[0_1px_8px_rgba(0,0,0,0.45)]">
             Sách đọc và nghe trước giờ đi ngủ
           </p>
 
@@ -267,10 +294,10 @@ export default function HomeLibraryPage() {
               color: '#F8F5EE',
               border: '1px solid rgba(248, 245, 238, 0.32)'
             }}
-            className="mt-5 md:mt-6 h-[48px] md:h-[54px] px-9 md:px-12 rounded-full text-[15px] md:text-[16.5px] font-semibold inline-flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(0,0,0,0.36)] transition hover:brightness-110 active:scale-[0.98]"
+            className="mt-4 md:mt-5 h-[40px] md:h-[44px] px-7 md:px-9 rounded-full text-[13.5px] md:text-[14.5px] font-semibold inline-flex items-center justify-center gap-1.5 shadow-[0_8px_24px_rgba(0,0,0,0.36)] transition hover:brightness-110 active:scale-[0.98]"
           >
-            <span>Bước vào</span>
-            <ChevronRightIcon size={19} strokeWidth={1.95} />
+            <span>Mời vào!</span>
+            <ChevronRightIcon size={17} strokeWidth={1.95} />
           </button>
         </div>
       </div>
@@ -299,29 +326,29 @@ export default function HomeLibraryPage() {
   })();
 
   return (
-    <div className="pb-8">
-      {/* Sticky Doubled Pinned Menu (72px Mobile / 86px Desktop, CAPS LOCK + 2x Icons) */}
+    <div className="pb-6">
+      {/* Compact Sticky Pinned Menu (48px Mobile / 54px Desktop) */}
       <header
         style={{
           backgroundColor: 'var(--bg-canvas)',
           borderBottom: '1.5px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[72px] md:h-[86px] px-2.5 sm:px-3.5 md:px-7 flex items-center justify-between gap-1.5"
+        className="sticky top-0 z-20 h-[48px] md:h-[54px] px-2.5 sm:px-3.5 md:px-6 flex items-center justify-between gap-1.5"
       >
         <LibraryWayfinder currentStep="foyer" />
 
-        <div className="flex items-center gap-0.5 md:gap-1.5 shrink-0">
+        <div className="flex items-center gap-0.5 md:gap-1 shrink-0">
           <button
             type="button"
             onClick={() => openUtilitySheet('search')}
             aria-label="Tìm kiếm"
             style={{ color: 'var(--text-primary)' }}
-            className="w-[38px] h-[38px] md:w-[46px] md:h-[46px] rounded-[10px] hover:bg-[var(--bg-surface)] flex items-center justify-center transition"
+            className="w-[34px] h-[34px] md:w-[36px] md:h-[36px] rounded-[8px] hover:bg-[var(--bg-surface)] flex items-center justify-center transition"
           >
             <SearchIcon
-              size={24}
+              size={19}
               strokeWidth={1.85}
-              className="w-[23px] h-[23px] md:w-[28px] md:h-[28px]"
+              className="w-[18px] h-[18px] md:w-[20px] md:h-[20px]"
             />
           </button>
 
@@ -332,19 +359,19 @@ export default function HomeLibraryPage() {
             style={{
               color: favorites.length > 0 ? 'var(--accent-berry)' : 'var(--text-primary)'
             }}
-            className="w-[38px] h-[38px] md:w-[46px] md:h-[46px] rounded-[10px] hover:bg-[var(--bg-surface)] flex items-center justify-center relative transition"
+            className="w-[34px] h-[34px] md:w-[36px] md:h-[36px] rounded-[8px] hover:bg-[var(--bg-surface)] flex items-center justify-center relative transition"
           >
             <BookmarkIcon
-              size={24}
+              size={19}
               strokeWidth={1.85}
               filled={favorites.length > 0}
-              className="w-[23px] h-[23px] md:w-[28px] md:h-[28px]"
+              className="w-[18px] h-[18px] md:w-[20px] md:h-[20px]"
             />
             {favorites.length > 0 && (
               <span
                 aria-hidden="true"
                 style={{ backgroundColor: 'var(--accent-warm)' }}
-                className="w-2 h-2 rounded-full absolute top-1.5 right-1.5"
+                className="w-1.5 h-1.5 rounded-full absolute top-1.5 right-1.5"
               />
             )}
           </button>
@@ -354,19 +381,19 @@ export default function HomeLibraryPage() {
             onClick={toggleNight}
             aria-label={isNight ? 'Giao diện sáng' : 'Giao diện đêm'}
             style={{ color: 'var(--text-primary)' }}
-            className="w-[38px] h-[38px] md:w-[46px] md:h-[46px] rounded-[10px] hover:bg-[var(--bg-surface)] flex items-center justify-center transition"
+            className="w-[34px] h-[34px] md:w-[36px] md:h-[36px] rounded-[8px] hover:bg-[var(--bg-surface)] flex items-center justify-center transition"
           >
             {isNight ? (
               <SunIcon
-                size={24}
+                size={19}
                 strokeWidth={1.85}
-                className="w-[23px] h-[23px] md:w-[28px] md:h-[28px]"
+                className="w-[18px] h-[18px] md:w-[20px] md:h-[20px]"
               />
             ) : (
               <MoonIcon
-                size={24}
+                size={19}
                 strokeWidth={1.85}
-                className="w-[23px] h-[23px] md:w-[28px] md:h-[28px]"
+                className="w-[18px] h-[18px] md:w-[20px] md:h-[20px]"
               />
             )}
           </button>
@@ -374,13 +401,13 @@ export default function HomeLibraryPage() {
       </header>
 
       {/* Scenic Hero Stage + Centered "Không gian chung" + Minimalist 1-Line Collapsible Resume */}
-      <section aria-label="Không gian chung" className="md:px-7 md:pt-5">
+      <section aria-label="Không gian chung" className="md:px-6 md:pt-3.5">
         <button
           type="button"
           onClick={() => setIsHeroZoomOpen(true)}
           aria-label="Chạm để xem toàn màn hình tranh Không gian chung"
           style={{ backgroundColor: foyerWashBg }}
-          className="block relative w-full h-[236px] sm:h-[272px] md:h-[324px] lg:h-[356px] md:rounded-[16px] md:border md:border-[var(--border-hairline)] overflow-hidden select-none transition active:scale-[0.995]"
+          className="block relative w-full h-[136px] sm:h-[156px] md:h-[180px] lg:h-[196px] md:rounded-[12px] md:border md:border-[var(--border-hairline)] overflow-hidden select-none transition active:scale-[0.995]"
         >
           <img
             src={foyerArtSrc}
@@ -390,21 +417,21 @@ export default function HomeLibraryPage() {
           <div
             aria-hidden="true"
             style={{
-              background: 'linear-gradient(180deg, rgba(0,0,0,0) 44%, var(--bg-canvas) 100%)'
+              background: 'linear-gradient(180deg, rgba(0,0,0,0) 40%, var(--bg-canvas) 100%)'
             }}
             className="absolute inset-0 pointer-events-none"
           />
         </button>
 
-        <div className="px-4 -mt-9 md:-mt-11 relative z-10 flex flex-col items-center text-center">
-          <h1 className="text-[26px] md:text-[34px] font-bold font-editorial tracking-tight">
+        <div className="px-3.5 -mt-7 md:-mt-8 relative z-10 flex flex-col items-center text-center">
+          <h1 className="text-[20px] md:text-[24px] font-bold font-editorial tracking-tight">
             Không gian chung
           </h1>
           <p
-            className="text-xs md:text-[13px] mt-0.5 tabular-nums"
+            className="text-[11.5px] mt-0.5 tabular-nums"
             style={{ color: 'var(--text-secondary)' }}
           >
-            {visibleBooks.length} bộ sách · {LIBRARY_HALLS.length} kệ chủ đề · {totalPublishedEpisodes} tập
+            {visibleBooks.length} bộ sách · {LIBRARY_HALLS.length} kệ sách · {totalPublishedEpisodes} tập
           </p>
 
           {/* Subtle Age-Tier Filter Bar (4–10 vs 11–15) */}
@@ -415,7 +442,7 @@ export default function HomeLibraryPage() {
               backgroundColor: 'var(--bg-surface)',
               border: '1px solid var(--border-hairline)'
             }}
-            className="mt-3 p-0.5 rounded-full inline-flex items-center gap-0.5 max-w-full overflow-x-auto no-scrollbar"
+            className="mt-2 p-0.5 rounded-full inline-flex items-center gap-0.5 max-w-full overflow-x-auto no-scrollbar"
           >
             {AUDIENCE_FILTER_PILLS.map((pill) => {
               const active = audienceFilter === pill.key;
@@ -429,7 +456,7 @@ export default function HomeLibraryPage() {
                     color: active ? 'var(--accent-primary)' : 'var(--text-secondary)',
                     border: active ? '1px solid var(--border-hairline)' : '1px solid transparent'
                   }}
-                  className={`h-7 px-3 rounded-full text-[11.5px] whitespace-nowrap transition ${
+                  className={`h-[26px] px-2.5 rounded-full text-[11px] whitespace-nowrap transition ${
                     active ? 'font-semibold shadow-sm' : 'font-medium hover:opacity-85'
                   }`}
                 >
@@ -441,7 +468,7 @@ export default function HomeLibraryPage() {
 
           {/* Ultra-Minimalist 1-Line Collapsible "Đang đọc / Đang nghe" Trigger */}
           {activeResumes.length > 0 && (
-            <div className="mt-3 w-full max-w-[760px] flex flex-col items-center">
+            <div className="mt-2 w-full max-w-[720px] flex flex-col items-center">
               <button
                 type="button"
                 aria-expanded={isResumeOpen}
@@ -451,23 +478,23 @@ export default function HomeLibraryPage() {
                   border: '1px solid var(--border-hairline)',
                   color: 'var(--accent-primary)'
                 }}
-                className="h-[34px] px-4 rounded-full text-xs font-semibold inline-flex items-center gap-2 max-w-[min(100%,540px)] shadow-sm transition hover:opacity-90"
+                className="h-[30px] px-3.5 rounded-full text-[11.5px] font-semibold inline-flex items-center gap-1.5 max-w-[min(100%,500px)] shadow-sm transition hover:opacity-90"
               >
                 <span
                   aria-hidden="true"
                   style={{ backgroundColor: 'var(--accent-warm)' }}
-                  className="w-2 h-2 rounded-full shrink-0"
+                  className="w-1.5 h-1.5 rounded-full shrink-0"
                 />
                 <span className="truncate">{resumeSummaryLabel}</span>
                 <ChevronDownIcon
-                  size={14}
+                  size={13}
                   strokeWidth={1.9}
                   className={`shrink-0 transition-transform ${isResumeOpen ? 'rotate-180' : ''}`}
                 />
               </button>
 
               {isResumeOpen && (
-                <div className="mt-3 w-full grid grid-cols-1 md:grid-cols-2 gap-3 text-left">
+                <div className="mt-2.5 w-full grid grid-cols-1 md:grid-cols-2 gap-2.5 text-left">
                   {activeResumes.map((resumeItem) => {
                     const isResumeAudio = resumeItem.mode === 'audio';
                     const isResumePlaying = Boolean(
@@ -489,11 +516,11 @@ export default function HomeLibraryPage() {
                           backgroundColor: 'var(--bg-elevated)',
                           border: '1px solid var(--border-hairline)'
                         }}
-                        className="rounded-[12px] p-3 flex items-center gap-3 shadow-sm"
+                        className="rounded-[10px] p-2.5 flex items-center gap-2.5 shadow-sm"
                       >
                         <Link
                           href={`/episodes/${resumeItem.episode.id}`}
-                          className="w-[52px] shrink-0 block"
+                          className="w-[44px] shrink-0 block"
                         >
                           <BookCover
                             src={resumeItem.episode.effectiveCoverUrl}
@@ -504,18 +531,18 @@ export default function HomeLibraryPage() {
 
                         <div className="flex-1 min-w-0">
                           <span
-                            className="text-[10.5px] font-bold uppercase tracking-wider block truncate tabular-nums"
+                            className="text-[10px] font-bold uppercase tracking-wider block truncate tabular-nums"
                             style={{ color: 'var(--accent-warm)' }}
                           >
                             {modeTag}
                           </span>
                           <Link href={`/episodes/${resumeItem.episode.id}`}>
-                            <h2 className="text-[14px] font-semibold font-editorial truncate mt-0.5">
+                            <h2 className="text-[13.5px] font-semibold font-editorial truncate mt-0.5">
                               Tập {resumeItem.episode.episodeCode}: {resumeItem.episode.title}
                             </h2>
                           </Link>
                           <p
-                            className="text-[11.5px] truncate tabular-nums"
+                            className="text-[11px] truncate tabular-nums"
                             style={{ color: 'var(--text-secondary)' }}
                           >
                             {resumeItem.book.title} ·{' '}
@@ -538,9 +565,9 @@ export default function HomeLibraryPage() {
                               backgroundColor: 'var(--accent-primary)',
                               color: 'var(--accent-primary-fg)'
                             }}
-                            className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                            className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
                           >
-                            {isResumePlaying ? <PauseIcon size={14} /> : <PlayIcon size={14} />}
+                            {isResumePlaying ? <PauseIcon size={12} /> : <PlayIcon size={12} />}
                           </button>
                         ) : (
                           <Link
@@ -550,9 +577,9 @@ export default function HomeLibraryPage() {
                               backgroundColor: 'var(--accent-primary)',
                               color: 'var(--accent-primary-fg)'
                             }}
-                            className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                            className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
                           >
-                            <BookOpenIcon size={15} />
+                            <BookOpenIcon size={13} />
                           </Link>
                         )}
                       </div>
@@ -565,17 +592,17 @@ export default function HomeLibraryPage() {
         </div>
       </section>
 
-      {/* Main Rich Visual Body (Full 1040px Editorial Spread) */}
-      <div className="px-4 md:px-7 mt-6 md:mt-8 space-y-8 md:space-y-10">
-        {/* TẦNG 1: TỦ SÁCH NỔI BẬT (Trưng bày Bìa Bộ Sách 3:4 cỡ lớn) */}
+      {/* Main Compact Editorial Body */}
+      <div className="px-3.5 md:px-6 mt-4 md:mt-5 space-y-5 md:space-y-6">
+        {/* TẦNG 1: TỦ SÁCH NỔI BẬT */}
         {visibleBooks.length > 0 && (
           <section aria-label="Tủ sách nổi bật">
-            <div className="flex items-baseline justify-between gap-2 mb-3.5">
+            <div className="flex items-baseline justify-between gap-2 mb-2.5">
               <div>
-                <h2 className="text-[18.5px] md:text-[22px] font-bold font-editorial">
+                <h2 className="text-[16px] md:text-[17.5px] font-bold font-editorial">
                   Tủ sách nổi bật
                 </h2>
-                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                <p className="text-[11.5px]" style={{ color: 'var(--text-secondary)' }}>
                   Chạm vào bộ sách để mở mục lục hoặc nghe, đọc ngay
                 </p>
               </div>
@@ -583,14 +610,14 @@ export default function HomeLibraryPage() {
               <Link
                 href="/books"
                 style={{ color: 'var(--accent-primary)' }}
-                className="text-xs font-semibold inline-flex items-center gap-1 shrink-0 hover:underline"
+                className="text-xs font-semibold inline-flex items-center gap-0.5 shrink-0 hover:underline"
               >
                 <span>Tất cả ({visibleBooks.length})</span>
-                <ChevronRightIcon size={14} />
+                <ChevronRightIcon size={13} />
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-3.5">
               {visibleBooks.map((book) => {
                 const audioEps = book.episodes.filter((ep) => !isEpisodeReadingOnly(ep));
                 const isAudioBook = audioEps.length > 0;
@@ -637,11 +664,11 @@ export default function HomeLibraryPage() {
                       backgroundColor: 'var(--bg-elevated)',
                       border: '1px solid var(--border-hairline)'
                     }}
-                    className="rounded-[14px] p-3.5 md:p-4 flex gap-4 items-center shadow-sm transition hover:shadow-md"
+                    className="rounded-[11px] p-2.5 md:p-3 flex gap-3 items-center shadow-sm transition hover:shadow-md"
                   >
                     <Link
                       href={`/books/${book.slug}`}
-                      className="w-[98px] sm:w-[110px] md:w-[122px] shrink-0 block transition active:scale-[0.98]"
+                      className="w-[68px] sm:w-[74px] md:w-[80px] shrink-0 block transition active:scale-[0.98]"
                     >
                       <BookCover
                         src={book.coverUrl}
@@ -650,23 +677,23 @@ export default function HomeLibraryPage() {
                       />
                     </Link>
 
-                    <div className="flex-1 min-w-0 space-y-1.5">
+                    <div className="flex-1 min-w-0 space-y-1">
                       <span
-                        className="vn-eyebrow block truncate"
+                        className="text-[10px] font-semibold uppercase tracking-[0.05em] block truncate"
                         style={{ color: 'var(--accent-warm)' }}
                       >
                         {formatBookDisplayGenre(book)}
                       </span>
 
                       <Link href={`/books/${book.slug}`}>
-                        <h3 className="text-[16.5px] md:text-[18.5px] font-bold font-editorial leading-snug line-clamp-2">
+                        <h3 className="text-[14.5px] md:text-[15.5px] font-bold font-editorial leading-snug line-clamp-2">
                           {book.title}
                         </h3>
                       </Link>
 
                       {(book.subtitle || book.description) && (
                         <p
-                          className="text-xs line-clamp-2"
+                          className="text-[11.5px] line-clamp-1"
                           style={{ color: 'var(--text-secondary)' }}
                         >
                           {book.subtitle || book.description}
@@ -674,14 +701,14 @@ export default function HomeLibraryPage() {
                       )}
 
                       <p
-                        className="text-[11.5px] font-medium tabular-nums"
+                        className="text-[11px] font-medium tabular-nums truncate"
                         style={{ color: 'var(--text-secondary)' }}
                       >
                         {book.ageRange ? `${book.ageRange} · ` : ''}
                         {statsLabel}
                       </p>
 
-                      <div className="pt-1 flex flex-wrap items-center gap-2">
+                      <div className="pt-0.5 flex flex-wrap items-center gap-1.5">
                         {isAudioBook && targetAudioEp ? (
                           <button
                             type="button"
@@ -690,9 +717,9 @@ export default function HomeLibraryPage() {
                               backgroundColor: 'var(--accent-primary)',
                               color: 'var(--accent-primary-fg)'
                             }}
-                            className="h-8 px-3.5 rounded-[8px] text-xs font-semibold inline-flex items-center gap-1.5 tabular-nums transition active:scale-[0.98]"
+                            className="h-7 px-2.5 rounded-[7px] text-[11.5px] font-semibold inline-flex items-center gap-1 tabular-nums transition active:scale-[0.98]"
                           >
-                            {isBookPlaying ? <PauseIcon size={12} /> : <PlayIcon size={12} />}
+                            {isBookPlaying ? <PauseIcon size={11} /> : <PlayIcon size={11} />}
                             <span>
                               {isBookPlaying
                                 ? 'Đang phát'
@@ -709,9 +736,9 @@ export default function HomeLibraryPage() {
                                 backgroundColor: 'var(--accent-primary)',
                                 color: 'var(--accent-primary-fg)'
                               }}
-                              className="h-8 px-3.5 rounded-[8px] text-xs font-semibold inline-flex items-center gap-1.5 tabular-nums transition active:scale-[0.98]"
+                              className="h-7 px-2.5 rounded-[7px] text-[11.5px] font-semibold inline-flex items-center gap-1 tabular-nums transition active:scale-[0.98]"
                             >
-                              <BookOpenIcon size={13} />
+                              <BookOpenIcon size={12} />
                               <span>
                                 {inProgRead
                                   ? `Đọc tiếp Tập ${targetReadEp.episodeCode}`
@@ -724,10 +751,10 @@ export default function HomeLibraryPage() {
                         <Link
                           href={`/books/${book.slug}`}
                           style={{ color: 'var(--text-secondary)' }}
-                          className="h-8 px-2 text-xs font-medium inline-flex items-center gap-0.5 hover:underline"
+                          className="h-7 px-1.5 text-[11.5px] font-medium inline-flex items-center gap-0.5 hover:underline"
                         >
                           <span>Mục lục</span>
-                          <ChevronRightIcon size={13} />
+                          <ChevronRightIcon size={12} />
                         </Link>
                       </div>
                     </div>
@@ -738,42 +765,63 @@ export default function HomeLibraryPage() {
           </section>
         )}
 
-        {/* TẦNG 2: CÁC KỆ SÁCH (5 Thể loại chuẩn + Bộ tranh màu nước Ngày / Đêm độc bản) */}
+        {/* TẦNG 2: CÁC KỆ SÁCH (Lưới 2×3 Mobile, 3×2 Tablet & Desktop) */}
         <section aria-label="Các kệ sách">
-          <div className="mb-3.5">
-            <h2 className="text-[18.5px] md:text-[22px] font-bold font-editorial">
+          <div className="mb-2.5">
+            <h2 className="text-[16px] md:text-[17.5px] font-bold font-editorial">
               Các kệ sách
             </h2>
-            <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-              5 không gian tri thức và câu chuyện theo từng chủ đề
+            <p className="text-[11.5px]" style={{ color: 'var(--text-secondary)' }}>
+              5 không gian chủ đề và 1 kệ gợi ý dành riêng cho bạn
             </p>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-3 md:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 md:gap-3.5">
             {LIBRARY_HALLS.map((hall) => {
-              const hallBooks = booksByHall.get(hall.slug) || [];
-              const isLit = hallBooks.length > 0;
-              const totalEps = hallBooks.reduce((sum, b) => sum + b.episodes.length, 0);
+              const isCurated = hall.kind === 'curated';
+              const hallBooks = isCurated
+                ? curatedShelfData.books.map((item) => item.book)
+                : booksByHall.get(hall.slug) || [];
+              const isLit = isCurated
+                ? curatedShelfData.books.length > 0 || curatedShelfData.episodes.length > 0
+                : hallBooks.length > 0;
+              const totalEps = isCurated
+                ? curatedShelfData.episodes.length
+                : hallBooks.reduce((sum, b) => sum + b.episodes.length, 0);
               const preset = BOOK_PRESETS[hall.preset];
-              const accentColor = isNight ? preset.nightAccent : preset.dayAccent;
+              const accentColor = isCurated
+                ? 'var(--accent-warm)'
+                : isNight
+                  ? preset.nightAccent
+                  : preset.dayAccent;
               const hallArtSrc = isNight ? hall.nightHeroUrl : hall.dayHeroUrl;
+              const cardBg = isCurated
+                ? isNight
+                  ? '#242019'
+                  : '#FBF6EC'
+                : 'var(--bg-elevated)';
+              const cardBorder = isCurated
+                ? isNight
+                  ? '1.5px solid rgba(212, 172, 110, 0.42)'
+                  : '1.5px solid rgba(158, 123, 67, 0.45)'
+                : '1px solid var(--border-hairline)';
 
               return (
                 <Link
                   key={hall.slug}
                   href={`/halls/${hall.slug}`}
                   style={{
-                    backgroundColor: 'var(--bg-elevated)',
-                    border: '1px solid var(--border-hairline)'
+                    backgroundColor: cardBg,
+                    border: cardBorder
                   }}
-                  className="group w-[calc(50%-6px)] md:w-[calc(33.333%-11px)] rounded-[12px] overflow-hidden flex flex-col shadow-sm transition hover:shadow-md active:scale-[0.99]"
+                  className="group rounded-[10px] overflow-hidden flex flex-col shadow-sm transition hover:shadow-md active:scale-[0.99]"
                 >
                   <div
                     style={{
                       backgroundColor: isNight ? preset.nightWash : preset.dayWash,
                       borderBottom: '1px solid var(--border-hairline)'
                     }}
-                    className="w-full aspect-[3/4] overflow-hidden relative"
+                    className="w-full aspect-[4/3] overflow-hidden relative"
                   >
                     <img
                       src={hallArtSrc}
@@ -783,49 +831,53 @@ export default function HomeLibraryPage() {
                     />
                   </div>
 
-                  <div className="p-3 md:p-3.5 flex-1 flex flex-col justify-between">
+                  <div className="p-2.5 flex-1 flex flex-col justify-between">
                     <div>
-                      <div className="flex items-start gap-1.5">
+                      <div className="flex items-start gap-1">
                         <span
                           style={{
                             color: isLit ? accentColor : 'var(--text-secondary)'
                           }}
                           className="shrink-0 mt-0.5"
                         >
-                          <HallIcon slug={hall.slug} size={15} />
+                          <HallIcon slug={hall.slug} size={13} />
                         </span>
-                        <h3 className="text-[14.5px] md:text-[16.5px] font-bold font-editorial leading-snug">
+                        <h3 className="text-[13px] md:text-[14px] font-bold font-editorial leading-snug line-clamp-2">
                           {hall.shortTitle}
                         </h3>
                       </div>
 
                       <p
-                        className="text-[11.5px] md:text-xs mt-1 line-clamp-2 leading-relaxed"
+                        className="text-[10.5px] md:text-[11px] mt-0.5 line-clamp-1"
                         style={{ color: 'var(--text-secondary)' }}
                       >
-                        ({hall.epigraph})
+                        {hall.epigraph}
                       </p>
                     </div>
 
                     <div
                       style={{ borderTop: '1px solid var(--border-hairline)' }}
-                      className="mt-2.5 pt-2 flex items-center justify-between gap-1 text-[11px] tabular-nums"
+                      className="mt-2 pt-1.5 flex items-center justify-between gap-1 text-[10.5px] tabular-nums"
                     >
                       <span
-                        className="font-semibold"
+                        className="font-semibold truncate"
                         style={{
                           color: isLit ? 'var(--text-primary)' : 'var(--text-secondary)'
                         }}
                       >
-                        {isLit ? `${hallBooks.length} bộ · ${totalEps} tập` : 'Sắp có sách'}
+                        {isLit
+                          ? isCurated
+                            ? `${curatedShelfData.books.length} bộ · ${totalEps} tập gợi ý`
+                            : `${hallBooks.length} bộ · ${totalEps} tập`
+                          : 'Sắp có sách'}
                       </span>
 
                       <span
                         style={{ color: isLit ? 'var(--accent-warm)' : 'var(--text-secondary)' }}
                         className="font-semibold inline-flex items-center gap-0.5 shrink-0"
                       >
-                        <span>{isLit ? 'Mở kệ' : 'Xem kệ'}</span>
-                        <ChevronRightIcon size={12} />
+                        <span>{isLit ? 'Mở' : 'Xem'}</span>
+                        <ChevronRightIcon size={11} />
                       </span>
                     </div>
                   </div>
@@ -835,27 +887,27 @@ export default function HomeLibraryPage() {
           </div>
         </section>
 
-        {/* TẦNG 3: TẬP TRUYỆN MỚI LÊN KỆ (Thẻ Tranh 3:4 Cỡ Lớn, Mặt Bìa Sạch 100%) */}
+        {/* TẦNG 3: TẬP TRUYỆN MỚI LÊN KỆ (Thẻ ngang gọn giảm chiều cao cuộn) */}
         {recentArrivals.length > 0 && (
           <section aria-label="Mới lên kệ">
-            <div className="flex items-baseline justify-between gap-2 mb-3.5">
+            <div className="flex items-baseline justify-between gap-2 mb-2.5">
               <div>
-                <h2 className="text-[18.5px] md:text-[22px] font-bold font-editorial">
+                <h2 className="text-[16px] md:text-[17.5px] font-bold font-editorial">
                   Tập truyện mới lên kệ
                 </h2>
-                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                <p className="text-[11.5px]" style={{ color: 'var(--text-secondary)' }}>
                   Những câu chuyện vừa được cập nhật trong thư viện
                 </p>
               </div>
               <span
-                className="text-xs font-semibold tabular-nums shrink-0"
+                className="text-[11.5px] font-semibold tabular-nums shrink-0"
                 style={{ color: 'var(--accent-warm)' }}
               >
                 {visibleNewEpisodes.length} tập mới
               </span>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {recentArrivals.map(({ book, episode }) => {
                 const isItemPlaying = activeEpisode?.id === episode.id && isPlaying;
                 const durLabel = getEpisodeDurationLabel(episode);
@@ -868,85 +920,71 @@ export default function HomeLibraryPage() {
                       backgroundColor: 'var(--bg-elevated)',
                       border: '1px solid var(--border-hairline)'
                     }}
-                    className="rounded-[12px] p-2.5 md:p-3 flex flex-col justify-between shadow-sm transition hover:shadow-md"
+                    className="rounded-[10px] p-2.5 flex items-center gap-3 shadow-sm transition hover:shadow-md"
                   >
-                    <div>
-                      <Link
-                        href={`/episodes/${episode.id}`}
-                        className="block transition active:scale-[0.99]"
-                      >
-                        <BookCover
-                          src={episode.effectiveCoverUrl}
-                          alt={episode.title}
-                          focalPoint={book.coverFocalPoint}
-                        />
-                      </Link>
-
-                      <Link href={`/episodes/${episode.id}`} className="block mt-2.5 space-y-0.5">
-                        <p
-                          className="text-[10.5px] font-semibold uppercase tracking-wider truncate"
-                          style={{ color: 'var(--accent-warm)' }}
-                        >
-                          Mới · {formatRelativePublishDate(episode.publishedAt)}
-                        </p>
-                        <p
-                          className="text-[11px] truncate"
-                          style={{ color: 'var(--text-secondary)' }}
-                        >
-                          {book.title}
-                        </p>
-                        <h3 className="text-[14px] md:text-[15px] font-bold font-editorial leading-snug line-clamp-2">
-                          Tập {episode.episodeCode}: {episode.title}
-                        </h3>
-                      </Link>
-                    </div>
-
-                    <div
-                      style={{ borderTop: '1px solid var(--border-hairline)' }}
-                      className="mt-2.5 pt-2 flex items-center justify-between gap-2"
+                    <Link
+                      href={`/episodes/${episode.id}`}
+                      className="w-[48px] sm:w-[52px] shrink-0 block transition active:scale-[0.98]"
                     >
-                      <span
-                        className="text-[11px] tabular-nums truncate"
+                      <BookCover
+                        src={episode.effectiveCoverUrl}
+                        alt={episode.title}
+                        focalPoint={book.coverFocalPoint}
+                      />
+                    </Link>
+
+                    <Link href={`/episodes/${episode.id}`} className="flex-1 min-w-0 space-y-0.5">
+                      <p
+                        className="text-[10px] font-semibold uppercase tracking-wider truncate"
+                        style={{ color: 'var(--accent-warm)' }}
+                      >
+                        Mới · {formatRelativePublishDate(episode.publishedAt)}
+                      </p>
+                      <h3 className="text-[13.5px] font-bold font-editorial leading-snug truncate">
+                        Tập {episode.episodeCode}: {episode.title}
+                      </h3>
+                      <p
+                        className="text-[11px] truncate tabular-nums"
                         style={{ color: 'var(--text-secondary)' }}
                       >
-                        {durLabel}
-                      </span>
+                        {book.title} · {durLabel}
+                      </p>
+                    </Link>
 
-                      {epHasAudio ? (
-                        <button
-                          type="button"
-                          aria-label={
-                            isItemPlaying ? `Tạm dừng ${episode.title}` : `Nghe ${episode.title}`
-                          }
-                          onClick={() => playEpisode(book, episode)}
-                          style={{
-                            backgroundColor: isItemPlaying
-                              ? 'var(--accent-primary)'
-                              : 'var(--bg-surface)',
-                            color: isItemPlaying
-                              ? 'var(--accent-primary-fg)'
-                              : 'var(--accent-primary)',
-                            border: '1px solid var(--border-hairline)'
-                          }}
-                          className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition"
-                        >
-                          {isItemPlaying ? <PauseIcon size={13} /> : <PlayIcon size={13} />}
-                        </button>
-                      ) : (
-                        <Link
-                          href={`/episodes/${episode.id}`}
-                          aria-label={`Đọc ${episode.title}`}
-                          style={{
-                            backgroundColor: 'var(--bg-surface)',
-                            color: 'var(--accent-primary)',
-                            border: '1px solid var(--border-hairline)'
-                          }}
-                          className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition"
-                        >
-                          <BookOpenIcon size={14} />
-                        </Link>
-                      )}
-                    </div>
+                    {epHasAudio ? (
+                      <button
+                        type="button"
+                        aria-label={
+                          isItemPlaying ? `Tạm dừng ${episode.title}` : `Nghe ${episode.title}`
+                        }
+                        onClick={() => playEpisode(book, episode)}
+                        style={{
+                          backgroundColor: isItemPlaying
+                            ? 'var(--accent-primary)'
+                            : 'var(--bg-surface)',
+                          color: isItemPlaying
+                            ? 'var(--accent-primary-fg)'
+                            : 'var(--accent-primary)',
+                          border: '1px solid var(--border-hairline)'
+                        }}
+                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition"
+                      >
+                        {isItemPlaying ? <PauseIcon size={12} /> : <PlayIcon size={12} />}
+                      </button>
+                    ) : (
+                      <Link
+                        href={`/episodes/${episode.id}`}
+                        aria-label={`Đọc ${episode.title}`}
+                        style={{
+                          backgroundColor: 'var(--bg-surface)',
+                          color: 'var(--accent-primary)',
+                          border: '1px solid var(--border-hairline)'
+                        }}
+                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition"
+                      >
+                        <BookOpenIcon size={13} />
+                      </Link>
+                    )}
                   </div>
                 );
               })}

@@ -2,7 +2,7 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import { isAdminAuthenticated } from '@/lib/auth';
 import { getEpisodeWithContext } from '@/lib/repository';
-import { EpisodeReaderClient } from '@/components/EpisodeReaderClient';
+import { EpisodeReaderClient } from '@/components/library/EpisodeReaderClient';
 
 export const dynamic = 'force-dynamic';
 

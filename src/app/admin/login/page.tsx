@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronLeftIcon, LockIcon } from '@/components/Icons';
+import { ChevronLeftIcon, LockIcon } from '@/components/ui/Icons';
 
 export default function AdminLoginPage() {
   const router = useRouter();

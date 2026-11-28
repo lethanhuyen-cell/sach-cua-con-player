@@ -4,7 +4,7 @@ import { Be_Vietnam_Pro, Lora } from 'next/font/google';
 import './globals.css';
 import { getPublishedLibrary } from '@/lib/repository';
 import { LibraryPlayerProvider } from '@/context/LibraryPlayerContext';
-import { AppShell } from '@/components/AppShell';
+import { AppShell } from '@/components/layout/AppShell';
 
 const lora = Lora({
   subsets: ['vietnamese', 'latin'],

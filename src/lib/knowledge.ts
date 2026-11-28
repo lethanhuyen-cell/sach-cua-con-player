@@ -9,7 +9,7 @@ import {
   NarrativeForm,
   PillarCode
 } from './types';
-import type { LibraryHallSlug } from './halls';
+import type { ThematicHallSlug } from './halls';
 
 export type AudienceFilterKey = 'ALL' | 'CHILD' | 'TEEN';
 
@@ -18,7 +18,7 @@ export interface KnowledgePillarDefinition {
   title: string;
   shortTitle: string;
   description: string;
-  defaultHallSlug: LibraryHallSlug;
+  defaultHallSlug: ThematicHallSlug;
 }
 
 export interface BookLineDefinition {
@@ -26,7 +26,7 @@ export interface BookLineDefinition {
   pillar: PillarCode;
   title: string;
   scopeSummary: string;
-  defaultHallSlug: LibraryHallSlug;
+  defaultHallSlug: ThematicHallSlug;
   isReservedFuture?: boolean;
 }
 
@@ -520,6 +520,18 @@ export function sanitizeKnowledgeMetadata(
         .slice(0, 2)
     : undefined;
 
+  const isRecommended = raw.isRecommended === true ? true : undefined;
+  const recommendedNote =
+    typeof raw.recommendedNote === 'string'
+      ? raw.recommendedNote.normalize('NFC').trim().slice(0, 140)
+      : '';
+  const recommendedOrder =
+    typeof raw.recommendedOrder === 'number' &&
+    Number.isInteger(raw.recommendedOrder) &&
+    raw.recommendedOrder >= 0
+      ? raw.recommendedOrder
+      : undefined;
+
   const cleaned: KnowledgeMetadata = {
     ...(primaryPillar ? { primaryPillar } : {}),
     ...(primaryLine ? { primaryLine } : {}),
@@ -535,7 +547,10 @@ export function sanitizeKnowledgeMetadata(
     ...(liberalCompetencies && liberalCompetencies.length > 0 ? { liberalCompetencies } : {}),
     ...(curriculumAnchors && curriculumAnchors.length > 0 ? { curriculumAnchors } : {}),
     ...(topicKeywords && topicKeywords.length > 0 ? { topicKeywords } : {}),
-    ...(curiosityTrails && curiosityTrails.length > 0 ? { curiosityTrails } : {})
+    ...(curiosityTrails && curiosityTrails.length > 0 ? { curiosityTrails } : {}),
+    ...(isRecommended ? { isRecommended: true } : {}),
+    ...(recommendedNote ? { recommendedNote } : {}),
+    ...(recommendedOrder !== undefined ? { recommendedOrder } : {})
   };
 
   return Object.keys(cleaned).length > 0 ? cleaned : undefined;

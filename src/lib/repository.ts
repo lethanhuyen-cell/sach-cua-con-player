@@ -955,6 +955,138 @@ export async function updateTrashState(params: {
   writeLocalDb(db);
 }
 
+export interface CuratedRecommendationPatch {
+  id: string;
+  isRecommended: boolean;
+  recommendedNote?: string;
+  recommendedOrder?: number;
+}
+
+function mergeRecommendedKnowledgeMeta(
+  existing: KnowledgeMetadata | undefined,
+  patch: CuratedRecommendationPatch
+): KnowledgeMetadata | undefined {
+  const base: Partial<KnowledgeMetadata> = { ...(existing || {}) };
+  if (patch.isRecommended) {
+    base.isRecommended = true;
+  } else {
+    delete base.isRecommended;
+  }
+
+  if (patch.recommendedNote !== undefined) {
+    const cleanNote = patch.recommendedNote.normalize('NFC').trim();
+    if (cleanNote) {
+      base.recommendedNote = cleanNote;
+    } else {
+      delete base.recommendedNote;
+    }
+  }
+
+  if (patch.recommendedOrder !== undefined && Number.isInteger(patch.recommendedOrder)) {
+    base.recommendedOrder = patch.recommendedOrder;
+  } else {
+    delete base.recommendedOrder;
+  }
+
+  return sanitizeKnowledgeMetadata(base);
+}
+
+export async function saveCuratedRecommendations(input: {
+  books: CuratedRecommendationPatch[];
+  episodes: CuratedRecommendationPatch[];
+}): Promise<{ updatedBooks: number; updatedEpisodes: number }> {
+  const now = new Date().toISOString();
+  const bookPatches = new Map(input.books.map((item) => [item.id, item]));
+  const episodePatches = new Map(input.episodes.map((item) => [item.id, item]));
+
+  if (isSupabaseConfigured()) {
+    const sb = getSupabaseAdmin();
+    let updatedBooks = 0;
+    let updatedEpisodes = 0;
+
+    if (bookPatches.size > 0) {
+      const bookIds = Array.from(bookPatches.keys());
+      const { data: existingBooks, error: fetchBooksErr } = await sb
+        .from('books')
+        .select('id, knowledge_meta')
+        .in('id', bookIds);
+      if (fetchBooksErr) throw new Error(fetchBooksErr.message);
+
+      for (const row of existingBooks || []) {
+        const patch = bookPatches.get(row.id);
+        if (!patch) continue;
+        const currentMeta = sanitizeKnowledgeMetadata(row.knowledge_meta);
+        const nextMeta = mergeRecommendedKnowledgeMeta(currentMeta, patch);
+        const { error: updateErr } = await sb
+          .from('books')
+          .update({ knowledge_meta: nextMeta || {}, updated_at: now })
+          .eq('id', row.id);
+        if (updateErr) throw new Error(updateErr.message);
+        updatedBooks++;
+      }
+    }
+
+    if (episodePatches.size > 0) {
+      const epIds = Array.from(episodePatches.keys());
+      const { data: existingEps, error: fetchEpsErr } = await sb
+        .from('episodes')
+        .select('id, knowledge_meta')
+        .in('id', epIds);
+      if (fetchEpsErr) throw new Error(fetchEpsErr.message);
+
+      for (const row of existingEps || []) {
+        const patch = episodePatches.get(row.id);
+        if (!patch) continue;
+        const currentMeta = sanitizeKnowledgeMetadata(row.knowledge_meta);
+        const nextMeta = mergeRecommendedKnowledgeMeta(currentMeta, patch);
+        const { error: updateErr } = await sb
+          .from('episodes')
+          .update({ knowledge_meta: nextMeta || {}, updated_at: now })
+          .eq('id', row.id);
+        if (updateErr) throw new Error(updateErr.message);
+        updatedEpisodes++;
+      }
+    }
+
+    return { updatedBooks, updatedEpisodes };
+  }
+
+  const db = readLocalDb();
+  let updatedBooks = 0;
+  let updatedEpisodes = 0;
+
+  db.books = db.books.map((book) => {
+    const patch = bookPatches.get(book.id);
+    if (!patch) return book;
+    updatedBooks++;
+    const nextMeta = mergeRecommendedKnowledgeMeta(book.knowledgeMeta, patch);
+    const nextBook: Book = { ...book, updatedAt: now };
+    if (nextMeta) {
+      nextBook.knowledgeMeta = nextMeta;
+    } else {
+      delete nextBook.knowledgeMeta;
+    }
+    return nextBook;
+  });
+
+  db.episodes = db.episodes.map((ep) => {
+    const patch = episodePatches.get(ep.id);
+    if (!patch) return ep;
+    updatedEpisodes++;
+    const nextMeta = mergeRecommendedKnowledgeMeta(ep.knowledgeMeta, patch);
+    const nextEp: Episode = { ...ep, updatedAt: now };
+    if (nextMeta) {
+      nextEp.knowledgeMeta = nextMeta;
+    } else {
+      delete nextEp.knowledgeMeta;
+    }
+    return nextEp;
+  });
+
+  writeLocalDb(db);
+  return { updatedBooks, updatedEpisodes };
+}
+
 export async function buildBackupExportPayload(): Promise<Record<string, unknown>> {
   const db = await getRawDatabase();
   const mediaManifest: { type: string; ownerId: string; url: string }[] = [];

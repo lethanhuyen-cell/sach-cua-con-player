@@ -13,8 +13,8 @@ import json
 import subprocess
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LEGACY_JSON = os.path.join(ROOT, "data", "episodes.json")
-THD_JSON = os.path.join(ROOT, "data", "tieu_hat_de_episodes.json")
+LEGACY_JSON = os.path.join(ROOT, "data", "seeds", "episodes.json")
+THD_JSON = os.path.join(ROOT, "data", "seeds", "tieu_hat_de_episodes.json")
 OUT_DB = os.path.join(ROOT, "data", "library_db.json")
 
 CLEAN_TITLES = {
@@ -201,7 +201,7 @@ def main():
         eid = raw_ep["id"]
         ep_uuid = f"ep-lim-{eid}"
         clean_title = CLEAN_TITLES.get(eid, raw_ep["title"].title())
-        cover_rel = "/" + raw_ep.get("cover", f"images/episodes/{eid}/cover.jpg").lstrip("/")
+        cover_rel = "/" + raw_ep.get("cover", f"images/episodes/lim-va-me-vacci/{eid}/cover.jpg").lstrip("/")
 
         raw_ills = raw_ep.get("illustrations") or []
         inline_imgs = []

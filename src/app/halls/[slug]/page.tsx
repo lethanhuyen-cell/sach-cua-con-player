@@ -7,7 +7,7 @@ import {
   resolveBookHalls,
   resolveLegacyHallSlug
 } from '@/lib/halls';
-import { HallShelfClient } from '@/components/HallShelfClient';
+import { HallShelfClient } from '@/components/library/HallShelfClient';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,11 +27,14 @@ export default async function HallDetailPage({
   }
 
   const allBooks = await getPublishedLibrary();
-  const booksInHall = allBooks.filter((b) =>
-    resolveBookHalls(b).some((h) => h.slug === hall.slug)
-  );
+  const booksInHall =
+    hall.kind === 'curated'
+      ? allBooks
+      : allBooks.filter((b) => resolveBookHalls(b).some((h) => h.slug === hall.slug));
   const litHallSlugs = LIBRARY_HALLS.filter((h) =>
-    allBooks.some((b) => resolveBookHalls(b).some((bh) => bh.slug === h.slug))
+    h.kind === 'curated'
+      ? allBooks.length > 0
+      : allBooks.some((b) => resolveBookHalls(b).some((bh) => bh.slug === h.slug))
   ).map((h) => h.slug);
 
   return (

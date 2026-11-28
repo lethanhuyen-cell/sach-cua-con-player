@@ -3,8 +3,8 @@
 import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useLibraryPlayer } from '@/context/LibraryPlayerContext';
-import { BookCover } from '@/components/BookCover';
-import { LibraryWayfinder } from '@/components/LibraryWayfinder';
+import { BookCover } from '@/components/ui/BookCover';
+import { LibraryWayfinder } from '@/components/layout/LibraryWayfinder';
 import {
   BookmarkIcon,
   BookOpenIcon,
@@ -12,7 +12,7 @@ import {
   PauseIcon,
   PlayIcon,
   SunIcon
-} from '@/components/Icons';
+} from '@/components/ui/Icons';
 import {
   estimateReadingMinutes,
   formatClock,
@@ -57,7 +57,7 @@ export default function SavedArchivePage() {
           backgroundColor: 'var(--bg-canvas)',
           borderBottom: '1.5px solid var(--border-hairline)'
         }}
-        className="sticky top-0 z-20 h-[72px] md:h-[86px] px-2.5 sm:px-3.5 md:px-7 flex items-center justify-between gap-1.5"
+        className="sticky top-0 z-20 h-[48px] md:h-[54px] px-2.5 sm:px-3.5 md:px-6 flex items-center justify-between gap-1.5"
       >
         <LibraryWayfinder currentStep="shelf" shelfBranch="saved" />
         <button
@@ -65,27 +65,27 @@ export default function SavedArchivePage() {
           onClick={toggleNight}
           aria-label={isNight ? 'Giao diện sáng' : 'Giao diện đêm'}
           style={{ color: 'var(--text-primary)' }}
-          className="w-[38px] h-[38px] md:w-[46px] md:h-[46px] rounded-[10px] hover:bg-[var(--bg-surface)] flex items-center justify-center shrink-0 transition"
+          className="w-[34px] h-[34px] md:w-[36px] md:h-[36px] rounded-[8px] hover:bg-[var(--bg-surface)] flex items-center justify-center shrink-0 transition"
         >
           {isNight ? (
             <SunIcon
-              size={24}
+              size={19}
               strokeWidth={1.85}
-              className="w-[23px] h-[23px] md:w-[28px] md:h-[28px]"
+              className="w-[18px] h-[18px] md:w-[20px] md:h-[20px]"
             />
           ) : (
             <MoonIcon
-              size={24}
+              size={19}
               strokeWidth={1.85}
-              className="w-[23px] h-[23px] md:w-[28px] md:h-[28px]"
+              className="w-[18px] h-[18px] md:w-[20px] md:h-[20px]"
             />
           )}
         </button>
       </header>
 
-      <div className="px-4 md:px-6 pt-4 md:pt-6 space-y-5 max-w-[740px] mx-auto w-full">
+      <div className="px-4 md:px-6 pt-3.5 md:pt-4 space-y-4 max-w-[700px] mx-auto w-full">
         <div>
-          <h1 className="text-[21px] font-bold font-editorial">Lưu trữ</h1>
+          <h1 className="text-[18px] font-bold font-editorial">Lưu trữ</h1>
           <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
             Tiến độ đọc, nghe và các tập đánh dấu trên thiết bị này
           </p>
@@ -151,7 +151,7 @@ export default function SavedArchivePage() {
             </Link>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {continueItems.map((item) => {
               const playing =
                 item.mode === 'audio' &&
@@ -173,9 +173,9 @@ export default function SavedArchivePage() {
                     backgroundColor: 'var(--bg-elevated)',
                     border: '1px solid var(--border-hairline)'
                   }}
-                  className="rounded-[10px] p-3 flex items-center gap-3"
+                  className="rounded-[10px] p-2.5 flex items-center gap-2.5"
                 >
-                  <Link href={`/episodes/${item.episode.id}`} className="w-14 shrink-0">
+                  <Link href={`/episodes/${item.episode.id}`} className="w-11 shrink-0">
                     <BookCover
                       src={item.episode.effectiveCoverUrl}
                       alt={item.episode.title}
@@ -238,9 +238,9 @@ export default function SavedArchivePage() {
                         backgroundColor: 'var(--accent-primary)',
                         color: 'var(--accent-primary-fg)'
                       }}
-                      className="w-11 h-11 rounded-full flex items-center justify-center shrink-0"
+                      className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
                     >
-                      {playing ? <PauseIcon size={15} /> : <PlayIcon size={15} />}
+                      {playing ? <PauseIcon size={14} /> : <PlayIcon size={14} />}
                     </button>
                   ) : (
                     <Link
@@ -250,9 +250,9 @@ export default function SavedArchivePage() {
                         backgroundColor: 'var(--accent-primary)',
                         color: 'var(--accent-primary-fg)'
                       }}
-                      className="w-11 h-11 rounded-full flex items-center justify-center shrink-0"
+                      className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
                     >
-                      <BookOpenIcon size={15} />
+                      <BookOpenIcon size={14} />
                     </Link>
                   )}
                 </div>
@@ -274,7 +274,7 @@ export default function SavedArchivePage() {
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {savedList.map(({ book, episode }) => {
             const playing = activeEpisode?.id === episode.id && isPlaying;
             return (
@@ -284,9 +284,9 @@ export default function SavedArchivePage() {
                   backgroundColor: 'var(--bg-elevated)',
                   border: '1px solid var(--border-hairline)'
                 }}
-                className="rounded-[10px] p-3 flex items-center gap-3"
+                className="rounded-[10px] p-2.5 flex items-center gap-2.5"
               >
-                <Link href={`/episodes/${episode.id}`} className="w-14 shrink-0">
+                <Link href={`/episodes/${episode.id}`} className="w-11 shrink-0">
                   <BookCover
                     src={episode.effectiveCoverUrl}
                     alt={episode.title}
@@ -322,9 +322,9 @@ export default function SavedArchivePage() {
                         border: '1px solid var(--border-hairline)',
                         color: 'var(--accent-primary)'
                       }}
-                      className="w-10 h-10 rounded-full flex items-center justify-center"
+                      className="w-9 h-9 rounded-full flex items-center justify-center"
                     >
-                      {playing ? <PauseIcon size={14} /> : <PlayIcon size={14} />}
+                      {playing ? <PauseIcon size={13} /> : <PlayIcon size={13} />}
                     </button>
                   )}
                   <button
@@ -332,9 +332,9 @@ export default function SavedArchivePage() {
                     aria-label="Bỏ đánh dấu"
                     onClick={() => toggleFavorite(episode.id)}
                     style={{ color: 'var(--accent-berry)' }}
-                    className="w-10 h-10 flex items-center justify-center"
+                    className="w-9 h-9 flex items-center justify-center"
                   >
-                    <BookmarkIcon size={17} filled />
+                    <BookmarkIcon size={16} filled />
                   </button>
                 </div>
               </div>
